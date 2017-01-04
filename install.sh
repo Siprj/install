@@ -52,6 +52,7 @@ packages=(arandr
     steam
     teamspeak3
     texlive-core
+    texlive-langgreek
     thunderbird
     tree
     unrar
