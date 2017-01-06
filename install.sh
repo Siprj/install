@@ -71,13 +71,15 @@ sudo pacman -Sy --needed ${packages[@]}
 pacman -Q dropbox || apacman -S --noconfirm dropbox
 pacman -Q google-chrome || apacman -S --noconfirm google-chrome
 pacman -Q openttd-openmsx || apacman  -S --noconfirm openttd-openmsx
-pacman -Q antu-dark-icon-theme-git || apacman  -S --noconfirm antu-dark-icon-theme-git
+pacman -Q powerline-fonts-git || apacman  -S --noconfirm powerline-fonts-git
+pacman -Q antu-dark-icon-theme-git || apacman -S --noconfirm antu-dark-icon-theme-git
 
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
 # TODO: install my xmonad configuration
 
+stack setup
 stack install xmobar --flag xmobar:with_alsa
 
 # setup stalonetray
