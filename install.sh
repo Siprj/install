@@ -30,6 +30,7 @@ packages=(arandr
     git
     gnome-logs
     graphviz
+    gwenview
     hicolor-icon-theme
     keepassx
     konsole
@@ -81,6 +82,7 @@ pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
 # TODO: install my xmonad configuration
+# TODO: install my vim configuration
 
 stack setup
 stack install xmobar --flag xmobar:with_alsa
