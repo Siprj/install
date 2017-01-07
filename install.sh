@@ -117,7 +117,7 @@ xrdb ~/.Xresources
 
 stalonetray &
 
-xautolock --time 20 --locker slock &
+xautolock -time 20 -locker slock &
 
 .screenlayout/two-monitors.sh
 
