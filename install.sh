@@ -28,6 +28,7 @@ packages=(arandr
     firefox
     gcc
     git
+    gnome-logs
     graphviz
     hicolor-icon-theme
     keepassx
@@ -62,6 +63,7 @@ packages=(arandr
     vpnc
     wireshark-gtk
     xautolock
+    xorg-xev
     xorg-xmessage
     )
 
