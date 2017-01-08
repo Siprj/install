@@ -121,6 +121,8 @@ xautolock -time 20 -locker slock &
 
 .screenlayout/two-monitors.sh
 
+dropbox start -i &
+
 exec xmonad
 EOF
 
