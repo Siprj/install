@@ -28,6 +28,7 @@ packages=(arandr
     firefox
     gcc
     git
+    gitg
     gnome-logs
     graphviz
     gwenview
