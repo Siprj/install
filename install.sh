@@ -45,6 +45,9 @@ packages=(arandr
     okular
     pkg-config
     pulseaudio
+    qt5
+    qt5-doc
+    qtcreator
     quassel-monolithic
     sane
     scrot
