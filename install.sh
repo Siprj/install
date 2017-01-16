@@ -18,6 +18,7 @@ packages=(arandr
     autoconf
     autocutsel
     automake
+    cairo
     ctags
     cups
     deluge
@@ -26,6 +27,8 @@ packages=(arandr
     evince
     feh
     firefox
+    fontconfig
+    freetype2
     gcc
     git
     gitg
@@ -35,6 +38,9 @@ packages=(arandr
     hicolor-icon-theme
     keepassx
     konsole
+    lib32-cairo
+    lib32-fontconfig
+    lib32-freetype2
     libxft
     libzip
     lyx
@@ -43,6 +49,8 @@ packages=(arandr
     nautilus
     networkmanager
     okular
+    oxygen-icons
+    oxygen-icons-svg
     pkg-config
     pulseaudio
     qt5
@@ -127,6 +135,8 @@ xautolock -time 20 -locker slock &
 
 dropbox start -i &
 
+export XDG_CURRENT_DESKTOP=kde
+
 exec xmonad
 EOF
 
@@ -156,6 +166,7 @@ Xmessage*international: true
 
 ! {{{ terminal colors
 
+xterm*bellIsUrgent: true
 xterm*background: #001419
 xterm*foreground: #b4cbcc
 ! xterm*font:     *-fixed-*-*-*-18-*
