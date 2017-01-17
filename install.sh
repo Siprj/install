@@ -135,7 +135,7 @@ xautolock -time 20 -locker slock &
 
 dropbox start -i &
 
-export XDG_CURRENT_DESKTOP=kde
+export XDG_CURRENT_DESKTOP=qt5ct
 
 exec xmonad
 EOF
