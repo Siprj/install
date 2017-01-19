@@ -49,6 +49,7 @@ packages=(arandr
     nautilus
     networkmanager
     okular
+    openssh
     oxygen-icons
     oxygen-icons-svg
     pkg-config
@@ -78,6 +79,8 @@ packages=(arandr
     xautolock
     xorg-xev
     xorg-xmessage
+    xterm
+    zsh
     )
 
 sudo pacman -Sy
@@ -88,6 +91,7 @@ pacman -Q dropbox || packer -S dropbox
 pacman -Q google-chrome || packer -S google-chrome
 pacman -Q openttd-openmsx || packer  -S openttd-openmsx
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
+pacman -Q par || packer  -S par
 # pacman -Q antu-dark-icon-theme-git || packer -S antu-dark-icon-theme-git
 
 # I hate nano.
