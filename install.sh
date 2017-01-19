@@ -226,10 +226,13 @@ path=(~/.local/bin \$path[@])
 EOF
 fi
 
-#Set zsh behaviour
+# Set zsh behaviour
 ZSHRC="${HOME}/.zshrc"
 sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" ${ZSHRC}
 sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" ${ZSHRC}
 sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" ${ZSHRC}
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" ${ZSHRC}
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\/dd\/yyyy\"/g" ${ZSHRC}
+
+# Set git behaviour
+git config --global commit.verbose true
