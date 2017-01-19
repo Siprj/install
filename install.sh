@@ -29,7 +29,7 @@ packages=(arandr
     firefox
     fontconfig
     freetype2
-    gcc
+    gcc-multilib
     git
     gitg
     gnome-logs
