@@ -58,6 +58,7 @@ packages=(arandr
     qt5-doc
     qtcreator
     quassel-monolithic
+    rdesktop
     sane
     scrot
     slock
@@ -73,6 +74,8 @@ packages=(arandr
     unrar
     unzip
     vifm
+    virtualbox
+    virtualbox-host-modules-arch
     vlc
     vpnc
     wireshark-gtk
@@ -92,6 +95,7 @@ pacman -Q google-chrome || packer -S google-chrome
 pacman -Q openttd-openmsx || packer  -S openttd-openmsx
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
+pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 # pacman -Q antu-dark-icon-theme-git || packer -S antu-dark-icon-theme-git
 
 # I hate nano.
