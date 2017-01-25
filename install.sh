@@ -18,15 +18,18 @@ packages=(arandr
     autoconf
     autocutsel
     automake
+    bridge-utils
     cairo
     ctags
     cups
     deluge
     dia
     dmenu
+    dnsmasq
     evince
     feh
     firefox
+    firewalld
     fontconfig
     freetype2
     gcc-multilib
@@ -36,6 +39,7 @@ packages=(arandr
     graphviz
     gwenview
     hicolor-icon-theme
+    iptables
     keepassx
     konsole
     lib32-cairo
@@ -49,11 +53,13 @@ packages=(arandr
     nautilus
     networkmanager
     okular
+    openbsd-netcat
     openssh
     oxygen-icons
     oxygen-icons-svg
     pkg-config
     pulseaudio
+    qemu
     qt5
     qt5-doc
     qtcreator
@@ -74,8 +80,7 @@ packages=(arandr
     unrar
     unzip
     vifm
-    virtualbox
-    virtualbox-host-modules-arch
+    virt-manager
     vlc
     vpnc
     wireshark-gtk
@@ -96,7 +101,20 @@ pacman -Q openttd-openmsx || packer  -S openttd-openmsx
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
-# pacman -Q antu-dark-icon-theme-git || packer -S antu-dark-icon-theme-git
+
+systemctl enable libvirtd
+
+# Allow users in libvirt group to access system libvirt
+# Add your self to libvirt gropu with
+# > gpasswd -a USER_NAME libvirt
+sudo bash -c 'cat > /etc/polkit-1/rules.d/50-org.libvirt.unix.manage.rules <<EOF
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.libvirt.unix.manage" &&
+        subject.isInGroup("libvirt")) {
+            return polkit.Result.YES;
+    }
+});
+EOF'
 
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
