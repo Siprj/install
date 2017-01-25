@@ -102,7 +102,7 @@ pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 
-systemctl enable libvirtd
+sudo systemctl enable libvirtd
 
 # Allow users in libvirt group to access system libvirt
 # Add your self to libvirt gropu with
@@ -258,3 +258,138 @@ sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\/dd\/yyyy\"/g" ${ZSHRC}
 
 # Set git behaviour
 git config --global commit.verbose true
+
+# Configure konsole
+cat > ~/.config/konsolerc <<EOF
+[Desktop Entry]
+DefaultProfile=Profile1.profile
+
+[Favorite Profiles]
+Favorites=Profile1.profile
+
+[KonsoleWindow]
+ShowMenuBarByDefault=false
+ShowWindowTitleOnTitleBar=true
+
+[MainWindow]
+Height 1050=1048
+Height 1080=1061
+MenuBar=Disabled
+State=AAAA/wAAAAD9AAAAAAAAB34AAAQlAAAABAAAAAQAAAAIAAAACPwAAAAA
+ToolBarsMovable=Disabled
+Width 1680=838
+Width 1920=1918
+
+[TabBar]
+TabBarVisibility=ShowTabBarWhenNeeded
+EOF
+
+
+cat > ~/.local/share/konsole/my.colorscheme <<EOF
+[Background]
+Color=0,16,21
+
+[BackgroundFaint]
+Color=0,43,54
+
+[BackgroundIntense]
+Color=7,54,66
+
+[Color0]
+Color=3,28,34
+
+[Color0Faint]
+Color=6,48,59
+
+[Color0Intense]
+Color=0,43,54
+
+[Color1]
+Color=220,50,47
+
+[Color1Faint]
+Color=147,33,31
+
+[Color1Intense]
+Color=203,75,22
+
+[Color2]
+Color=133,153,0
+
+[Color2Faint]
+Color=94,106,0
+
+[Color2Intense]
+Color=88,110,117
+
+[Color3]
+Color=181,137,0
+
+[Color3Faint]
+Color=138,103,0
+
+[Color3Intense]
+Color=101,123,131
+
+[Color4]
+Color=38,139,210
+
+[Color4Faint]
+Color=20,77,115
+
+[Color4Intense]
+Color=131,148,150
+
+[Color5]
+Color=211,54,130
+
+[Color5Faint]
+Color=120,30,75
+
+[Color5Intense]
+Color=108,113,196
+
+[Color6]
+Color=42,161,152
+
+[Color6Faint]
+Color=24,94,88
+
+[Color6Intense]
+Color=147,161,161
+
+[Color7]
+Color=238,232,213
+
+[Color7Faint]
+Color=171,167,154
+
+[Color7Intense]
+Color=253,246,227
+
+[Foreground]
+Color=131,148,150
+
+[ForegroundFaint]
+Color=106,119,121
+
+[ForegroundIntense]
+Color=147,161,161
+
+[General]
+Description=my
+Opacity=1
+Wallpaper=
+EOF
+
+cat > ~/.local/share/konsole/Profile1.profile <<EOF
+[Appearance]
+BoldIntense=true
+ColorScheme=my
+Font=Droid Sans Mono Dotted for Powerline,12,-1,5,50,0,0,0,0,0
+UseFontLineChararacters=false
+
+[General]
+Name=Profile1
+Parent=FALLBACK/
+EOF
