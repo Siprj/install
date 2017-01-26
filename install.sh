@@ -161,7 +161,8 @@ xautolock -time 20 -locker slock &
 
 dropbox start -i &
 
-export XDG_CURRENT_DESKTOP=qt5ct
+export XDG_CURRENT_DESKTOP="qt5ct"
+export QT_QPA_PLATFORMTHEME="qt5ct"
 
 exec xmonad
 EOF
