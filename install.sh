@@ -122,7 +122,13 @@ pacman -Q nano &> /dev/null && sudo pacman -R nano
 # TODO: install my xmonad configuration
 # TODO: install my vim configuration
 
-stack setup
+if [ -d ~/xmonadrc ]; then
+    (cd ~/xmonadrc && git pull --rebase && stack setup && stack install)
+else
+    (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
+    (cd ~/xmonadrc && stack setup && stack install)
+fi
+
 stack install xmobar --flag xmobar:with_alsa
 
 # setup stalonetray
