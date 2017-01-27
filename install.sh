@@ -52,6 +52,7 @@ packages=(arandr
     moc
     nautilus
     networkmanager
+    nfs-utils
     okular
     openbsd-netcat
     openssh
