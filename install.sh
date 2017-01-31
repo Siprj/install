@@ -62,6 +62,7 @@ packages=(arandr
     pulseaudio
     qemu
     qt5
+    qt5ct
     qt5-doc
     qtcreator
     quassel-monolithic
