@@ -40,6 +40,7 @@ packages=(arandr
     gwenview
     hicolor-icon-theme
     iptables
+    jq
     keepassx
     konsole
     lib32-cairo
