@@ -104,6 +104,7 @@ pacman -Q openttd-openmsx || packer  -S openttd-openmsx
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
+pacman -Q xflux || packer -S xflux
 
 sudo systemctl enable libvirtd
 
@@ -169,6 +170,8 @@ xautolock -time 20 -locker slock &
 .screenlayout/two-monitors.sh
 
 dropbox start -i &
+
+xflux -l 49 -g 15
 
 export XDG_CURRENT_DESKTOP="qt5ct"
 export QT_QPA_PLATFORMTHEME="qt5ct"
