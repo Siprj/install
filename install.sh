@@ -269,6 +269,13 @@ sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" 
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" ${ZSHRC}
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\/dd\/yyyy\"/g" ${ZSHRC}
 
+cat > ~/.oh-my-zsh/custom/load-bash-completition.zsh <<EOF
+autoload -U +X compinit && compinit
+autoload -U +X bashcompinit && bashcompinit
+
+source /usr/share/bash-completion/completions/stack
+EOF
+
 # Set git behaviour
 git config --global commit.verbose true
 
