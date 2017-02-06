@@ -31,6 +31,7 @@ packages=(arandr
     firefox
     firewalld
     fontconfig
+    fping
     freetype2
     gcc-multilib
     git
