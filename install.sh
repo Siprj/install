@@ -13,6 +13,7 @@
 # scrot is screen capture utility
 # autocutsel synchronize clipboards
 # ss is netstat equivalent
+# network-manager-applet run nm-applet
 packages=(arandr
     asciidoc
     autoconf
@@ -54,6 +55,7 @@ packages=(arandr
     moc
     nautilus
     networkmanager
+    network-manager-applet
     nfs-utils
     okular
     openbsd-netcat
