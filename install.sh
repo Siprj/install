@@ -29,6 +29,7 @@ packages=(arandr
     dnsmasq
     evince
     feh
+    ffmpeg
     firefox
     firewalld
     fontconfig
