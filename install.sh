@@ -70,7 +70,7 @@ packages=(arandr
     qt5ct
     qt5-doc
     qtcreator
-    quassel-monolithic
+    quassel-client
     rdesktop
     sane
     scrot
