@@ -28,6 +28,7 @@ packages=(arandr
     dmenu
     dnsmasq
     evince
+    feedreader
     feh
     ffmpeg
     firefox
