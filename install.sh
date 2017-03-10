@@ -19,6 +19,7 @@ packages=(arandr
     autoconf
     autocutsel
     automake
+    ark
     bridge-utils
     cairo
     ctags
