@@ -15,13 +15,14 @@
 # ss is netstat equivalent
 # network-manager-applet run nm-applet
 packages=(arandr
+    ark
     asciidoc
     autoconf
     autocutsel
     automake
-    ark
     bridge-utils
     cairo
+    calibre
     ctags
     cups
     deluge
