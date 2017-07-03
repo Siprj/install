@@ -44,6 +44,8 @@ packages=(arandr
     graphviz
     gwenview
     hicolor-icon-theme
+    hunspell
+    hunspell-en
     iptables
     jq
     keepassx
@@ -140,7 +142,7 @@ else
     (cd ~/xmonadrc && stack setup && stack install)
 fi
 
-stack install xmobar --flag xmobar:with_alsa
+(cd ~/xmonadrc && stack install xmobar --flag xmobar:with_alsa)
 
 # setup stalonetray
 cat > ~/.stalonetrayrc <<EOF
