@@ -55,6 +55,7 @@ packages=(arandr
     lib32-freetype2
     libxft
     libzip
+    linux-headers
     lyx
     make
     moc
@@ -132,7 +133,6 @@ EOF'
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
-# TODO: install my xmonad configuration
 # TODO: install my vim configuration
 
 if [ -d ~/xmonadrc ]; then
