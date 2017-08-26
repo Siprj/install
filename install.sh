@@ -50,6 +50,7 @@ packages=(arandr
     jq
     keepassx
     konsole
+    kdiff3
     lib32-cairo
     lib32-fontconfig
     lib32-freetype2
