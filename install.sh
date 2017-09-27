@@ -31,7 +31,6 @@ packages=(arandr
     dnsmasq
     evince
     feh
-    ffmpeg
     firefox
     firewalld
     fontconfig
@@ -143,7 +142,21 @@ else
     (cd ~/xmonadrc && stack setup && stack install)
 fi
 
-(cd ~/xmonadrc && stack install xmobar --flag xmobar:with_alsa)
+(cd ~/xmonadrc \
+    && stack install xmobar --flag xmobar:with_alsa \
+    && stack install fast-tags \
+)
+
+if [ ! -d ~/Programing/ ]; then
+    mkdir -p ~/Programing/
+fi
+
+if [ -d ~/Programing/haskell-ide-engine/ ]; then
+    (cd ~/Programing/haskell-ide-engine/ && git pull --rebase)
+else
+    (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
+fi
+(cd ~/Programing/haskell-ide-engine/ && stack setup && stack install)
 
 # setup stalonetray
 cat > ~/.stalonetrayrc <<EOF
@@ -284,6 +297,7 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 source /usr/share/bash-completion/completions/stack
+alias vim="nvim"
 EOF
 
 # Set git behaviour
