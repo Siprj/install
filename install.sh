@@ -23,6 +23,7 @@ packages=(arandr
     bridge-utils
     cairo
     calibre
+    xsel
     ctags
     cups
     deluge

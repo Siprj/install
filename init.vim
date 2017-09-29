@@ -63,6 +63,7 @@ Plug 'tpope/vim-commentary'
 Plug 'godlygeek/tabular'
 Plug 'michaeljsmith/vim-indent-object'
 Plug 'easymotion/vim-easymotion'
+" TODO, FIX: Need additional setup
 Plug 'ConradIrwin/vim-bracketed-paste'
 
 " Haskell
@@ -159,11 +160,6 @@ nnoremap <leader>mo :set mouse=<cr>
 " Default to mouse mode off
 set mouse=
 
-" Change cursor shape between insert and normal mode in iTerm2.app
-if $TERM_PROGRAM =~ "iTerm"
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7" " Vertical bar in insert mode
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7" " Block in normal mode
-endif
 " }}}
 
 " Colors and Fonts {{{
@@ -231,7 +227,7 @@ set expandtab
 " Be smart when using tabs ;)
 set smarttab
 
-" 1 tab == 2 spaces
+" 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
 
@@ -333,9 +329,9 @@ set laststatus=2
 
 " Utility function to delete trailing white space
 func! DeleteTrailingWS()
-  exe "normal mz"
-  %s/\s\+$//ge
-  exe "normal `z"
+    let l:save = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:save)
 endfunc
 
 autocmd FileType c,cpp,java,haskell,javascript autocmd BufWritePre <buffer> :call DeleteTrailingWS
@@ -427,6 +423,39 @@ set tags=tags;/
 set cst
 set csverb
 
+" Tagbar setup
+let g:tagbar_type_haskell = {
+    \ 'ctagsbin'  : 'fast-tags',
+    \ 'ctagsargs' : '-o -',
+    \ 'kinds'     : [
+        \  'm:modules:0:1',
+        \  'd:data: 0:1',
+        \  'd_gadt: data gadt:0:1',
+        \  't:type names:0:1',
+        \  'nt:new types:0:1',
+        \  'c:classes:0:1',
+        \  'cons:constructors:1:1',
+        \  'c_gadt:constructor gadt:1:1',
+        \  'c_a:constructor accessors:1:1',
+        \  'f:function types:0:1',
+        \  'o:others:0:1'
+    \ ],
+    \ 'sro'        : '.',
+    \ 'kind2scope' : {
+        \ 'm' : 'module',
+        \ 'c' : 'class',
+        \ 'd' : 'data',
+        \ 't' : 'type'
+    \ },
+    \ 'scope2kind' : {
+        \ 'module' : 'm',
+        \ 'class'  : 'c',
+        \ 'data'   : 'd',
+        \ 'type'   : 't'
+    \ }
+\ }
+
+
 " }}}
 
 " Git {{{
@@ -487,38 +516,7 @@ let g:SuperTabDefaultCompletionType = '<c-x><c-p>'
 
 set colorcolumn=80
 
-" Tagbar setup
-
-let g:tagbar_type_haskell = {
-    \ 'ctagsbin'  : 'fast-tags',
-    \ 'ctagsargs' : '-o -',
-    \ 'kinds'     : [
-        \  'm:modules:0:1',
-        \  'd:data: 0:1',
-        \  'd_gadt: data gadt:0:1',
-        \  't:type names:0:1',
-        \  'nt:new types:0:1',
-        \  'c:classes:0:1',
-        \  'cons:constructors:1:1',
-        \  'c_gadt:constructor gadt:1:1',
-        \  'c_a:constructor accessors:1:1',
-        \  'f:function types:0:1',
-        \  'o:others:0:1'
-    \ ],
-    \ 'sro'        : '.',
-    \ 'kind2scope' : {
-        \ 'm' : 'module',
-        \ 'c' : 'class',
-        \ 'd' : 'data',
-        \ 't' : 'type'
-    \ },
-    \ 'scope2kind' : {
-        \ 'module' : 'm',
-        \ 'class'  : 'c',
-        \ 'data'   : 'd',
-        \ 'type'   : 't'
-    \ }
-\ }
+" LSP Client {{{
 
 let g:LanguageClient_serverCommands = {
     \ 'haskell': ['hie --lsp'],
@@ -526,3 +524,5 @@ let g:LanguageClient_serverCommands = {
 
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
+
+" }}}
