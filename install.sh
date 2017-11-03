@@ -49,6 +49,7 @@ packages=(arandr
     iptables
     jq
     keepassx
+    wget
     konsole
     kdiff3
     lib32-cairo
@@ -107,6 +108,8 @@ packages=(arandr
 sudo pacman -Sy
 sudo pacman -Sy --needed ${packages[@]}
 
+sudo systemctl enable NetworkManager.service
+
 pacman -Q packer || apacmna -S --noconfirm packer
 pacman -Q dropbox || packer -S dropbox
 pacman -Q google-chrome || packer -S google-chrome
@@ -115,7 +118,6 @@ pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 pacman -Q xflux || packer -S xflux
-pacman -Q feedreader || packer -S feedreader
 
 sudo systemctl enable libvirtd
 
@@ -137,15 +139,15 @@ pacman -Q nano &> /dev/null && sudo pacman -R nano
 # TODO: install my vim configuration
 
 if [ -d ~/xmonadrc ]; then
-    (cd ~/xmonadrc && git pull --rebase && stack setup && stack install)
+    (cd ~/xmonadrc && git pull --rebase && stack setup && stack install --ghc-build nopie --install-ghc)
 else
     (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
     (cd ~/xmonadrc && stack setup && stack install)
 fi
 
 (cd ~/xmonadrc \
-    && stack install xmobar --flag xmobar:with_alsa \
-    && stack install fast-tags \
+    && stack install --ghc-build nopie --install-ghc xmobar --flag xmobar:with_alsa \
+    && stack install --ghc-build nopie --install-ghc fast-tags \
 )
 
 if [ ! -d ~/Programing/ ]; then
@@ -330,6 +332,7 @@ TabBarVisibility=ShowTabBarWhenNeeded
 EOF
 
 
+mkdir -p ~/.local/share/konsole
 cat > ~/.local/share/konsole/my.colorscheme <<EOF
 [Background]
 Color=0,16,21
