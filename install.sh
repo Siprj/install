@@ -1,5 +1,7 @@
 #!/bin/bash -xe
 
+PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Application nmtui is ncurse network manager part of the network-manager package.
 # PDF viewer evince or okular
 # Printer CUPS
@@ -442,3 +444,11 @@ UseFontLineChararacters=false
 Name=Profile1
 Parent=FALLBACK/
 EOF
+
+# Instal vim-plug and configure vim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+mkdir -p ~/.config/nvim/
+cp ${PROG_DIR}/init.vim ~/.config/nvim/
+nvim -E -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
