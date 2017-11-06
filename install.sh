@@ -23,6 +23,7 @@ packages=(arandr
     bridge-utils
     cairo
     calibre
+    dolphin
     xsel
     ctags
     cups
