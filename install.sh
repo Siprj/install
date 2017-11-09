@@ -106,6 +106,8 @@ packages=(arandr
     xorg-xmessage
     xterm
     zsh
+    python2-neovim
+    python-neovim
     )
 
 sudo pacman -Sy
@@ -308,6 +310,7 @@ EOF
 
 # Set git behaviour
 git config --global commit.verbose true
+git config --global core.editro nvim
 
 # Configure konsole
 cat > ~/.config/konsolerc <<EOF
