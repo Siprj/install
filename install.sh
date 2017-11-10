@@ -27,7 +27,6 @@ packages=(arandr
     calibre
     dolphin
     xsel
-    ctags
     cups
     deluge
     dia
@@ -123,6 +122,7 @@ pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 pacman -Q xflux || packer -S xflux
+pacman -Q universal-ctags-git || packer -S universal-ctags-git
 
 sudo systemctl enable libvirtd
 
