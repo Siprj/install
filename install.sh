@@ -107,6 +107,7 @@ packages=(arandr
     zsh
     python2-neovim
     python-neovim
+    texlive-latexextra
     )
 
 sudo pacman -Sy
