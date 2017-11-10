@@ -85,7 +85,6 @@ packages=(arandr
     scrot
     slock
     sox
-    stack
     stalonetray
     steam
     teamspeak3
@@ -114,6 +113,8 @@ sudo pacman -Sy
 sudo pacman -Sy --needed ${packages[@]}
 
 sudo systemctl enable NetworkManager.service
+
+which stack || curl -sSL https://get.haskellstack.org/ | sh
 
 pacman -Q packer || apacmna -S --noconfirm packer
 pacman -Q dropbox || packer -S dropbox
@@ -145,7 +146,7 @@ pacman -Q nano &> /dev/null && sudo pacman -R nano
 # TODO: install my vim configuration
 
 if [ -d ~/xmonadrc ]; then
-    (cd ~/xmonadrc && git pull --rebase && stack setup && stack install --ghc-build nopie --install-ghc)
+    (cd ~/xmonadrc && git pull --rebase && stack setup --ghc-build nopie && stack install --ghc-build nopie --install-ghc)
 else
     (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
     (cd ~/xmonadrc && stack setup && stack install)
@@ -305,7 +306,6 @@ cat > ~/.oh-my-zsh/custom/load-bash-completition.zsh <<EOF
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
-source /usr/share/bash-completion/completions/stack
 alias vim="nvim"
 EOF
 
