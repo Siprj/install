@@ -25,13 +25,12 @@ packages=(arandr
     bridge-utils
     cairo
     calibre
-    dolphin
-    xsel
     cups
     deluge
     dia
     dmenu
     dnsmasq
+    dolphin
     evince
     feh
     firefox
@@ -50,10 +49,9 @@ packages=(arandr
     hunspell-en
     iptables
     jq
-    keepassx
-    wget
-    konsole
     kdiff3
+    keepassx
+    konsole
     lib32-cairo
     lib32-fontconfig
     lib32-freetype2
@@ -74,6 +72,8 @@ packages=(arandr
     oxygen-icons-svg
     pkg-config
     pulseaudio
+    python2-neovim
+    python-neovim
     qemu
     qt5
     qt5ct
@@ -91,6 +91,7 @@ packages=(arandr
     teamspeak3
     texlive-core
     texlive-langgreek
+    texlive-latexextra
     thunderbird
     tree
     unrar
@@ -99,15 +100,14 @@ packages=(arandr
     virt-manager
     vlc
     vpnc
+    wget
     wireshark-gtk
     xautolock
     xorg-xev
     xorg-xmessage
+    xsel
     xterm
     zsh
-    python2-neovim
-    python-neovim
-    texlive-latexextra
     )
 
 sudo pacman -Sy
