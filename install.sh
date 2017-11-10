@@ -128,6 +128,11 @@ pacman -Q universal-ctags-git || packer -S universal-ctags-git
 
 sudo systemctl enable libvirtd
 
+# Disable beep...
+sudo bash -c 'cat > /etc/modprobe.d/nobeep.conf <<EOF
+blacklist pcspkr
+EOF'
+
 # Allow users in libvirt group to access system libvirt
 # Add your self to libvirt gropu with
 # > gpasswd -a USER_NAME libvirt
