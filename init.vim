@@ -230,6 +230,7 @@ set smarttab
 " 1 tab == 4 spaces
 set shiftwidth=4
 set tabstop=4
+autocmd Filetype cpp,c setlocal tabstop=2 shiftwidth=2
 
 " Linebreak on 500 characters
 set lbr
@@ -334,7 +335,7 @@ func! DeleteTrailingWS()
     call winrestview(l:save)
 endfunc
 
-autocmd FileType c,cpp,java,haskell,javascript autocmd BufWritePre <buffer> :call DeleteTrailingWS
+autocmd FileType c,cpp,java,haskell,javascript autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
 " }}}
 
