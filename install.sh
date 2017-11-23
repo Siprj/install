@@ -70,6 +70,7 @@ packages=(arandr
     openssh
     oxygen-icons
     oxygen-icons-svg
+    pavucontrol
     pkg-config
     pulseaudio
     python2-neovim
