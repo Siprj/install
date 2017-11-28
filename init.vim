@@ -69,8 +69,13 @@ Plug 'ConradIrwin/vim-bracketed-paste'
 " Haskell
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 
+" Purescript
+Plug 'purescript-contrib/purescript-vim'
+Plug 'FrigoEU/psc-ide-vim'
+
 "" Print types and check code
 "Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
+Plug 'vim-syntastic/syntastic'
 "" Autocompletions
 Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
@@ -527,3 +532,22 @@ let g:LanguageClient_serverCommands = {
 let g:LanguageClient_autoStart = 1
 
 " }}}
+
+" Purescript {{{
+let g:psc_ide_log_level = 3
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_error_symbol = '✗✗'
+let g:syntastic_style_error_symbol = '✠✠'
+let g:syntastic_warning_symbol = '∆∆'
+let g:syntastic_style_warning_symbol = '≈≈'
+
+"  }}}
