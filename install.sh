@@ -348,94 +348,94 @@ EOF
 mkdir -p ~/.local/share/konsole
 cat > ~/.local/share/konsole/my.colorscheme <<EOF
 [Background]
-Color=0,16,21
+Color=0,0,0
 
 [BackgroundFaint]
-Color=0,43,54
+Color=0,0,0
 
 [BackgroundIntense]
-Color=7,54,66
+Color=0,0,0
 
 [Color0]
 Color=3,28,34
 
 [Color0Faint]
-Color=6,48,59
+Color=24,24,24
 
 [Color0Intense]
-Color=0,43,54
+Color=104,104,104
 
 [Color1]
-Color=220,50,47
+Color=250,75,75
 
 [Color1Faint]
-Color=147,33,31
+Color=101,25,25
 
 [Color1Intense]
-Color=203,75,22
+Color=255,84,84
 
 [Color2]
 Color=133,153,0
 
 [Color2Faint]
-Color=94,106,0
+Color=0,101,0
 
 [Color2Intense]
-Color=88,110,117
+Color=84,255,84
 
 [Color3]
-Color=181,137,0
+Color=181,138,34
 
 [Color3Faint]
-Color=138,103,0
+Color=101,74,0
 
 [Color3Intense]
-Color=101,123,131
+Color=255,255,84
 
 [Color4]
 Color=38,139,210
 
 [Color4Faint]
-Color=20,77,115
+Color=0,0,101
 
 [Color4Intense]
-Color=131,148,150
+Color=84,84,255
 
 [Color5]
-Color=211,54,130
+Color=225,30,225
 
 [Color5Faint]
-Color=120,30,75
+Color=95,5,95
 
 [Color5Intense]
-Color=108,113,196
+Color=255,84,255
 
 [Color6]
-Color=42,161,152
+Color=24,178,178
 
 [Color6Faint]
-Color=24,94,88
+Color=0,101,101
 
 [Color6Intense]
-Color=147,161,161
+Color=84,255,255
 
 [Color7]
-Color=238,232,213
+Color=178,178,178
 
 [Color7Faint]
-Color=171,167,154
+Color=101,101,101
 
 [Color7Intense]
-Color=253,246,227
+Color=255,255,255
 
 [Foreground]
 Color=131,148,150
 
 [ForegroundFaint]
-Color=106,119,121
+Color=18,200,18
 
 [ForegroundIntense]
-Color=147,161,161
+Color=24,240,24
 
 [General]
 Description=my
