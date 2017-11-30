@@ -126,6 +126,7 @@ pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 pacman -Q xflux || packer -S xflux
 pacman -Q universal-ctags-git || packer -S universal-ctags-git
+pacman -Q trayer-srg || packer -S trayer-srg
 
 sudo systemctl enable libvirtd
 
@@ -174,26 +175,6 @@ else
 fi
 (cd ~/Programing/haskell-ide-engine/ && stack setup && stack install)
 
-# setup stalonetray
-cat > ~/.stalonetrayrc <<EOF
-decorations none
-transparent false
-dockapp_mode none
-geometry 5x1+1460+0
-max_geometry 5x1-295-10
-background "#000000"
-kludges force_icons_size
-grow_gravity NE
-icon_gravity NE
-icon_size 12
-sticky true
-#window_strut none
-window_type dock
-window_layer bottom
-#no_shrink false
-skip_taskbar true
-EOF
-
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
 # .xsession
@@ -202,7 +183,7 @@ xrdb ~/.Xresources
 
 # xsetroot -cursor_name left_ptr
 
-stalonetray &
+trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 5 --transparent true --tint 0x000000 --height 17 --monitor primary --alpha 0 &
 
 xautolock -time 20 -locker slock &
 
