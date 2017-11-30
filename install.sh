@@ -126,6 +126,7 @@ pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 pacman -Q xflux || packer -S xflux
 pacman -Q universal-ctags-git || packer -S universal-ctags-git
+pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
 pacman -Q trayer-srg || packer -S trayer-srg
 
 sudo systemctl enable libvirtd

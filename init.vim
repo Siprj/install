@@ -53,6 +53,8 @@ Plug 'int3/vim-extradite'
 
 " Bars, panels, and files
 Plug 'scrooloose/nerdtree'
+"" Nerd tree filetype highlighting
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'vim-airline/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
@@ -86,6 +88,9 @@ Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
 
 " Colorscheme
 Plug 'vim-scripts/wombat256.vim'
+
+" Icons
+Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -547,7 +552,24 @@ let g:syntastic_check_on_wq = 0
 
 let g:syntastic_error_symbol = '✗✗'
 let g:syntastic_style_error_symbol = '✠✠'
-let g:syntastic_warning_symbol = '∆∆'
+let g:syntastic_warning_symbol = ''
 let g:syntastic_style_warning_symbol = '≈≈'
+
+" Icon font
+set guifont=DroidSansMono_Nerd_Font:h15
+" Without this there is some '+' or '.' before file names
+autocmd FileType nerdtree setlocal nolist
+
+" NERDTree highlighting
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+
+" Change NERDTree icon appearance
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
 "  }}}
