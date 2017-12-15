@@ -174,7 +174,7 @@ if [ -d ~/Programing/haskell-ide-engine/ ]; then
 else
     (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
 fi
-(cd ~/Programing/haskell-ide-engine/ && stack setup && stack install)
+(cd ~/Programing/haskell-ide-engine/ && stack setup --ghc-build nopie && stack install --ghc-build nopie )
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
@@ -443,4 +443,4 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 
 mkdir -p ~/.config/nvim/
 cp ${PROG_DIR}/init.vim ~/.config/nvim/
-nvim -E -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
+nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
