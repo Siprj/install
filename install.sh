@@ -38,6 +38,7 @@ packages=(arandr
     fontconfig
     fping
     freetype2
+    bind-tools
     gcc-multilib
     git
     gitg
