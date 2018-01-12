@@ -22,6 +22,9 @@ packages=(arandr
     autoconf
     autocutsel
     automake
+    bind-tools
+    bluez
+    bluez-utils
     bridge-utils
     cairo
     calibre
@@ -38,7 +41,6 @@ packages=(arandr
     fontconfig
     fping
     freetype2
-    bind-tools
     gcc-multilib
     git
     gitg
