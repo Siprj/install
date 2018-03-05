@@ -38,6 +38,7 @@ packages=(arandr
     feh
     firefox
     firewalld
+    flashplugin
     fontconfig
     fping
     freetype2
@@ -120,17 +121,17 @@ sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
-pacman -Q packer || apacmna -S --noconfirm packer
+pacman -Q packer || yaourt -S --noconfirm packer
 pacman -Q dropbox || packer -S dropbox
 pacman -Q google-chrome || packer -S google-chrome
 pacman -Q openttd-openmsx || packer  -S openttd-openmsx
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
-pacman -Q par || packer  -S par
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
 pacman -Q xflux || packer -S xflux
 pacman -Q universal-ctags-git || packer -S universal-ctags-git
 pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
 pacman -Q trayer-srg || packer -S trayer-srg
+pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
 
 sudo systemctl enable libvirtd
 
@@ -157,10 +158,10 @@ pacman -Q nano &> /dev/null && sudo pacman -R nano
 # TODO: install my vim configuration
 
 if [ -d ~/xmonadrc ]; then
-    (cd ~/xmonadrc && git pull --rebase && stack setup --ghc-build nopie && stack install --ghc-build nopie --install-ghc)
+    (cd ~/xmonadrc && git pull --rebase && stack install --ghc-build nopie --install-ghc)
 else
     (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
-    (cd ~/xmonadrc && stack setup && stack install)
+    (cd ~/xmonadrc && stack install --ghc-build nopie)
 fi
 
 (cd ~/xmonadrc \
