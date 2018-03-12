@@ -33,6 +33,7 @@ packages=(arandr
     dia
     dmenu
     dnsmasq
+    docker
     dolphin
     evince
     feh
@@ -132,7 +133,7 @@ pacman -Q universal-ctags-git || packer -S universal-ctags-git
 pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
 pacman -Q trayer-srg || packer -S trayer-srg
 pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
-
+pacman -Q spotify || packer -S spotify
 sudo systemctl enable libvirtd
 
 # Disable beep...
