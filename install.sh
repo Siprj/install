@@ -39,6 +39,7 @@ packages=(arandr
     dnsmasq
     docker
     dolphin
+    dunst
     evince
     feh
     firefox
@@ -122,25 +123,27 @@ packages=(arandr
     )
 
 sudo pacman -Sy
-sudo pacman -Sy --needed ${packages[@]}
+sudo pacman -Sy --needed "${packages[@]}"
 
 sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
-pacman -Q packer || yaourt -S --noconfirm packer
+pacman -Q cquery-git || packer -S cquery-git
 pacman -Q dropbox || packer -S dropbox
 pacman -Q google-chrome || packer -S google-chrome
+pacman -Q libcurl-gnutls || packer -S libcurl-gnutls
+pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
+pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
 pacman -Q openttd-openmsx || packer  -S openttd-openmsx
+pacman -Q packer || yaourt -S --noconfirm packer
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
 pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
-pacman -Q xflux || packer -S xflux
-pacman -Q universal-ctags-git || packer -S universal-ctags-git
-pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
-pacman -Q trayer-srg || packer -S trayer-srg
-pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
-pacman -Q libcurl-gnutls || packer -S libcurl-gnutls
 pacman -Q spotify || packer -S spotify
+pacman -Q trayer-srg || packer -S trayer-srg
+pacman -Q universal-ctags-git || packer -S universal-ctags-git
+pacman -Q xflux || packer -S xflux
+
 sudo systemctl enable libvirtd
 
 # Disable beep...
@@ -201,6 +204,8 @@ trayer --edge top --align right --SetDockType true --SetPartialStrut true --expa
 xautolock -time 20 -locker slock &
 
 .screenlayout/two-monitors.sh
+
+dunst -conf install/dunstrc &
 
 dropbox start -i &
 
@@ -279,7 +284,7 @@ if [ ! -n "$ZSH" ]; then
 fi
 
 # Put stack bin path into path
-STACK_BIN_PATH="~/.local/bin"
+STACK_BIN_PATH="${HOME}/.local/bin"
 ZPROFILE="${HOME}/.zprofile"
 if [ -s "${ZPROFILE}" ]; then
     if grep "${STACK_BIN_PATH}" "${ZPROFILE}"; then
@@ -296,11 +301,11 @@ fi
 
 # Set zsh behaviour
 ZSHRC="${HOME}/.zshrc"
-sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" ${ZSHRC}
-sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" ${ZSHRC}
-sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" ${ZSHRC}
-sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" ${ZSHRC}
-sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\/dd\/yyyy\"/g" ${ZSHRC}
+sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" "${ZSHRC}"
+sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" "${ZSHRC}"
+sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" "${ZSHRC}"
+sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
+sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
 
 cat > ~/.oh-my-zsh/custom/load-bash-completition.zsh <<EOF
 autoload -U +X compinit && compinit
@@ -455,7 +460,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p ~/.config/nvim/
-cp ${PROG_DIR}/init.vim ~/.config/nvim/
+cp "${PROG_DIR}/init.vim" ~/.config/nvim/
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 # Set default applications
