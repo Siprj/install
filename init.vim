@@ -68,6 +68,9 @@ Plug 'easymotion/vim-easymotion'
 " TODO, FIX: Need additional setup
 Plug 'ConradIrwin/vim-bracketed-paste'
 
+" Doxygen
+Plug 'vim-scripts/DoxygenToolkit.vim'
+
 " Haskell
 Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 
@@ -78,8 +81,17 @@ Plug 'FrigoEU/psc-ide-vim'
 "" Print types and check code
 "Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'vim-syntastic/syntastic'
-"" Autocompletions
-Plug 'autozimu/LanguageClient-neovim', { 'do': ':UpdateRemotePlugins' }
+" Autocompletions
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
+
+" (Completion plugin option 2)
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 "Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 "Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
@@ -408,6 +420,20 @@ endfunction
 nmap <silent> <leader>f <ESC>:call ToggleFindNerd()<CR>
 nmap <silent> <leader>F <ESC>:NERDTreeToggle<CR>
 
+" Without this there is some '+' or '.' before file names
+autocmd FileType nerdtree setlocal nolist
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+
+" Change NERDTree icon appearance
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+
 " }}}
 
 " Alignment {{{
@@ -466,6 +492,11 @@ let g:tagbar_type_haskell = {
     \ }
 \ }
 
+" }}}
+
+" Deoplete {{{
+
+let g:deoplete#enable_at_startup = 0
 
 " }}}
 
@@ -530,16 +561,27 @@ set colorcolumn=80
 " LSP Client {{{
 
 let g:LanguageClient_serverCommands = {
-    \ 'haskell': ['hie --lsp'],
+    \ 'haskell': ['hie',  '--lsp'],
+    \ 'cpp': ['cquery', '--log-file=/tmp/cq.log']
 \ }
+let g:LanguageClient_loadSettings = 1
 
 " Automatically start language servers.
 let g:LanguageClient_autoStart = 1
+
+nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
+nnoremap <silent> <leader>z :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <leader>x :call LanguageClient_textDocument_documentSymbol()<CR>
+nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
 
 " }}}
 
 " Purescript {{{
 let g:psc_ide_log_level = 3
+
+" }}}
+
+" Syntastic {{{
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -547,29 +589,35 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
 
 let g:syntastic_error_symbol = '✗✗'
 let g:syntastic_style_error_symbol = '✠✠'
 let g:syntastic_warning_symbol = ''
 let g:syntastic_style_warning_symbol = '≈≈'
 
-" Icon font
+let g:syntastic_loc_list_height=3
+
+let g:syntastic_check_on_open = 0
+
+"disable syntastic on a per buffer basis (some work files blow it up)
+function! SyntasticDisableBuffer()
+    let b:syntastic_skip_checks = 1
+    SyntasticReset
+endfunction
+
+command! SyntasticDisableBuffer call SyntasticDisableBuffer()
+
+autocmd Filetype cpp,c SyntasticDisableBuffer
+
+" }}}
+
+" Icons {{{
+
 set guifont=DroidSansMono_Nerd_Font:h15
-" Without this there is some '+' or '.' before file names
-autocmd FileType nerdtree setlocal nolist
-
-" NERDTree highlighting
-let g:NERDTreeFileExtensionHighlightFullName = 1
-let g:NERDTreeExactMatchHighlightFullName = 1
-let g:NERDTreePatternMatchHighlightFullName = 1
-
-let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
-
-" Change NERDTree icon appearance
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
 "  }}}
+
+set exrc
+set secure
