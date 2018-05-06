@@ -54,6 +54,7 @@ packages=(arandr
     hunspell-en
     iptables
     jq
+    kate
     kdiff3
     keepassx
     konsole
@@ -133,6 +134,7 @@ pacman -Q universal-ctags-git || packer -S universal-ctags-git
 pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
 pacman -Q trayer-srg || packer -S trayer-srg
 pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
+pacman -Q libcurl-gnutls || packer -S libcurl-gnutls
 pacman -Q spotify || packer -S spotify
 sudo systemctl enable libvirtd
 
