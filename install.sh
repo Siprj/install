@@ -16,12 +16,16 @@ PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # autocutsel synchronize clipboards
 # ss is netstat equivalent
 # network-manager-applet run nm-applet
+# recoll document indexing
 packages=(arandr
     ark
     asciidoc
     autoconf
     autocutsel
     automake
+    aspell
+    aspell-cs
+    aspell-en
     bind-tools
     bluez
     bluez-utils
@@ -88,6 +92,7 @@ packages=(arandr
     qtcreator
     quassel-client
     rdesktop
+    recoll
     sane
     scrot
     slock
@@ -306,7 +311,8 @@ EOF
 
 # Set git behaviour
 git config --global commit.verbose true
-git config --global core.editro nvim
+git config --global core.editor nvim
+git config --global rebase.autosquash true
 
 # Configure konsole
 cat > ~/.config/konsolerc <<EOF
@@ -451,3 +457,8 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 mkdir -p ~/.config/nvim/
 cp ${PROG_DIR}/init.vim ~/.config/nvim/
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
+
+# Set default applications
+
+xdg-mime default org.kde.dolphin.desktop inode/directory
+xdg-mime default org.kde.okular.desktop application/pdf
