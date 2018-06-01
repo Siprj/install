@@ -357,7 +357,7 @@ func! DeleteTrailingWS()
     call winrestview(l:save)
 endfunc
 
-autocmd FileType c,cpp,java,haskell,javascript autocmd BufWritePre <buffer> :call DeleteTrailingWS()
+autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
 " }}}
 
@@ -562,7 +562,8 @@ set colorcolumn=80
 
 let g:LanguageClient_serverCommands = {
     \ 'haskell': ['hie',  '--lsp'],
-    \ 'cpp': ['cquery', '--log-file=/tmp/cq.log']
+    \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'python': ['pyls']
 \ }
 let g:LanguageClient_loadSettings = 1
 
@@ -573,6 +574,7 @@ nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> <leader>z :call LanguageClient_textDocument_definition()<CR>
 nnoremap <silent> <leader>x :call LanguageClient_textDocument_documentSymbol()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 
 " }}}
 
