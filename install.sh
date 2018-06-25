@@ -122,27 +122,27 @@ packages=(arandr
     zsh
     )
 
-sudo pacman -Sy
-sudo pacman -Sy --needed "${packages[@]}"
+sudo pacman -Sy --noconfirm
+sudo pacman -Sy --needed "${packages[@]}" --noconfirm
 
 sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
-pacman -Q cquery-git || packer -S cquery-git
-pacman -Q dropbox || packer -S dropbox
-pacman -Q google-chrome || packer -S google-chrome
-pacman -Q libcurl-gnutls || packer -S libcurl-gnutls
-pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs
-pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete
-pacman -Q openttd-openmsx || packer  -S openttd-openmsx
-pacman -Q packer || yaourt -S --noconfirm packer
-pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git
-pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop
-pacman -Q spotify || packer -S spotify
-pacman -Q trayer-srg || packer -S trayer-srg
-pacman -Q universal-ctags-git || packer -S universal-ctags-git
-pacman -Q xflux || packer -S xflux
+pacman -Q cquery-git || packer -S cquery-git --noedit --noconfirm
+pacman -Q dropbox || packer -S dropbox  --noedit --noconfirm
+pacman -Q google-chrome || packer -S google-chrome  --noedit --noconfirm
+pacman -Q libcurl-gnutls || packer -S libcurl-gnutls --noedit --noconfirm
+pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs --noedit --noconfirm
+pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete --noedit --noconfirm
+pacman -Q openttd-openmsx || packer  -S openttd-openmsx --noedit --noconfirm
+pacman -Q packer || yaourt -S --noconfirm packer --noedit --noconfirm
+pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git --noedit --noconfirm
+pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop --noedit --noconfirm
+pacman -Q spotify || packer -S spotify --noedit --noconfirm
+pacman -Q trayer-srg || packer -S trayer-srg --noedit --noconfirm
+pacman -Q universal-ctags-git || packer -S universal-ctags-git --noedit --noconfirm
+pacman -Q xflux || packer -S xflux --noedit --noconfirm
 
 sudo systemctl enable libvirtd
 
@@ -163,6 +163,7 @@ polkit.addRule(function(action, subject) {
 });
 EOF'
 
+sudo usermod --append --groups libvirt `whoami`
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
@@ -189,7 +190,7 @@ if [ -d ~/Programing/haskell-ide-engine/ ]; then
 else
     (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
 fi
-(cd ~/Programing/haskell-ide-engine/ && stack setup --ghc-build nopie && stack install --ghc-build nopie )
+(cd ~/Programing/haskell-ide-engine/ && make)
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
