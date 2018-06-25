@@ -1,4 +1,4 @@
-" HVN paths {{{
+" General stuff {{{
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -6,15 +6,8 @@ set history=700
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
-if ! exists("mapleader")
-  let mapleader = ","
-endif
-
-if ! exists("g:mapleader")
-  let g:mapleader = ","
-endif
+let mapleader = ","
+let g:mapleader = ","
 
 " Leader key timeout
 set tm=2000
@@ -32,17 +25,16 @@ nnoremap Q <nop>
 " Make <c-h> work like <c-h> again (this is a problem with libterm)
 nnoremap <BS> <C-w>h
 
+set noshowmode
+
 " }}}
 
 " vim-plug {{{
-
-set nocompatible
 
 call plug#begin('~/.config/nvim/bundle')
 
 " Support bundles
 "Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'ervandew/supertab'
 "Plug 'benekastah/neomake'
 
 "Plug 'nathanaelkane/vim-indent-guides'
@@ -78,9 +70,10 @@ Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'purescript-contrib/purescript-vim'
 Plug 'FrigoEU/psc-ide-vim'
 
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
 "" Print types and check code
 "Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
-Plug 'vim-syntastic/syntastic'
 " Autocompletions
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -91,12 +84,11 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'junegunn/fzf'
 
 " (Completion plugin option 2)
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 "Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 "Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 "Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
 "" (Optional) Showing function signature and inline doc.
-"Plug 'Shougo/echodoc.vim'
+Plug 'Shougo/echodoc.vim'
 
 " Colorscheme
 Plug 'vim-scripts/wombat256.vim'
@@ -218,6 +210,7 @@ endif
 
 let g:airline_powerline_fonts = 1
 let g:airline_symbols.space = "\ua0"
+
 " }}}
 
 " Files, backups and undo {{{
@@ -453,7 +446,6 @@ map <leader>ap :Align
 
 " Tags {{{
 
-"" TODO: Think about this one
 map <leader>tt :TagbarToggle<CR>
 
 set tags=tags;/
@@ -494,12 +486,6 @@ let g:tagbar_type_haskell = {
 
 " }}}
 
-" Deoplete {{{
-
-let g:deoplete#enable_at_startup = 0
-
-" }}}
-
 " Git {{{
 
 let g:extradite_width = 60
@@ -537,13 +523,19 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 
 " }}}
 
-" Completion {{{
+" Deoplete {{{
+"
 set completeopt+=longest
 
-" Use buffer words as default tab completion
-let g:SuperTabDefaultCompletionType = '<c-x><c-p>'
+" use tab to forward cycle
+inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" use tab to backward cycle
+inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+
+let g:deoplete#enable_at_startup = 1
 
 " }}}
+
 
 " Indent Guides {{{
 
@@ -561,7 +553,7 @@ set colorcolumn=80
 " LSP Client {{{
 
 let g:LanguageClient_serverCommands = {
-    \ 'haskell': ['hie',  '--lsp'],
+    \ 'haskell': ['hie-wrapper',  '--lsp'],
     \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
     \ 'python': ['pyls']
 \ }
@@ -579,39 +571,8 @@ nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " }}}
 
 " Purescript {{{
+
 let g:psc_ide_log_level = 3
-
-" }}}
-
-" Syntastic {{{
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-
-let g:syntastic_error_symbol = '✗✗'
-let g:syntastic_style_error_symbol = '✠✠'
-let g:syntastic_warning_symbol = ''
-let g:syntastic_style_warning_symbol = '≈≈'
-
-let g:syntastic_loc_list_height=3
-
-let g:syntastic_check_on_open = 0
-
-"disable syntastic on a per buffer basis (some work files blow it up)
-function! SyntasticDisableBuffer()
-    let b:syntastic_skip_checks = 1
-    SyntasticReset
-endfunction
-
-command! SyntasticDisableBuffer call SyntasticDisableBuffer()
-
-autocmd Filetype cpp,c SyntasticDisableBuffer
 
 " }}}
 
@@ -620,6 +581,3 @@ autocmd Filetype cpp,c SyntasticDisableBuffer
 set guifont=DroidSansMono_Nerd_Font:h15
 
 "  }}}
-
-set exrc
-set secure
