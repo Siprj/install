@@ -33,11 +33,9 @@ set noshowmode
 
 call plug#begin('~/.config/nvim/bundle')
 
-" Support bundles
-"Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-"Plug 'benekastah/neomake'
-
-"Plug 'nathanaelkane/vim-indent-guides'
+Plug 'thaerkh/vim-indentguides'
+"" Possible alternative
+" Plug 'Yggdroot/indentLine'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -51,13 +49,11 @@ Plug 'vim-airline/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 
-" .... Undo tree
-Plug 'tpope/vim-commentary'
+Plug 'mbbill/undotree'
 
+Plug 'tpope/vim-commentary'
 Plug 'godlygeek/tabular'
-Plug 'michaeljsmith/vim-indent-object'
 Plug 'easymotion/vim-easymotion'
-" TODO, FIX: Need additional setup
 Plug 'ConradIrwin/vim-bracketed-paste'
 
 " Doxygen
@@ -71,9 +67,8 @@ Plug 'purescript-contrib/purescript-vim'
 Plug 'FrigoEU/psc-ide-vim'
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/echodoc.vim'
 
-"" Print types and check code
-"Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 " Autocompletions
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -82,13 +77,6 @@ Plug 'autozimu/LanguageClient-neovim', {
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
-
-" (Completion plugin option 2)
-"Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
-"Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
-"Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
-"" (Optional) Showing function signature and inline doc.
-Plug 'Shougo/echodoc.vim'
 
 " Colorscheme
 Plug 'vim-scripts/wombat256.vim'
@@ -537,14 +525,9 @@ let g:deoplete#enable_at_startup = 1
 " }}}
 
 
-" Indent Guides {{{
+" Indent Line {{{
 
-"let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-"let g:indent_guides_enable_on_vim_startup = 1
-"let g:indent_guides_start_level = 1
-"let g:indent_guides_guide_size = 1
+"let g:indentLine_char = '┆'
 
 " }}}
 
