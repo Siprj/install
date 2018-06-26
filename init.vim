@@ -554,7 +554,7 @@ set colorcolumn=80
 
 let g:LanguageClient_serverCommands = {
     \ 'haskell': ['hie-wrapper',  '--lsp'],
-    \ 'cpp': ['cquery', '--log-file=/tmp/cq.log'],
+    \ 'cpp': ['cquery'],
     \ 'python': ['pyls']
 \ }
 let g:LanguageClient_loadSettings = 1
