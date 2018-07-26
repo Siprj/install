@@ -93,6 +93,8 @@ packages=(arandr
     qtcreator
     quassel-client
     rdesktop
+    remmina
+    freerdp
     recoll
     sane
     scrot
@@ -138,7 +140,6 @@ pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete --noedit --noconf
 pacman -Q openttd-openmsx || packer  -S openttd-openmsx --noedit --noconfirm
 pacman -Q packer || yaourt -S --noconfirm packer --noedit --noconfirm
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git --noedit --noconfirm
-pacman -Q remmina-plugin-rdesktop || packer -S remmina-plugin-rdesktop --noedit --noconfirm
 pacman -Q spotify || packer -S spotify --noedit --noconfirm
 pacman -Q trayer-srg || packer -S trayer-srg --noedit --noconfirm
 pacman -Q universal-ctags-git || packer -S universal-ctags-git --noedit --noconfirm
