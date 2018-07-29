@@ -75,7 +75,6 @@ packages=(arandr
     nautilus
     networkmanager
     network-manager-applet
-    nfs-utils
     okular
     openbsd-netcat
     openssh
