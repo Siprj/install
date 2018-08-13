@@ -17,15 +17,17 @@ PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # ss is netstat equivalent
 # network-manager-applet run nm-applet
 # recoll document indexing
+# anki flash cards
 packages=(arandr
+    anki
     ark
     asciidoc
-    autoconf
-    autocutsel
-    automake
     aspell
     aspell-cs
     aspell-en
+    autoconf
+    autocutsel
+    automake
     bind-tools
     bluez
     bluez-utils
@@ -468,3 +470,5 @@ nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 xdg-mime default org.kde.dolphin.desktop inode/directory
 xdg-mime default org.kde.okular.desktop application/pdf
+xdg-mime default firefox.desktop x-scheme-handler/http
+xdg-mime default firefox.desktop x-scheme-handler/https
