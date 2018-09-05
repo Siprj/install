@@ -18,15 +18,16 @@ PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # network-manager-applet run nm-applet
 # recoll document indexing
 # anki flash cards
-packages=(arandr
+declare -a packages=(
+    arandr
     anki
     ark
     asciidoc
-    aspell
-    aspell-cs
-    aspell-en
+#    aspell
+#    aspell-cs
+#    aspell-en
     autoconf
-    autocutsel
+#    autocutsel
     automake
     bind-tools
     bluez
@@ -38,11 +39,11 @@ packages=(arandr
     deluge
     dia
     dmenu
-    dnsmasq
+#    dnsmasq
     docker
     dolphin
     dunst
-    evince
+#    evince
     feh
     firefox
     firewalld
@@ -53,12 +54,12 @@ packages=(arandr
     gcc-multilib
     git
     gitg
-    gnome-logs
+#    gnome-logs
     graphviz
     gwenview
-    hicolor-icon-theme
+#    hicolor-icon-theme
     hunspell
-    hunspell-en
+    hunspell-en_GB
     iptables
     jq
     kate
@@ -73,6 +74,7 @@ packages=(arandr
     linux-headers
     lyx
     make
+# Audio player
     moc
     nautilus
     networkmanager
@@ -97,11 +99,11 @@ packages=(arandr
     remmina
     freerdp
     recoll
+    # Scanner app
     sane
     scrot
     slock
     sox
-    stalonetray
     steam
     teamspeak3
     texlive-core
@@ -111,7 +113,7 @@ packages=(arandr
     tree
     unrar
     unzip
-    vifm
+#    vifm
     virt-manager
     vlc
     vpnc
@@ -121,7 +123,7 @@ packages=(arandr
     xorg-xev
     xorg-xmessage
     xsel
-    xterm
+#    xterm
     zsh
     )
 
@@ -132,14 +134,13 @@ sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
+pacman -Q packer || yaourt -S packer --noedit --noconfirm
 pacman -Q cquery-git || packer -S cquery-git --noedit --noconfirm
 pacman -Q dropbox || packer -S dropbox  --noedit --noconfirm
 pacman -Q google-chrome || packer -S google-chrome  --noedit --noconfirm
 pacman -Q libcurl-gnutls || packer -S libcurl-gnutls --noedit --noconfirm
 pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs --noedit --noconfirm
 pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete --noedit --noconfirm
-pacman -Q openttd-openmsx || packer  -S openttd-openmsx --noedit --noconfirm
-pacman -Q packer || yaourt -S --noconfirm packer --noedit --noconfirm
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git --noedit --noconfirm
 pacman -Q spotify || packer -S spotify --noedit --noconfirm
 pacman -Q trayer-srg || packer -S trayer-srg --noedit --noconfirm
