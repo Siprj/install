@@ -244,12 +244,12 @@ set si "Smart indent
 set wrap "Wrap lines
 
 " Copy and paste to os clipboard
-nmap <leader>y "*y
-vmap <leader>y "*y
-nmap <leader>d "*d
-vmap <leader>d "*d
-nmap <leader>p "*p
-vmap <leader>p "*p
+nmap <leader>y "+y
+vmap <leader>y "+y
+nmap <leader>d "+d
+vmap <leader>d "+d
+nmap <leader>p "+p
+vmap <leader>p "+p
 
 " }}}
 
@@ -267,11 +267,6 @@ vnoremap <silent> # :call VisualSelection('b', '')<CR>
 " Treat long lines as break lines (useful when moving around in them)
 nnoremap j gj
 nnoremap k gk
-
-noremap <c-h> <c-w>h
-noremap <c-k> <c-w>k
-noremap <c-j> <c-w>j
-noremap <c-l> <c-w>l
 
 " Disable highlight when <leader><cr> is pressed
 " but preserve cursor coloring
@@ -300,12 +295,6 @@ set hidden
 " previous buffer, next buffer
 nnoremap <leader>bp :bp<cr>
 nnoremap <leader>bn :bn<cr>
-
-" close every window in current tabview but the current
-nnoremap <leader>bo <c-w>o
-
-" delete buffer without closing pane
-noremap <leader>bd :Bd<cr>
 
 " fuzzy find buffers
 noremap <leader>b<space> :CtrlPBuffer<cr>
@@ -339,6 +328,12 @@ func! DeleteTrailingWS()
 endfunc
 
 autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
+
+" }}}
+
+" {{{ undo tree
+
+nnoremap <F6> :UndotreeToggle<cr>
 
 " }}}
 
@@ -380,6 +375,15 @@ endfunction
 
 " }}}
 
+" Easy motion {{{
+
+map <leader>f <Plug>(easymotion-overwin-f)
+map <leader>F <Plug>(easymotion-overwin-F)
+map <leader>t <Plug>(easymotion-overwin-t)
+map <leader>T <Plug>(easymotion-overwin-T)
+
+" }}}
+
 " NERDTree {{{
 
 " Close nerdtree after a file is selected
@@ -397,11 +401,10 @@ function! ToggleFindNerd()
   endif
 endfunction
 
-" If nerd tree is closed, find current file, if open, close it
-nmap <silent> <leader>f <ESC>:call ToggleFindNerd()<CR>
-nmap <silent> <leader>F <ESC>:NERDTreeToggle<CR>
+" If nerd tree is closed, find current file, if open, close it/
+nmap <silent> <leader>o <ESC>:call ToggleFindNerd()<CR>
 
-" Without this there is some '+' or '.' before file names
+" Without this there are some '+' or '.' before file names.
 autocmd FileType nerdtree setlocal nolist
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
