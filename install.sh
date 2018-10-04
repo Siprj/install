@@ -52,16 +52,20 @@ declare -a packages=(
     fping
     freetype2
     gcc-multilib
+    gdb
     git
     gitg
 #    gnome-logs
     graphviz
     gwenview
 #    hicolor-icon-theme
+    htop
     hunspell
     hunspell-en_GB
     iptables
     jq
+# packer dependence
+    jshon
     kate
     kdiff3
     keepassx
@@ -134,7 +138,11 @@ sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
-pacman -Q packer || yaourt -S packer --noedit --noconfirm
+pacman -Q packer || (
+    wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer -O /tmp/PKGBUILD && \
+        cd /tmp/ && \
+        makepkg && \
+        sudo pacman -U packer-*.pkg.tar.xz)
 pacman -Q cquery-git || packer -S cquery-git --noedit --noconfirm
 pacman -Q dropbox || packer -S dropbox  --noedit --noconfirm
 pacman -Q google-chrome || packer -S google-chrome  --noedit --noconfirm
@@ -142,7 +150,7 @@ pacman -Q libcurl-gnutls || packer -S libcurl-gnutls --noedit --noconfirm
 pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs --noedit --noconfirm
 pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete --noedit --noconfirm
 pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git --noedit --noconfirm
-pacman -Q spotify || packer -S spotify --noedit --noconfirm
+# pacman -Q spotify || packer -S spotify --noedit --noconfirm
 pacman -Q trayer-srg || packer -S trayer-srg --noedit --noconfirm
 pacman -Q universal-ctags-git || packer -S universal-ctags-git --noedit --noconfirm
 pacman -Q xflux || packer -S xflux --noedit --noconfirm
@@ -167,6 +175,7 @@ polkit.addRule(function(action, subject) {
 EOF'
 
 sudo usermod --append --groups libvirt `whoami`
+sudo usermod --append --groups docker `whoami`
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
@@ -324,6 +333,7 @@ git config --global core.editor nvim
 git config --global rebase.autosquash true
 
 # Configure konsole
+mkdir -p ~/.config/
 cat > ~/.config/konsolerc <<EOF
 [Desktop Entry]
 DefaultProfile=Profile1.profile
