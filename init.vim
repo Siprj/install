@@ -66,14 +66,13 @@ Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'purescript-contrib/purescript-vim'
 Plug 'FrigoEU/psc-ide-vim'
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/echodoc.vim'
-
-" Autocompletions
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/echodoc.vim'
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
@@ -514,16 +513,47 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 
 " }}}
 
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
+    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
+    \ 'python': ['/usr/local/bin/pyls'],
+    \ 'cpp': ['clangd']
+    \ }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+nnoremap <silent> <leader>K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> <leader>gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
 " Deoplete {{{
 "
 set completeopt+=longest
 
+" Hide preview windows when it is no longer needed.
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+
 " use tab to forward cycle
-inoremap <silent><expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort ""
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction ""
+
 " use tab to backward cycle
 inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 
+
 let g:deoplete#enable_at_startup = 1
+
+call deoplete#custom#option({
+    \ 'max_abbr_width': 20,
+    \ 'max_menu_width': 80,
+    \ })
+
 
 " }}}
 
@@ -535,26 +565,6 @@ let g:deoplete#enable_at_startup = 1
 " }}}
 
 set colorcolumn=80
-
-" LSP Client {{{
-
-let g:LanguageClient_serverCommands = {
-    \ 'haskell': ['hie-wrapper',  '--lsp'],
-    \ 'cpp': ['cquery'],
-    \ 'python': ['pyls']
-\ }
-let g:LanguageClient_loadSettings = 1
-
-" Automatically start language servers.
-let g:LanguageClient_autoStart = 1
-
-nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
-nnoremap <silent> <leader>z :call LanguageClient_textDocument_definition()<CR>
-nnoremap <silent> <leader>x :call LanguageClient_textDocument_documentSymbol()<CR>
-nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()<CR>
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-
-" }}}
 
 " Purescript {{{
 

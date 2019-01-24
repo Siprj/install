@@ -44,6 +44,7 @@ declare -a packages=(
     dolphin
     dunst
 #    evince
+    expac
     feh
     firefox
     firewalld
@@ -143,7 +144,6 @@ pacman -Q packer || (
         cd /tmp/ && \
         makepkg && \
         sudo pacman -U packer-*.pkg.tar.xz)
-pacman -Q cquery-git || packer -S cquery-git --noedit --noconfirm
 pacman -Q dropbox || packer -S dropbox  --noedit --noconfirm
 pacman -Q google-chrome || packer -S google-chrome  --noedit --noconfirm
 pacman -Q libcurl-gnutls || packer -S libcurl-gnutls --noedit --noconfirm
