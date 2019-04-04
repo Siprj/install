@@ -66,13 +66,21 @@ Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
 Plug 'purescript-contrib/purescript-vim'
 Plug 'FrigoEU/psc-ide-vim'
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/echodoc.vim'
+" Plug 'autozimu/LanguageClient-neovim', {
+"     \ 'branch': 'next',
+"     \ 'do': 'bash install.sh',
+"     \ }
+
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'Shougo/echodoc.vim'
+
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+
+" Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
 
 " (Optional) Multi-entry selection UI.
 Plug 'junegunn/fzf'
@@ -526,36 +534,53 @@ nnoremap <silent> <leader>K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> <leader>gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
-" Deoplete {{{
-"
-set completeopt+=longest
-
-" Hide preview windows when it is no longer needed.
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-
-" use tab to forward cycle
-inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort ""
+" " Deoplete {{{
+" "
+" set completeopt+=longest
+" 
+" " Hide preview windows when it is no longer needed.
+" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+" 
+" " use tab to forward cycle
+" inoremap <silent><expr> <TAB>
+"     \ pumvisible() ? "\<C-n>" :
+"     \ <SID>check_back_space() ? "\<TAB>" :
+"     \ deoplete#mappings#manual_complete()
+" function! s:check_back_space() abort ""
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~ '\s'
+" endfunction ""
+" 
+" " use tab to backward cycle
+" inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+" 
+" 
+" let g:deoplete#enable_at_startup = 1
+" 
+" call deoplete#custom#option({
+"     \ 'max_abbr_width': 20,
+"     \ 'max_menu_width': 80,
+"     \ })
+" 
+" 
+" " }}}
+" autocmd BufEnter * call ncm2#enable_for_buffer()
+set completeopt=noinsert,menuone,noselect
+" use <tab> for trigger completion and navigate to next complete item
+function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~ '\s'
-endfunction ""
+endfunction
 
-" use tab to backward cycle
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
-
-let g:deoplete#enable_at_startup = 1
-
-call deoplete#custom#option({
-    \ 'max_abbr_width': 20,
-    \ 'max_menu_width': 80,
-    \ })
-
-
-" }}}
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 
 " Indent Line {{{

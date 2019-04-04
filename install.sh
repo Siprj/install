@@ -92,7 +92,6 @@ declare -a packages=(
     pavucontrol
     pkg-config
     pulseaudio
-    python2-neovim
     python-neovim
     qemu
     qt5
@@ -118,12 +117,11 @@ declare -a packages=(
     tree
     unrar
     unzip
-#    vifm
     virt-manager
     vlc
     vpnc
     wget
-    wireshark-gtk
+    wireshark-qt
     xautolock
     xorg-xev
     xorg-xmessage
@@ -179,19 +177,17 @@ sudo usermod --append --groups docker `whoami`
 # I hate nano.
 pacman -Q nano &> /dev/null && sudo pacman -R nano
 
-# TODO: install my vim configuration
-
 if [ -d ~/xmonadrc ]; then
-    (cd ~/xmonadrc && git pull --rebase && stack install --ghc-build nopie --install-ghc)
+    (cd ~/xmonadrc && git pull --rebase && stack install --install-ghc)
 else
     (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
-    (cd ~/xmonadrc && stack install --ghc-build nopie)
+    (cd ~/xmonadrc && stack install)
 fi
 
 (cd ~/xmonadrc \
-    && stack install --ghc-build nopie --install-ghc xmobar --flag xmobar:with_alsa \
-    && stack install --ghc-build nopie --install-ghc fast-tags \
+    && stack install --install-ghc xmobar --flag xmobar:with_alsa \
 )
+stack install --install-ghc fast-tags \
 
 if [ ! -d ~/Programing/ ]; then
     mkdir -p ~/Programing/
@@ -202,7 +198,7 @@ if [ -d ~/Programing/haskell-ide-engine/ ]; then
 else
     (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
 fi
-(cd ~/Programing/haskell-ide-engine/ && make)
+(cd ~/Programing/haskell-ide-engine/ && ./install.hs)
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
