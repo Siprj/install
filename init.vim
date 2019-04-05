@@ -68,14 +68,6 @@ Plug 'FrigoEU/psc-ide-vim'
 
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
-" Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
-
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'Shougo/echodoc.vim'
-
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 
@@ -117,7 +109,7 @@ if &listchars ==# 'eol:$'
 endif
 
 " Height of the command bar
-set cmdheight=1
+set cmdheight=2
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -521,50 +513,8 @@ nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
 
 " }}}
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'],
-    \ 'javascript': ['/usr/local/bin/javascript-typescript-stdio'],
-    \ 'python': ['/usr/local/bin/pyls'],
-    \ 'cpp': ['clangd']
-    \ }
+" {{{ coc
 
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-nnoremap <silent> <leader>K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> <leader>gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-" " Deoplete {{{
-" "
-" set completeopt+=longest
-" 
-" " Hide preview windows when it is no longer needed.
-" autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-" 
-" " use tab to forward cycle
-" inoremap <silent><expr> <TAB>
-"     \ pumvisible() ? "\<C-n>" :
-"     \ <SID>check_back_space() ? "\<TAB>" :
-"     \ deoplete#mappings#manual_complete()
-" function! s:check_back_space() abort ""
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~ '\s'
-" endfunction ""
-" 
-" " use tab to backward cycle
-" inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-" 
-" 
-" let g:deoplete#enable_at_startup = 1
-" 
-" call deoplete#custom#option({
-"     \ 'max_abbr_width': 20,
-"     \ 'max_menu_width': 80,
-"     \ })
-" 
-" 
-" " }}}
-" autocmd BufEnter * call ncm2#enable_for_buffer()
 set completeopt=noinsert,menuone,noselect
 " use <tab> for trigger completion and navigate to next complete item
 function! s:check_back_space() abort
@@ -581,6 +531,43 @@ inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+
+
+call coc#config('languageserver', {
+    \ "clangd": {
+    \   "command": "clangd",
+    \   "rootPatterns": ["compile_commands.json"],
+    \   "filetypes": ["c", "cpp", "h", "hpp"]
+    \ }
+    \})
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+nnoremap <F5> :CocList<CR>
+" Or map each action separately
+nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
+nmap <silent> <F2> <Plug>(coc-rename)
+
+nmap <silent> <leader>gd <Plug>(coc-definition)
+nmap <silent> <leader>gy <Plug>(coc-type-definition)
+nmap <silent> <leader>gi <Plug>(coc-implementation)
+nmap <silent> <leader>gr <Plug>(coc-references)
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+nmap <silent> <leader>< <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>> <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>c <Plug>(coc-fix-current)
+
+
+" }}} coc
 
 
 " Indent Line {{{
