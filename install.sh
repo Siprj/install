@@ -198,7 +198,7 @@ if [ -d ~/Programing/haskell-ide-engine/ ]; then
 else
     (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
 fi
-(cd ~/Programing/haskell-ide-engine/ && ./install.hs)
+(cd ~/Programing/haskell-ide-engine/ && ./install.hs build-all)
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF

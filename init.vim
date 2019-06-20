@@ -1,4 +1,32 @@
-" General stuff {{{
+
+call plug#begin('~/.config/nvim/bundle')
+
+Plug 'thaerkh/vim-indentguides'
+Plug 'tpope/vim-fugitive'
+Plug 'int3/vim-extradite'
+Plug 'scrooloose/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'vim-airline/vim-airline'
+Plug 'majutsushi/tagbar'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'mbbill/undotree'
+Plug 'easymotion/vim-easymotion'
+Plug 'ConradIrwin/vim-bracketed-paste'
+Plug 'vim-scripts/DoxygenToolkit.vim'
+Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
+Plug 'purescript-contrib/purescript-vim'
+Plug 'FrigoEU/psc-ide-vim'
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+Plug 'neoclide/coc-snippets'
+Plug 'ryanoasis/vim-devicons'
+" Plug 'jremmen/vim-ripgrep'
+
+Plug 'dracula/vim'
+
+call plug#end()
+
+set termguicolors
 
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -26,68 +54,6 @@ nnoremap Q <nop>
 nnoremap <BS> <C-w>h
 
 set noshowmode
-
-" }}}
-
-" vim-plug {{{
-
-call plug#begin('~/.config/nvim/bundle')
-
-Plug 'thaerkh/vim-indentguides'
-"" Possible alternative
-" Plug 'Yggdroot/indentLine'
-
-" Git
-Plug 'tpope/vim-fugitive'
-Plug 'int3/vim-extradite'
-
-" Bars, panels, and files
-Plug 'scrooloose/nerdtree'
-"" Nerd tree filetype highlighting
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'vim-airline/vim-airline'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'majutsushi/tagbar'
-
-Plug 'mbbill/undotree'
-
-Plug 'tpope/vim-commentary'
-Plug 'godlygeek/tabular'
-Plug 'easymotion/vim-easymotion'
-Plug 'ConradIrwin/vim-bracketed-paste'
-
-" Doxygen
-Plug 'vim-scripts/DoxygenToolkit.vim'
-
-" Haskell
-Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-
-" Purescript
-Plug 'purescript-contrib/purescript-vim'
-Plug 'FrigoEU/psc-ide-vim'
-
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-
-" Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
-
-" (Optional) Multi-entry selection UI.
-Plug 'junegunn/fzf'
-
-" Colorscheme
-Plug 'vim-scripts/wombat256.vim'
-
-" Icons
-Plug 'ryanoasis/vim-devicons'
-
-call plug#end()
-
-" }}}
-
-" VIM user interface {{{
 
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
@@ -142,13 +108,6 @@ set mat=2
 set noerrorbells
 set vb t_vb=
 
-if &term =~ '256color'
-  " disable Background Color Erase (BCE) so that color schemes
-  " render properly when inside 256-color tmux and GNU screen.
-  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-  set t_ut=
-endif
-
 " Force redraw
 map <silent> <leader>r :redraw!<CR>
 
@@ -161,27 +120,17 @@ nnoremap <leader>mo :set mouse=<cr>
 " Default to mouse mode off
 set mouse=
 
-" }}}
-
-" Colors and Fonts {{{
-
 try
-  colorscheme wombat256mod
+  colorscheme dracula
 catch
 endtry
 
 " Adjust signscolumn to match wombat
-hi! link SignColumn LineNr
+"hi! link SignColumn LineNr
+"
 
-" Use pleasant but very visible search hilighting
-hi Search ctermfg=white ctermbg=173 cterm=none guifg=#ffffff guibg=#e5786d gui=none
-hi! link Visual Search
-
-" Match wombat colors in nerd tree
-hi Directory guifg=#8ac6f2
-
-" Searing red very visible cursor
-hi Cursor guibg=red
+"" Searing red very visible cursor
+"hi Cursor guibg=red
 
 " Don't blink normal mode cursor
 set guicursor=n-v-c:block-Cursor
@@ -197,10 +146,11 @@ endif
 
 let g:airline_powerline_fonts = 1
 let g:airline_symbols.space = "\ua0"
+let g:airline#extensions#disable_rtp_load = 1
+let g:airline_extensions = ['branch', 'hunks', 'coc']
 
-" }}}
-
-" Files, backups and undo {{{
+let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 " Turn backup off, since most stuff is in Git anyway...
 set nobackup
@@ -214,14 +164,7 @@ augroup sourcing
 augroup END
 
 " Fuzzy find files
-nnoremap <silent> <Leader><space> :CtrlP<CR>
-let g:ctrlp_max_files=0
-let g:ctrlp_show_hidden=1
-let g:ctrlp_custom_ignore = { 'dir': '\v[\/](.git|.cabal-sandbox|.stack-work)$' }
-
-" }}}
-
-" Text, tab and indent related {{{
+nnoremap <silent> <Leader><space> :FZF<CR>
 
 " Use spaces instead of tabs
 set expandtab
@@ -238,9 +181,9 @@ autocmd Filetype cpp,c setlocal tabstop=2 shiftwidth=2
 set lbr
 set tw=500
 
-set ai "Auto indent
-set si "Smart indent
-set wrap "Wrap lines
+"set ai "Auto indent
+"set si "Smart indent
+"set wrap "Wrap lines
 
 " Copy and paste to os clipboard
 nmap <leader>y "+y
@@ -249,17 +192,6 @@ nmap <leader>d "+d
 vmap <leader>d "+d
 nmap <leader>p "+p
 vmap <leader>p "+p
-
-" }}}
-
-" Visual mode related {{{
-
-" Visual mode pressing * or # searches for the current selection
-" Super useful! From an idea by Michael Naumann
-vnoremap <silent> * :call VisualSelection('f', '')<CR>
-vnoremap <silent> # :call VisualSelection('b', '')<CR>
-
-" }}}
 
 " Moving around, tabs, windows and buffers {{{
 
@@ -279,6 +211,7 @@ augroup last_edit
        \   exe "normal! g`\"" |
        \ endif
 augroup END
+
 " Remember info about open buffers on close
 set viminfo^=%
 
@@ -291,33 +224,30 @@ nmap <leader>sj :rightbelow new<CR>
 " don't close buffers when you aren't displaying them
 set hidden
 
-" previous buffer, next buffer
-nnoremap <leader>bp :bp<cr>
-nnoremap <leader>bn :bn<cr>
 
-" fuzzy find buffers
-noremap <leader>b<space> :CtrlPBuffer<cr>
+let g:indentLine_char = '┆'
+
+set colorcolumn=80
+
+set guifont=DroidSansMono_Nerd_Font:h15
+
+"" previous buffer, next buffer
+"nnoremap <leader>bp :bp<cr>
+"nnoremap <leader>bn :bn<cr>
+"
 
 " Neovim terminal configurations
 " Use <Esc> to escape terminal insert mode
 tnoremap <Esc> <C-\><C-n>
+
 " Make terminal split moving behave like normal neovim
 tnoremap <c-h> <C-\><C-n><C-w>h
 tnoremap <c-j> <C-\><C-n><C-w>j
 tnoremap <c-k> <C-\><C-n><C-w>k
 tnoremap <c-l> <C-\><C-n><C-w>l
 
-
-" }}}
-
-" Status line {{{
-
 " Always show the status line
 set laststatus=2
-
-" }}}
-
-" Editing mappings {{{
 
 " Utility function to delete trailing white space
 func! DeleteTrailingWS()
@@ -328,62 +258,19 @@ endfunc
 
 autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
-" }}}
-
-" {{{ undo tree
-
 nnoremap <F6> :UndotreeToggle<cr>
-
-" }}}
-
-" Spell checking {{{
 
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-" }}}
-
-" Helper functions {{{
-
-function! CmdLine(str)
-  exe "menu Foo.Bar :" . a:str
-  emenu Foo.Bar
-  unmenu Foo
-endfunction
-
-function! VisualSelection(direction, extra_filter) range
-  let l:saved_reg = @"
-  execute "normal! vgvy"
-
-  let l:pattern = escape(@", '\\/.*$^~[]')
-  let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-  if a:direction == 'b'
-    execute "normal ?" . l:pattern . "^M"
-  elseif a:direction == 'gv'
-    call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.' . a:extra_filter)
-  elseif a:direction == 'replace'
-    call CmdLine("%s" . '/'. l:pattern . '/')
-  elseif a:direction == 'f'
-    execute "normal /" . l:pattern . "^M"
-  endif
-
-  let @/ = l:pattern
-  let @" = l:saved_reg
-endfunction
-
-" }}}
-
-" Easy motion {{{
-
-map <leader>f <Plug>(easymotion-overwin-f)
-map <leader>F <Plug>(easymotion-overwin-F)
-map <leader>t <Plug>(easymotion-overwin-t)
-map <leader>T <Plug>(easymotion-overwin-T)
-
-" }}}
-
-" NERDTree {{{
+map f <Plug>(easymotion-overwin-f)
+map <leader> F <Plug>(easymotion-overwin-F)
+"map <leader>t <Plug>(easymotion-overwin-t)
+"map <leader>T <Plug>(easymotion-overwin-T)
+"nmap f <Plug>(easymotion-overwin-f)
+"nmap <leader> F <Plug>(easymotion-overwin-F)
+"nmap <leader> t <Plug>(easymotion-overwin-t)
+"nmap <leader> T <Plug>(easymotion-overwin-T)
 
 " Close nerdtree after a file is selected
 let NERDTreeQuitOnOpen = 1
@@ -396,15 +283,15 @@ function! ToggleFindNerd()
   if IsNERDTreeOpen()
     exec ':NERDTreeToggle'
   else
-    exec ':NERDTreeFind'
+   exec ':NERDTreeFind'
   endif
 endfunction
 
 " If nerd tree is closed, find current file, if open, close it/
 nmap <silent> <leader>o <ESC>:call ToggleFindNerd()<CR>
 
-" Without this there are some '+' or '.' before file names.
-autocmd FileType nerdtree setlocal nolist
+"" Without this there are some '+' or '.' before file names.
+"autocmd FileType nerdtree setlocal nolist
 
 let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
@@ -416,23 +303,6 @@ let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
 " Change NERDTree icon appearance
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-
-" }}}
-
-" Alignment {{{
-
-"" TODO: Think about this one
-" Stop Align plugin from forcing its mappings on us
-let g:loaded_AlignMapsPlugin=1
-" Align on equal signs
-map <Leader>a= :Align =<CR>
-" Align on commas
-map <Leader>a, :Align ,<CR>
-" Align on pipes
-map <Leader>a<bar> :Align <bar><CR>
-" Prompt for align character
-map <leader>ap :Align
-" }}}
 
 " Tags {{{
 
@@ -474,10 +344,6 @@ let g:tagbar_type_haskell = {
     \ }
 \ }
 
-" }}}
-
-" Git {{{
-
 let g:extradite_width = 60
 " Hide messy Ggrep output and copen automatically
 function! NonintrusiveGitGrep(term)
@@ -495,97 +361,58 @@ nmap <leader>gl :Extradite!<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gb :Gblame<CR>
 
-function! CommittedFiles()
-  " Clear quickfix list
-  let qf_list = []
-  " Find files committed in HEAD
-  let git_output = system("git diff-tree --no-commit-id --name-only -r HEAD\n")
-  for committed_file in split(git_output, "\n")
-    let qf_item = {'filename': committed_file}
-    call add(qf_list, qf_item)
-  endfor
-  " Fill quickfix list with them
-  call setqflist(qf_list)
-endfunction
-
-" Show list of last-committed files
-nnoremap <silent> <leader>g? :call CommittedFiles()<CR>:copen<CR>
-
-" }}}
-
-" {{{ coc
-
-set completeopt=noinsert,menuone,noselect
-" use <tab> for trigger completion and navigate to next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-
-
-call coc#config('languageserver', {
-    \ "clangd": {
-    \   "command": "clangd",
-    \   "rootPatterns": ["compile_commands.json"],
-    \   "filetypes": ["c", "cpp", "h", "hpp"]
-    \ }
-    \})
-
-function! s:show_documentation()
-  if &filetype == 'vim'
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-nnoremap <F5> :CocList<CR>
-" Or map each action separately
-nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
-nmap <silent> <F2> <Plug>(coc-rename)
-
-nmap <silent> <leader>gd <Plug>(coc-definition)
-nmap <silent> <leader>gy <Plug>(coc-type-definition)
-nmap <silent> <leader>gi <Plug>(coc-implementation)
-nmap <silent> <leader>gr <Plug>(coc-references)
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-nmap <silent> <leader>< <Plug>(coc-diagnostic-prev)
-nmap <silent> <leader>> <Plug>(coc-diagnostic-next)
-nmap <silent> <leader>c <Plug>(coc-fix-current)
-
-
-" }}} coc
-
-
-" Indent Line {{{
-
-"let g:indentLine_char = '┆'
-
-" }}}
-
-set colorcolumn=80
-
-" Purescript {{{
+"set completeopt=noinsert,menuone,noselect
+"" use <tab> for trigger completion and navigate to next complete item
+"function! s:check_back_space() abort
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~ '\s'
+"endfunction
+"
+"inoremap <silent><expr> <TAB>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ coc#refresh()
+"
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+"
+"
+"call coc#config('languageserver', {
+"    \ "clangd": {
+"    \   "command": "clangd",
+"    \   "rootPatterns": ["compile_commands.json"],
+"    \   "filetypes": ["c", "cpp", "h", "hpp"]
+"    \ }
+"    \})
+"
+"function! s:show_documentation()
+"  if &filetype == 'vim'
+"    execute 'h '.expand('<cword>')
+"  else
+"    call CocAction('doHover')
+"  endif
+"endfunction
+"
+"nnoremap <F5> :CocList<CR>
+"" Or map each action separately
+"nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
+"nmap <silent> <F2> <Plug>(coc-rename)
+"
+"nmap <silent> <leader>gd <Plug>(coc-definition)
+"nmap <silent> <leader>gy <Plug>(coc-type-definition)
+"nmap <silent> <leader>gi <Plug>(coc-implementation)
+"nmap <silent> <leader>gr <Plug>(coc-references)
+"
+"" Highlight symbol under cursor on CursorHold
+"autocmd CursorHold * silent call CocActionAsync('highlight')
+"
+"nmap <silent> <leader>< <Plug>(coc-diagnostic-prev)
+"nmap <silent> <leader>> <Plug>(coc-diagnostic-next)
+"nmap <silent> <leader>c <Plug>(coc-fix-current)
+"
+"
+"" }}} coc
 
 let g:psc_ide_log_level = 3
-
-" }}}
-
-" Icons {{{
-
-set guifont=DroidSansMono_Nerd_Font:h15
-
-"  }}}
