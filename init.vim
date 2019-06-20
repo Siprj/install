@@ -186,12 +186,12 @@ set tw=500
 "set wrap "Wrap lines
 
 " Copy and paste to os clipboard
-nmap <leader>y "+y
-vmap <leader>y "+y
-nmap <leader>d "+d
-vmap <leader>d "+d
-nmap <leader>p "+p
-vmap <leader>p "+p
+nnoremap <leader>y "+y
+xnoremap <leader>y "+y
+nnoremap <leader>d "+d
+xnoremap <leader>d "+d
+nnoremap <leader>p "+p
+xnoremap <leader>p "+p
 
 " Moving around, tabs, windows and buffers {{{
 
@@ -216,10 +216,10 @@ augroup END
 set viminfo^=%
 
 " Open window splits in various places
-nmap <leader>sh :leftabove  vnew<CR>
-nmap <leader>sl :rightbelow vnew<CR>
-nmap <leader>sk :leftabove  new<CR>
-nmap <leader>sj :rightbelow new<CR>
+nnoremap <leader>sh :leftabove  vnew<CR>
+nnoremap <leader>sl :rightbelow vnew<CR>
+nnoremap <leader>sk :leftabove  new<CR>
+nnoremap <leader>sj :rightbelow new<CR>
 
 " don't close buffers when you aren't displaying them
 set hidden
@@ -263,14 +263,30 @@ nnoremap <F6> :UndotreeToggle<cr>
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
-map f <Plug>(easymotion-overwin-f)
-map <leader> F <Plug>(easymotion-overwin-F)
-"map <leader>t <Plug>(easymotion-overwin-t)
-"map <leader>T <Plug>(easymotion-overwin-T)
-"nmap f <Plug>(easymotion-overwin-f)
-"nmap <leader> F <Plug>(easymotion-overwin-F)
-"nmap <leader> t <Plug>(easymotion-overwin-t)
-"nmap <leader> T <Plug>(easymotion-overwin-T)
+nmap f <Plug>(easymotion-f)
+nmap F <Plug>(easymotion-F)
+nmap <silent> <leader>w <Plug>(easymotion-w)
+nmap <silent> <leader>W <Plug>(easymotion-W)
+nmap <silent> <leader>e <Plug>(easymotion-e)
+nmap <silent> <leader>E <Plug>(easymotion-E)
+nmap <silent> <leader>j <Plug>(easymotion-j)
+nmap <silent> <leader>k <Plug>(easymotion-l)
+xmap f <Plug>(easymotion-f)
+xmap F <Plug>(easymotion-F)
+xmap <silent> <leader>w <Plug>(easymotion-w)
+xmap <silent> <leader>W <Plug>(easymotion-W)
+xmap <silent> <leader>e <Plug>(easymotion-e)
+xmap <silent> <leader>E <Plug>(easymotion-E)
+xmap <silent> <leader>j <Plug>(easymotion-j)
+xmap <silent> <leader>k <Plug>(easymotion-l)
+omap f <Plug>(easymotion-f)
+omap F <Plug>(easymotion-F)
+omap <silent> <leader>w <Plug>(easymotion-w)
+omap <silent> <leader>W <Plug>(easymotion-W)
+omap <silent> <leader>e <Plug>(easymotion-e)
+omap <silent> <leader>E <Plug>(easymotion-E)
+omap <silent> <leader>j <Plug>(easymotion-j)
+omap <silent> <leader>k <Plug>(easymotion-l)
 
 " Close nerdtree after a file is selected
 let NERDTreeQuitOnOpen = 1
@@ -297,8 +313,8 @@ let g:NERDTreeFileExtensionHighlightFullName = 1
 let g:NERDTreeExactMatchHighlightFullName = 1
 let g:NERDTreePatternMatchHighlightFullName = 1
 
-let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
-let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name
+let g:NERDTreeHighlightFolders = 1 " Enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " Highlights the folder name
 
 " Change NERDTree icon appearance
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
@@ -361,6 +377,81 @@ nmap <leader>gl :Extradite!<CR>
 nmap <leader>gd :Gdiff<CR>
 nmap <leader>gb :Gblame<CR>
 
+" Use <c-space> for trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[c` and `]c` for navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)<Paste>
+
+" Remap for do codeAction of current line
+nmap <leader>ac <Plug>(coc-codeaction)
+
+" Remap for do action format
+nnoremap <silent> <leader>cf :call CocAction('format')<CR>
+
+" Show signature help
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Use K for show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Show all diagnostics
+nnoremap <silent> <space>a :<C-u>CocList diagnostics<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p :<C-u>CocListResume<CR>
+
+" Close preview (shown for hover / signature help)
+nnoremap <leader> <Esc> :pclose<CR>
+
+call coc#config('languageserver', {
+    \ "clangd": {
+    \   "command": "clangd",
+    \   "rootPatterns": ["compile_commands.json"],
+    \   "filetypes": ["c", "cpp", "h", "hpp"]
+    \ },
+    \ "haskell-ide": {
+    \   "command": "hie-8.6.5",
+    \   "rootPatterns": ['stack.yaml', '*.cabal'],
+    \   "filetypes": ["hs", "lhs"]
+    \ }
+    \})
+
 "set completeopt=noinsert,menuone,noselect
 "" use <tab> for trigger completion and navigate to next complete item
 "function! s:check_back_space() abort
@@ -379,13 +470,6 @@ nmap <leader>gb :Gblame<CR>
 "autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 "
 "
-"call coc#config('languageserver', {
-"    \ "clangd": {
-"    \   "command": "clangd",
-"    \   "rootPatterns": ["compile_commands.json"],
-"    \   "filetypes": ["c", "cpp", "h", "hpp"]
-"    \ }
-"    \})
 "
 "function! s:show_documentation()
 "  if &filetype == 'vim'
