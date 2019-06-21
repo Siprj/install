@@ -448,7 +448,7 @@ call coc#config('languageserver', {
     \ "haskell-ide": {
     \   "command": "hie-8.6.5",
     \   "rootPatterns": ['stack.yaml', '*.cabal'],
-    \   "filetypes": ["hs", "lhs"]
+    \   "filetypes": ["hs", "lhs", "haskell"]
     \ }
     \})
 
