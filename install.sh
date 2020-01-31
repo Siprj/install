@@ -2,6 +2,36 @@
 
 PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Acquire sudo!
+# Taken from here: https://serverfault.com/questions/266039/temporarily-increasing-sudos-timeout-for-the-duration-of-an-install-script
+function sudo_ping() {
+    if [[ ! -z $SUDO_PID ]]; then
+        if [[ $1 -eq stop ]]; then
+            kill $SUDO_PID
+            return
+        else
+            return
+        fi
+    fi
+
+    sudo -v
+    if [[ $? -eq 1 ]]; then
+        return
+    fi
+
+    while true; do
+        sudo -v
+        sleep 1
+    done &
+    SUDO_PID=$!
+
+    # Make sure we don't orphan our pinger
+    trap "sudo_ping stop" 0
+    trap "exit 2" 1 2 3 15
+}
+
+sudo_ping
+
 # Application nmtui is ncurse network manager part of the network-manager package.
 # PDF viewer evince or okular
 # Printer CUPS
@@ -65,8 +95,6 @@ declare -a packages=(
     hunspell-en_GB
     iptables
     jq
-# packer dependence
-    jshon
     kate
     kdiff3
     keepassx
@@ -114,6 +142,7 @@ declare -a packages=(
     texlive-langgreek
     texlive-latexextra
     thunderbird
+    tk
     tree
     unrar
     unzip
@@ -137,21 +166,16 @@ sudo systemctl enable NetworkManager.service
 
 which stack || curl -sSL https://get.haskellstack.org/ | sh
 
-pacman -Q packer || (
-    wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer -O /tmp/PKGBUILD && \
-        cd /tmp/ && \
-        makepkg && \
-        sudo pacman -U packer-*.pkg.tar.xz)
-pacman -Q dropbox || packer -S dropbox  --noedit --noconfirm
-pacman -Q google-chrome || packer -S google-chrome  --noedit --noconfirm
-pacman -Q libcurl-gnutls || packer -S libcurl-gnutls --noedit --noconfirm
-pacman -Q ncurses5-compat-libs || packer -S ncurses5-compat-libs --noedit --noconfirm
-pacman -Q nerd-fonts-complete || packer -S nerd-fonts-complete --noedit --noconfirm
-pacman -Q powerline-fonts-git || packer  -S powerline-fonts-git --noedit --noconfirm
-# pacman -Q spotify || packer -S spotify --noedit --noconfirm
-pacman -Q trayer-srg || packer -S trayer-srg --noedit --noconfirm
-pacman -Q universal-ctags-git || packer -S universal-ctags-git --noedit --noconfirm
-pacman -Q xflux || packer -S xflux --noedit --noconfirm
+pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
+pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
+pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
+pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
+pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
+pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
+# pacman -Q spotify || trizen -S spotify --noedit --noconfirm
+pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
+pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
+pacman -Q xflux || trizen -S xflux --noedit --noconfirm
 
 sudo systemctl enable libvirtd
 
@@ -189,16 +213,16 @@ fi
 )
 stack install --install-ghc fast-tags \
 
-if [ ! -d ~/Programing/ ]; then
-    mkdir -p ~/Programing/
+if [ ! -d ~/dev/ ]; then
+    mkdir -p ~/dev/
 fi
 
-if [ -d ~/Programing/haskell-ide-engine/ ]; then
-    (cd ~/Programing/haskell-ide-engine/ && git pull --rebase)
+if [ -d ~/dev/haskell-ide-engine/ ]; then
+    (cd ~/dev/haskell-ide-engine/ && git pull --rebase)
 else
-    (cd ~/Programing/ && git clone https://github.com/haskell/haskell-ide-engine.git)
+    (cd ~/dev/ && git clone https://github.com/haskell/haskell-ide-engine.git)
 fi
-(cd ~/Programing/haskell-ide-engine/ && ./install.hs build-all)
+(cd ~/dev/haskell-ide-engine/ && ./install.hs build-all)
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
