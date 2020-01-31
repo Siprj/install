@@ -97,7 +97,6 @@ declare -a packages=(
     jq
     kate
     kdiff3
-    keepassx
     konsole
     lib32-cairo
     lib32-fontconfig
