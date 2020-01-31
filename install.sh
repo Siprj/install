@@ -163,7 +163,7 @@ sudo pacman -Sy --needed "${packages[@]}" --noconfirm
 
 sudo systemctl enable NetworkManager.service
 
-which stack || curl -sSL https://get.haskellstack.org/ | sh
+which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
 
 pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
 pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
