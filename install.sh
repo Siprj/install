@@ -2,36 +2,6 @@
 
 PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Acquire sudo!
-# Taken from here: https://serverfault.com/questions/266039/temporarily-increasing-sudos-timeout-for-the-duration-of-an-install-script
-function sudo_ping() {
-    if [[ ! -z $SUDO_PID ]]; then
-        if [[ $1 -eq stop ]]; then
-            kill $SUDO_PID
-            return
-        else
-            return
-        fi
-    fi
-
-    sudo -v
-    if [[ $? -eq 1 ]]; then
-        return
-    fi
-
-    while true; do
-        sudo -v
-        sleep 1
-    done &
-    SUDO_PID=$!
-
-    # Make sure we don't orphan our pinger
-    trap "sudo_ping stop" 0
-    trap "exit 2" 1 2 3 15
-}
-
-sudo_ping
-
 # Application nmtui is ncurse network manager part of the network-manager package.
 # PDF viewer evince or okular
 # Printer CUPS
@@ -170,7 +140,7 @@ which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.loc
 pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
 pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
 pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
-pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
+# pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
 pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
 pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
 # pacman -Q spotify || trizen -S spotify --noedit --noconfirm
