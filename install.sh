@@ -59,6 +59,7 @@ declare -a packages=(
 #    gnome-logs
     graphviz
     gwenview
+    glu
 #    hicolor-icon-theme
     htop
     hunspell
@@ -100,6 +101,7 @@ declare -a packages=(
     remmina
     freerdp
     recoll
+    rust
     # Scanner app
     sane
     scrot
@@ -124,6 +126,7 @@ declare -a packages=(
     xorg-xev
     xorg-xmessage
     xsel
+    yarn
 #    xterm
     zsh
     )
@@ -147,6 +150,8 @@ pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --nocon
 pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
 pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
 pacman -Q xflux || trizen -S xflux --noedit --noconfirm
+pacman -Q slack-desktop || trizen -S slack-desktop --noedit --noconfirm
+pacman -Q zoom || trizen -S slack-desktop --noedit --noconfirm
 
 sudo systemctl enable libvirtd
 
@@ -311,11 +316,12 @@ sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" 
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
 
-cat > ~/.oh-my-zsh/custom/load-bash-completition.zsh <<EOF
+cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 alias vim="nvim"
+source ~/.nix-profile/etc/profile.d/nix.sh
 EOF
 
 # Set git behaviour
