@@ -112,6 +112,7 @@ declare -a packages=(
     texlive-core
     texlive-langgreek
     texlive-latexextra
+    thefuck
     thunderbird
     tk
     tree
@@ -300,6 +301,7 @@ if [ -s "${ZPROFILE}" ]; then
         echo "stack bin path is already persent; see: ${ZPROFILE}"
     else
         echo "path=(~/.local/bin \$path[@])" >> "${ZPROFILE}"
+        echo "path=(~/.ghcup/bin \$path[@])" >> "${ZPROFILE}"
     fi
 else
     cat > "${ZPROFILE}" <<EOF
@@ -315,6 +317,7 @@ sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
+sed -i "s/^.*plugins=.*/plugins=(git thefuck)/g" "${ZSHRC}"
 
 cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
