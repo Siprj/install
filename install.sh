@@ -72,6 +72,7 @@ declare -a packages=(
     lib32-cairo
     lib32-fontconfig
     lib32-freetype2
+    libreoffice-fresh
     libxft
     libzip
     linux-headers
