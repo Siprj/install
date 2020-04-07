@@ -2,159 +2,208 @@
 
 PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Application nmtui is ncurse network manager part of the network-manager package.
-# PDF viewer evince or okular
-# Printer CUPS
-# SANE is scanner app
-# feh can setup wallpaper -- used by xmonad-wallpaper package
-# Bit torrent deluge client.
-# File manager nautilus
-# libasound2-dev for xmobar
-# ubuntu-drivers-common driver installer
-# xautolock can automatically lock computer when no activity
-# scrot is screen capture utility
-# autocutsel synchronize clipboards
-# ss is netstat equivalent
-# network-manager-applet run nm-applet
-# recoll document indexing
-# anki flash cards
-declare -a packages=(
-    arandr
-    anki
-    ark
-    asciidoc
-#    aspell
-#    aspell-cs
-#    aspell-en
-    autoconf
-#    autocutsel
-    automake
-    bind-tools
-    bluez
-    bluez-utils
-    bridge-utils
-    cairo
-    calibre
-    cups
-    deluge
-    dia
-    dmenu
-#    dnsmasq
-    docker
-    dolphin
-    dunst
-#    evince
-    expac
-    feh
-    firefox
-    firewalld
-    flashplugin
-    fontconfig
-    fping
-    freetype2
-    gcc-multilib
-    gdb
-    git
-    gitg
-#    gnome-logs
-    graphviz
-    gwenview
-    glu
-#    hicolor-icon-theme
-    htop
-    hunspell
-    hunspell-en_GB
-    iptables
-    jq
-    kate
-    kdiff3
-    konsole
-    lib32-cairo
-    lib32-fontconfig
-    lib32-freetype2
-    libreoffice-fresh
-    libxft
-    libzip
-    linux-headers
-    lyx
-    make
-# Audio player
-    moc
-    nautilus
-    networkmanager
-    network-manager-applet
-    okular
-    openbsd-netcat
-    openssh
-    oxygen-icons
-    oxygen-icons-svg
-    pavucontrol
-    pkg-config
-    pulseaudio
-    python-neovim
-    qemu
-    qt5
-    qt5ct
-    qt5-doc
-    qtcreator
-    quassel-client
-    rdesktop
-    remmina
-    freerdp
-    recoll
-    rust
-    # Scanner app
-    sane
-    scrot
-    slock
-    sox
-    steam
-    teamspeak3
-    texlive-core
-    texlive-langgreek
-    texlive-latexextra
-    thefuck
-    thunderbird
-    tk
-    tree
-    unrar
-    unzip
-    virt-manager
-    vlc
-    vpnc
-    wget
-    wireshark-qt
-    xautolock
-    xorg-xev
-    xorg-xmessage
-    xsel
-    yarn
-#    xterm
-    zsh
-    )
+declare SKIP_AUR=false
+declare SKIP_HIE=false
+declare SKIP_PACMAN=false
+declare SKIP_SYSTEM_SETUP=false
+declare SKIP_XMONAD=false
 
-sudo pacman -Sy --noconfirm
-sudo pacman -Sy --needed "${packages[@]}" --noconfirm
+function pacman_setp() {
+    # Application nmtui is ncurse network manager part of the network-manager package.
+    # PDF viewer evince or okular
+    # Printer CUPS
+    # SANE is scanner app
+    # feh can setup wallpaper -- used by xmonad-wallpaper package
+    # Bit torrent deluge client.
+    # File manager nautilus
+    # libasound2-dev for xmobar
+    # ubuntu-drivers-common driver installer
+    # xautolock can automatically lock computer when no activity
+    # scrot is screen capture utility
+    # autocutsel synchronize clipboards
+    # ss is netstat equivalent
+    # network-manager-applet run nm-applet
+    # recoll document indexing
+    # anki flash cards
+    declare -a packages=(
+        arandr
+        anki
+        ark
+        asciidoc
+    #    aspell
+    #    aspell-cs
+    #    aspell-en
+        autoconf
+    #    autocutsel
+        automake
+        bind-tools
+        bluez
+        bluez-utils
+        bridge-utils
+        cairo
+        calibre
+        cups
+        deluge
+        dia
+        dmenu
+    #    dnsmasq
+        docker
+        dolphin
+        dunst
+    #    evince
+        expac
+        feh
+        firefox
+        firewalld
+        flashplugin
+        fontconfig
+        fping
+        freetype2
+        gcc-multilib
+        gdb
+        git
+        gitg
+    #    gnome-logs
+        graphviz
+        gwenview
+        glu
+    #    hicolor-icon-theme
+        htop
+        hunspell
+        hunspell-en_GB
+        iptables
+        jq
+        kate
+        kdiff3
+        konsole
+        lib32-cairo
+        lib32-fontconfig
+        lib32-freetype2
+        libreoffice-fresh
+        libxft
+        libzip
+        linux-headers
+        lyx
+        make
+    # Audio player
+        moc
+        nautilus
+        networkmanager
+        network-manager-applet
+        okular
+        openbsd-netcat
+        openssh
+        oxygen-icons
+        oxygen-icons-svg
+        pavucontrol
+        pkg-config
+        pulseaudio
+        python-neovim
+        qemu
+        qt5
+        qt5ct
+        qt5-doc
+        qtcreator
+        quassel-client
+        rdesktop
+        remmina
+        freerdp
+        recoll
+        rust
+        # Scanner app
+        sane
+        scrot
+        slock
+        sox
+        steam
+        teamspeak3
+        texlive-core
+        texlive-langgreek
+        texlive-latexextra
+        thefuck
+        thunderbird
+        tk
+        tree
+        unrar
+        unzip
+        virt-manager
+        vlc
+        vpnc
+        wget
+        wireshark-qt
+        xautolock
+        xorg-xev
+        xorg-xmessage
+        xsel
+        yarn
+    #    xterm
+        zsh
+        )
+
+    sudo pacman -Sy --noconfirm
+    sudo pacman -Sy --needed "${packages[@]}" --noconfirm
+
+    # I hate nano.
+    pacman -Q nano &> /dev/null && sudo pacman -R nano
+
+}
+
+function aur_step () {
+    pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
+    pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
+    pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
+    # pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
+    pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
+    pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
+    # pacman -Q spotify || trizen -S spotify --noedit --noconfirm
+    pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
+    pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
+    pacman -Q xflux || trizen -S xflux --noedit --noconfirm
+    pacman -Q slack-desktop || trizen -S slack-desktop --noedit --noconfirm
+    pacman -Q zoom || trizen -S slack-desktop --noedit --noconfirm
+}
+
+function stack_step () {
+    # Bootstrap path
+    PATH="${PATH}:${HOME}/.local/bin/"
+
+    which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
+
+}
+
+function xmonad_step () {
+
+    if [ -d ~/xmonadrc ]; then
+        (cd ~/xmonadrc && git pull --rebase && stack install --install-ghc)
+    else
+        (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
+        (cd ~/xmonadrc && stack install)
+    fi
+
+    (cd ~/xmonadrc \
+        && stack install --install-ghc xmobar --flag xmobar:with_alsa \
+    )
+    stack install --install-ghc fast-tags \
+
+    if [ ! -d ~/dev/ ]; then
+        mkdir -p ~/dev/
+    fi
+}
+
+function hie_step () {
+
+    if [ -d ~/dev/haskell-ide-engine/ ]; then
+        (cd ~/dev/haskell-ide-engine/ && git pull --rebase)
+    else
+        (cd ~/dev/ && git clone https://github.com/haskell/haskell-ide-engine.git)
+    fi
+    (cd ~/dev/haskell-ide-engine/ && ./install.hs hie)
+}
+
+
+function system_setup_step() {
 
 sudo systemctl enable NetworkManager.service
-
-PATH="${PATH}:${HOME}/.local/bin/"
-
-which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
-
-pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
-pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
-pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
-# pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
-pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
-pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
-# pacman -Q spotify || trizen -S spotify --noedit --noconfirm
-pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
-pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
-pacman -Q xflux || trizen -S xflux --noedit --noconfirm
-pacman -Q slack-desktop || trizen -S slack-desktop --noedit --noconfirm
-pacman -Q zoom || trizen -S slack-desktop --noedit --noconfirm
-
 sudo systemctl enable libvirtd
 
 # Disable beep...
@@ -176,31 +225,7 @@ EOF'
 
 sudo usermod --append --groups libvirt `whoami`
 sudo usermod --append --groups docker `whoami`
-# I hate nano.
-pacman -Q nano &> /dev/null && sudo pacman -R nano
 
-if [ -d ~/xmonadrc ]; then
-    (cd ~/xmonadrc && git pull --rebase && stack install --install-ghc)
-else
-    (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
-    (cd ~/xmonadrc && stack install)
-fi
-
-(cd ~/xmonadrc \
-    && stack install --install-ghc xmobar --flag xmobar:with_alsa \
-)
-stack install --install-ghc fast-tags \
-
-if [ ! -d ~/dev/ ]; then
-    mkdir -p ~/dev/
-fi
-
-if [ -d ~/dev/haskell-ide-engine/ ]; then
-    (cd ~/dev/haskell-ide-engine/ && git pull --rebase)
-else
-    (cd ~/dev/ && git clone https://github.com/haskell/haskell-ide-engine.git)
-fi
-(cd ~/dev/haskell-ide-engine/ && ./install.hs hie)
 
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
@@ -295,21 +320,12 @@ if [ ! -n "$ZSH" ]; then
 fi
 
 # Put stack bin path into path
-STACK_BIN_PATH="${HOME}/.local/bin"
-ZPROFILE="${HOME}/.zprofile"
-if [ -s "${ZPROFILE}" ]; then
-    if grep "${STACK_BIN_PATH}" "${ZPROFILE}"; then
-        echo "stack bin path is already persent; see: ${ZPROFILE}"
-    else
-        echo "path=(~/.local/bin \$path[@])" >> "${ZPROFILE}"
-        echo "path=(~/.ghcup/bin \$path[@])" >> "${ZPROFILE}"
-    fi
-else
-    cat > "${ZPROFILE}" <<EOF
+cat > ~/.zprofile <<EOF
 typeset -U path
-path=(~/.local/bin \$path[@])
+path=(~/.local/bin $path[@])
+path=(~/.ghcup/bin $path[@])
+path=(~/.cabal/bin $path[@])
 EOF
-fi
 
 # Set zsh behaviour
 ZSHRC="${HOME}/.zshrc"
@@ -325,7 +341,6 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 alias vim="nvim"
-source ~/.nix-profile/etc/profile.d/nix.sh
 EOF
 
 # Set git behaviour
@@ -484,3 +499,70 @@ xdg-mime default org.kde.dolphin.desktop inode/directory
 xdg-mime default org.kde.okular.desktop application/pdf
 xdg-mime default firefox.desktop x-scheme-handler/http
 xdg-mime default firefox.desktop x-scheme-handler/https
+}
+
+function print_help() {
+cat << EOF
+Usage: install.sh [OPTION]
+
+  -p --skip-pacman          don't install/update standard arch packages
+  -a --skip-aur             don't install/update packages form AUR
+  -x --skip-xmonad          don't install/update xmonad
+  -h --skip-hie             don't install/update haskell ide engine (hie)
+  -s --skip-system-setup    don't try to setup system setup
+EOF
+}
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -p|--skip-pacman)
+    SKIP_PACMAN=true
+    shift # past argument
+    ;;
+    -a|--skip-aur)
+    SKIP_AUR="$2"
+    shift # past argument
+    ;;
+    -h|--skip-hie)
+    SKIP_HIE="$2"
+    shift # past argument
+    ;;
+    -x|--skip-xmonad)
+    SKIP_XMONAD="$2"
+    shift # past argument
+    ;;
+    -s|--skip-system-setup)
+    SKIP_SYSTEM_SETUP="$2"
+    shift # past argument
+    ;;
+    *)    # unknown option
+        echo "ERROR: unknown argument [${key}]"
+        print_help
+        exit 1
+        shift # past argument
+    ;;
+esac
+done
+
+if [[ ${SKIP_PACMAN} == false ]]; then
+    pacman_setp
+fi
+if [[ ${SKIP_AUR} == false ]]; then
+    aur_step
+fi
+if [[ ${SKIP_HIE} == false || ${SKIP_XMONAD} == false ]]; then
+    stack_step
+fi
+if [[ ${SKIP_XMONAD} == false ]]; then
+    xmonad_step
+fi
+if [[ ${SKIP_HIE} == false ]]; then
+    hie_step
+fi
+if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
+    system_setup_step
+fi
+
