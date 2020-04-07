@@ -7,6 +7,7 @@ declare SKIP_HIE=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_XMONAD=false
+declare GPU_ACCELERATION=false
 
 function pacman_setp() {
     # Application nmtui is ncurse network manager part of the network-manager package.
@@ -510,6 +511,7 @@ Usage: install.sh [OPTION]
   -x --skip-xmonad          don't install/update xmonad
   -h --skip-hie             don't install/update haskell ide engine (hie)
   -s --skip-system-setup    don't try to setup system setup
+  -g --gpu-acceleration     sett GPU acceleration method to legacy mode
 EOF
 }
 
@@ -523,26 +525,35 @@ case $key in
     shift # past argument
     ;;
     -a|--skip-aur)
-    SKIP_AUR="$2"
+    SKIP_AUR=true
     shift # past argument
     ;;
     -h|--skip-hie)
-    SKIP_HIE="$2"
+    SKIP_HIE=true
     shift # past argument
     ;;
     -x|--skip-xmonad)
-    SKIP_XMONAD="$2"
+    SKIP_XMONAD=true
     shift # past argument
     ;;
     -s|--skip-system-setup)
-    SKIP_SYSTEM_SETUP="$2"
+    SKIP_SYSTEM_SETUP=true
+    shift # past argument
+    ;;
+    -g|--gpu-acceleration)
+    GPU_ACCELERATION=true
+    shift # past argument
+    ;;
+    -h|--help)
+    print_help
+    exit 0
     shift # past argument
     ;;
     *)    # unknown option
-        echo "ERROR: unknown argument [${key}]"
-        print_help
-        exit 1
-        shift # past argument
+    echo "ERROR: unknown argument [${key}]"
+    print_help
+    exit 1
+    shift # past argument
     ;;
 esac
 done
@@ -566,3 +577,8 @@ if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
 fi
 
+if [[ ${GPU_ACCELERATION} == true ]]; then
+    sudo mkdir -p "/etc/X11/xorg.conf.d/"
+    sudo cp "${PROG_DIR}/20-amdgpu.conf" "/etc/X11/xorg.conf.d/"
+    sudo cp "${PROG_DIR}/20-intell.conf" "/etc/X11/xorg.conf.d/"
+fi
