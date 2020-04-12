@@ -323,9 +323,9 @@ fi
 # Put stack bin path into path
 cat > ~/.zprofile <<EOF
 typeset -U path
-path=(~/.local/bin $path[@])
-path=(~/.ghcup/bin $path[@])
-path=(~/.cabal/bin $path[@])
+path+=(~/.local/bin)
+path+=(~/.ghcup/bin)
+path+=(~/.cabal/bin)
 EOF
 
 # Set zsh behaviour
