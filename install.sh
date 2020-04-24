@@ -91,6 +91,7 @@ function pacman_setp() {
         nautilus
         networkmanager
         network-manager-applet
+        neovim
         okular
         openbsd-netcat
         openssh
@@ -145,7 +146,7 @@ function pacman_setp() {
     sudo pacman -Sy --needed "${packages[@]}" --noconfirm
 
     # I hate nano.
-    pacman -Q nano &> /dev/null && sudo pacman -R nano
+    pacman -Q nano &> /dev/null && sudo pacman -R nano || true
 
 }
 
@@ -316,7 +317,7 @@ xterm*faceSize: 12
 EOF
 
 # install oh-my-zsh
-if [ ! -n "$ZSH" ]; then
+if [ -d ".oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
