@@ -3,6 +3,7 @@
 PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 declare SKIP_AUR=false
+declare SKIP_PIP=false
 declare SKIP_HIE=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
@@ -151,7 +152,6 @@ function pacman_setp() {
 }
 
 function aur_step () {
-    pacman -Q dropbox || trizen -S dropbox  --noedit --noconfirm
     pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
     pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
     # pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
@@ -161,8 +161,12 @@ function aur_step () {
     pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
     pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
     pacman -Q xflux || trizen -S xflux --noedit --noconfirm
-    pacman -Q slack-desktop || trizen -S slack-desktop --noedit --noconfirm
-    pacman -Q zoom || trizen -S slack-desktop --noedit --noconfirm
+    pacman -Q zoom || trizen -S zoom --noedit --noconfirm
+    pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
+}
+
+function pip_setup() {
+    which maestral || pip install --upgrade maestral maestral-qt
 }
 
 function stack_step () {
@@ -206,7 +210,11 @@ function hie_step () {
 function system_setup_step() {
 
 sudo systemctl enable NetworkManager.service
+sudo systemctl start NetworkManager.service
 sudo systemctl enable libvirtd
+sudo systemctl start libvirtd
+sudo systemctl enable nix-daemon
+sudo systemctl start nix-daemon
 
 # Disable beep...
 sudo bash -c 'cat > /etc/modprobe.d/nobeep.conf <<EOF
@@ -245,7 +253,7 @@ xautolock -time 20 -locker slock &
 
 dunst -conf install/dunstrc &
 
-dropbox start -i &
+INVOCATION_ID="" maestral start
 
 xflux -l 49 -g 15
 
@@ -317,7 +325,7 @@ xterm*faceSize: 12
 EOF
 
 # install oh-my-zsh
-if [ -d ".oh-my-zsh" ]; then
+if [ -d "~/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
@@ -509,6 +517,7 @@ Usage: install.sh [OPTION]
 
   -p --skip-pacman          don't install/update standard arch packages
   -a --skip-aur             don't install/update packages form AUR
+  -i --skip-pip             don't install packages with pip
   -x --skip-xmonad          don't install/update xmonad
   -h --skip-hie             don't install/update haskell ide engine (hie)
   -s --skip-system-setup    don't try to setup system setup
@@ -527,6 +536,10 @@ case $key in
     ;;
     -a|--skip-aur)
     SKIP_AUR=true
+    shift # past argument
+    ;;
+    -i|--skip-pip)
+    SKIP_PIP=true
     shift # past argument
     ;;
     -h|--skip-hie)
@@ -564,6 +577,9 @@ if [[ ${SKIP_PACMAN} == false ]]; then
 fi
 if [[ ${SKIP_AUR} == false ]]; then
     aur_step
+fi
+if [[ ${SKIP_PIP} == false ]]; then
+    pip_setup
 fi
 if [[ ${SKIP_HIE} == false || ${SKIP_XMONAD} == false ]]; then
     stack_step
