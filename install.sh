@@ -4,11 +4,12 @@ PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 declare SKIP_AUR=false
 declare SKIP_PIP=false
-declare SKIP_HIE=false
+declare SKIP_HLS=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_XMONAD=false
 declare GPU_ACCELERATION=false
+declare DROPBOX=true
 
 function pacman_setp() {
     # Application nmtui is ncurse network manager part of the network-manager package.
@@ -102,6 +103,7 @@ function pacman_setp() {
         pkg-config
         pulseaudio
         python-neovim
+        python-pip
         qemu
         qt5
         qt5ct
@@ -166,15 +168,20 @@ function aur_step () {
 }
 
 function pip_setup() {
-    which maestral || pip install --upgrade maestral maestral-qt
+    if [[ ${DROPBOX} == false ]]; then
+        which maestral || pip install --upgrade maestral maestral-qt
+    fi
 }
 
-function stack_step () {
+function haskell_step () {
     # Bootstrap path
-    PATH="${PATH}:${HOME}/.local/bin/"
+    PATH="${PATH}:${HOME}/.local/bin/:${HOME}/ghcup/bin/"
 
     which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
-
+    which ghcup || curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+    ghcup install ghc "8.8.3"
+    ghcup set ghc "8.8.3"
+    ghcup install cabal
 }
 
 function xmonad_step () {
@@ -185,25 +192,20 @@ function xmonad_step () {
         (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
         (cd ~/xmonadrc && stack install)
     fi
-
-    (cd ~/xmonadrc \
-        && stack install --install-ghc xmobar --flag xmobar:with_alsa \
-    )
-    stack install --install-ghc fast-tags \
-
-    if [ ! -d ~/dev/ ]; then
-        mkdir -p ~/dev/
-    fi
+    cabal install xmobar --flags=with_alsa --install-method=copy --overwrite-policy=always
 }
 
 function hie_step () {
+    mkdir -p ~/dev/
 
-    if [ -d ~/dev/haskell-ide-engine/ ]; then
-        (cd ~/dev/haskell-ide-engine/ && git pull --rebase)
+    if [ -d ~/dev/haskell-language-server/ ]; then
+        (cd ~/dev/haskell-language-server/ && git pull --rebase)
     else
-        (cd ~/dev/ && git clone https://github.com/haskell/haskell-ide-engine.git)
+        (cd ~/dev/ && git clone https://github.com/haskell/haskell-language-server --recurse-submodules)
     fi
-    (cd ~/dev/haskell-ide-engine/ && ./install.hs hie)
+    (cd ~/dev/haskell-language-server/ && cabal v2-run install.hs --project-file install/shake.project -- latest)
+#    (cd ~/dev/haskell-language-server/ && ./install.hs "hls-8.8.3")
+#    (cd ~/dev/haskell-language-server/ && ./install.hs "latest")
 }
 
 
@@ -325,7 +327,7 @@ xterm*faceSize: 12
 EOF
 
 # install oh-my-zsh
-if [ ! -d "~/.oh-my-zsh" ]; then
+if [ -d "~/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
@@ -542,8 +544,12 @@ case $key in
     SKIP_PIP=true
     shift # past argument
     ;;
-    -h|--skip-hie)
-    SKIP_HIE=true
+    -m|--maestral)
+    DROPBOX=false
+    shift # past argument
+    ;;
+    -h|--skip-hls)
+    SKIP_HLS=true
     shift # past argument
     ;;
     -x|--skip-xmonad)
@@ -581,13 +587,13 @@ fi
 if [[ ${SKIP_PIP} == false ]]; then
     pip_setup
 fi
-if [[ ${SKIP_HIE} == false || ${SKIP_XMONAD} == false ]]; then
-    stack_step
+if [[ ${SKIP_HLS} == false || ${SKIP_XMONAD} == false ]]; then
+    haskell_step
 fi
 if [[ ${SKIP_XMONAD} == false ]]; then
     xmonad_step
 fi
-if [[ ${SKIP_HIE} == false ]]; then
+if [[ ${SKIP_HLS} == false ]]; then
     hie_step
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
