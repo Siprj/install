@@ -182,6 +182,7 @@ function haskell_step () {
     ghcup install ghc "8.8.3"
     ghcup set ghc "8.8.3"
     ghcup install cabal
+    cabal update
 }
 
 function xmonad_step () {
@@ -204,8 +205,6 @@ function hie_step () {
         (cd ~/dev/ && git clone https://github.com/haskell/haskell-language-server --recurse-submodules)
     fi
     (cd ~/dev/haskell-language-server/ && cabal v2-run install.hs --project-file install/shake.project -- latest)
-#    (cd ~/dev/haskell-language-server/ && ./install.hs "hls-8.8.3")
-#    (cd ~/dev/haskell-language-server/ && ./install.hs "latest")
 }
 
 
