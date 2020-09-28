@@ -443,9 +443,10 @@ call coc#config('languageserver', {
     \   "filetypes": ["c", "cpp", "h", "hpp"]
     \ },
     \ "haskell-ide": {
-    \   "command": "hie-8.6.5",
-    \   "rootPatterns": ['stack.yaml', '*.cabal'],
-    \   "filetypes": ["hs", "lhs", "haskell"]
+    \   "command": "haskell-language-server-wrapper",
+    \   "args": ["--lsp"],
+    \   "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"],
+    \   "filetypes": ["haskell", "lhaskell"]
     \ }
     \})
 
