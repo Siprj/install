@@ -500,8 +500,8 @@ EOF
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-mkdir -p ~/.config/nvim/
-cp "${PROG_DIR}/init.vim" ~/.config/nvim/
+mkdir -p ~/.config/
+ln -s "${PROG_DIR}/nvim" ~/.config/nvim
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 # Set default applications
@@ -520,7 +520,7 @@ Usage: install.sh [OPTION]
   -a --skip-aur             don't install/update packages form AUR
   -i --skip-pip             don't install packages with pip
   -x --skip-xmonad          don't install/update xmonad
-  -h --skip-hie             don't install/update haskell ide engine (hie)
+  -h --skip-hls             don't install/update haskell ide engine (hie)
   -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     sett GPU acceleration method to legacy mode
 EOF

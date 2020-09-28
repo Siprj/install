@@ -1,3 +1,21 @@
+" Allow more colors
+set termguicolors
+" Sets how many lines of history VIM has to remember
+set history=700
+" Set to auto read when a file is changed from the outside
+set autoread
+let mapleader = ","
+" Allow the normal use of "," by pressing it twice
+noremap ,, ,
+
+" TODO: look at `compl-spelling` this could be interesteing insead of
+" `<leader>ss` command
+
+call plug#begin('~/.config/nvim/bundle')
+
+
+
+call plug#end()
 
 call plug#begin('~/.config/nvim/bundle')
 
@@ -26,22 +44,8 @@ Plug 'dracula/vim'
 
 call plug#end()
 
-set termguicolors
-
-" Sets how many lines of history VIM has to remember
-set history=700
-
-" Set to auto read when a file is changed from the outside
-set autoread
-
-let mapleader = ","
-let g:mapleader = ","
-
 " Leader key timeout
 set tm=2000
-
-" Allow the normal use of "," by pressing it twice
-noremap ,, ,
 
 " Use par for prettier line formatting
 set formatprg=par
@@ -436,6 +440,7 @@ nnoremap <silent> <space>p :<C-u>CocListResume<CR>
 " Close preview (shown for hover / signature help)
 nnoremap <leader> <Esc> :pclose<CR>
 
+
 call coc#config('languageserver', {
     \ "clangd": {
     \   "command": "clangd",
@@ -445,8 +450,21 @@ call coc#config('languageserver', {
     \ "haskell-ide": {
     \   "command": "haskell-language-server-wrapper",
     \   "args": ["--lsp"],
-    \   "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"],
-    \   "filetypes": ["haskell", "lhaskell"]
+    \   "rootPatterns": [
+    \     "*.cabal",
+    \     "stack.yaml",
+    \     "cabal.project",
+    \     "package.yaml"
+    \   ],
+    \   "filetypes": [
+    \     "hs",
+    \     "lhs",
+    \     "haskell"
+    \   ],
+    \   "initializationOptions": {
+    \     "languageServerHaskell": {
+    \     }
+    \   }
     \ }
     \})
 
@@ -496,5 +514,3 @@ call coc#config('languageserver', {
 "
 "
 "" }}} coc
-
-let g:psc_ide_log_level = 3
