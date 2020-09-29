@@ -14,6 +14,9 @@ noremap ,, ,
 call plug#begin('~/.config/nvim/bundle')
 
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'tjdevries/colorbuddy.vim'
+Plug 'ishan9299/modus-theme-vim'
+Plug 'Th3Whit3Wolf/space-nvim-theme'
 
 Plug 'dracula/vim'
 
