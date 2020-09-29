@@ -1,3 +1,6 @@
+
+" source ~/.config/nvim/new_configuration.vim
+
 " Allow more colors
 set termguicolors
 " Sets how many lines of history VIM has to remember
