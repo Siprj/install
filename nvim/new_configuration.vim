@@ -8,8 +8,43 @@ let mapleader = ","
 " Allow the normal use of "," by pressing it twice
 noremap ,, ,
 
+" Source the vimrc file after saving it
+augroup sourcing
+  autocmd!
+    autocmd bufwritepost init.vim source $MYVIMRC
+    autocmd bufwritepost new_configuration.vim source $MYVIMRC
+    autocmd bufwritepost old_configuration.vim source $MYVIMRC
+augroup END
+
 " TODO: look at `compl-spelling` this could be interesteing insead of
 " `<leader>ss` command
+" TODO: look at:
+" :earlier {count}	Go to older text state {count} times.
+" :earlier {N}s		Go to older text state about {N} seconds before.
+" :earlier {N}m		Go to older text state about {N} minutes before.
+" :earlier {N}h		Go to older text state about {N} hours before.
+" :earlier {N}d		Go to older text state about {N} days before.
+" 
+" :earlier {N}f		Go to older text state {N} file writes before.
+" 			When changes were made since the last write
+" 			":earlier 1f" will revert the text to the state when
+" 			it was written.  Otherwise it will go to the write
+" 			before that.
+" 			When at the state of the first file write, or when
+" 			the file was not written, ":earlier 1f" will go to
+" 			before the first change.
+" 
+" 							*g+*
+" g+			Go to newer text state.  With a count repeat that many
+" 			times.
+" 							*:lat* *:later*
+" :later {count}		Go to newer text state {count} times.
+" :later {N}s		Go to newer text state about {N} seconds later.
+" :later {N}m		Go to newer text state about {N} minutes later.
+" :later {N}h		Go to newer text state about {N} hours later.
+" :later {N}d		Go to newer text state about {N} days later.
+" 
+" :later {N}f		Go to newer text state {N} file writes later.
 
 call plug#begin('~/.config/nvim/bundle')
 
@@ -17,8 +52,13 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'ishan9299/modus-theme-vim'
 Plug 'Th3Whit3Wolf/space-nvim-theme'
+Plug 'chase/focuspoint-vim'
 
 Plug 'dracula/vim'
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/telescope.nvim'
 
 call plug#end()
 

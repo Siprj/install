@@ -13,12 +13,6 @@ noremap ,, ,
 
 call plug#begin('~/.config/nvim/bundle')
 
-
-
-call plug#end()
-
-call plug#begin('~/.config/nvim/bundle')
-
 Plug 'thaerkh/vim-indentguides'
 Plug 'tpope/vim-fugitive'
 Plug 'int3/vim-extradite'
@@ -165,6 +159,8 @@ set noswapfile
 augroup sourcing
   autocmd!
     autocmd bufwritepost init.vim source $MYVIMRC
+    autocmd bufwritepost new_configuration.vim source $MYVIMRC
+    autocmd bufwritepost old_configuration.vim source $MYVIMRC
 augroup END
 
 " Fuzzy find files
