@@ -8,6 +8,11 @@ let mapleader = ","
 " Allow the normal use of "," by pressing it twice
 noremap ,, ,
 
+" Turn backup off, since most stuff is in Git anyway...
+set nobackup
+set nowb
+set noswapfile
+
 " Source the vimrc file after saving it
 augroup sourcing
   autocmd!
@@ -53,6 +58,7 @@ Plug 'tjdevries/colorbuddy.vim'
 Plug 'ishan9299/modus-theme-vim'
 Plug 'Th3Whit3Wolf/space-nvim-theme'
 Plug 'chase/focuspoint-vim'
+Plug 'kamykn/popup-menu.nvim'
 
 Plug 'dracula/vim'
 
