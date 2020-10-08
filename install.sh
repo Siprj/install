@@ -340,12 +340,12 @@ EOF
 
 # Set zsh behaviour
 ZSHRC="${HOME}/.zshrc"
-sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" "${ZSHRC}"
+sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster-nix\"/g" "${ZSHRC}"
 sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
-sed -i "s/^.*plugins=.*/plugins=(git thefuck)/g" "${ZSHRC}"
+sed -i "s/^.*plugins=.*/plugins=(git thefuck nix-shell)/g" "${ZSHRC}"
 
 cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
@@ -354,6 +354,14 @@ autoload -U +X bashcompinit && bashcompinit
 alias vim="nvim"
 EDITOR=vim
 EOF
+
+if [ -d ~/.oh-my-zsh/plugins/nix-shell ]; then
+    (cd ~/.oh-my-zsh/plugins/nix-shell && git pull --rebase)
+else
+  git clone https://github.com/chisui/zsh-nix-shell.git ~/.oh-my-zsh/plugins/nix-shell
+fi
+
+cp ${PROG_DIR}/agnoster-nix.zsh-theme ~/.oh-my-zsh/custom/themes
 
 # Set git behaviour
 git config --global commit.verbose true
@@ -502,7 +510,9 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p ~/.config/
-ln -s "${PROG_DIR}/nvim" ~/.config/nvim
+if [ -d "~/.config/nvim/" ]; then
+    ln -s "${PROG_DIR}/nvim" ~/.config/nvim
+fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 # Set default applications
