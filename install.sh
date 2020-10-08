@@ -352,6 +352,7 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 alias vim="nvim"
+EDITOR=vim
 EOF
 
 # Set git behaviour
