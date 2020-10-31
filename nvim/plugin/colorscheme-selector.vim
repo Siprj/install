@@ -3,7 +3,7 @@ augroup ColoschemeSelector
 augroup END
 
 function! ColorschemeSelector()
-   lua require('plenary.reload').module_reload('colorscheme-selector').helloWorld()
+   lua require('plenary.reload').reload_module('colorscheme-selector'); require('colorscheme-selector').helloWorld()
 endfun
 
 function! Kwa()
