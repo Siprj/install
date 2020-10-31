@@ -83,8 +83,11 @@ Plug 'junegunn/fzf.vim'
 " lsp hurray
 Plug 'neovim/nvim-lspconfig'
 
-" Nice diagnostics
+" Nice diagnostics from lsp
 Plug 'nvim-lua/diagnostic-nvim'
+
+" Completions fupport for lsp
+Plug 'nvim-lua/completion-nvim'
 
 call plug#end()
 
@@ -470,15 +473,12 @@ nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 
 " Configure lsp
 lua <<EOF
-require'nvim_lsp'.hls.setup{on_attach=require'diagnostic'.on_attach}
+local on_attach = function(client)
+  require'diagnostic'.on_attach(client)
+  require'completion'.on_attach(client)
+end
+require'nvim_lsp'.hls.setup{on_attach=on_attach}
 EOF
-
-"sign define LspDiagnosticsErrorSign text=✗ texthl=LspDiagnosticsError linehl= numhl=
-"sign define LspDiagnosticsWarningSign text= texthl=LspDiagnosticsWarning linehl= numhl=
-"sign define LspDiagnosticsInformationSign text= texthl=LspDiagnosticsInformation linehl= numhl=
-"sign define LspDiagnosticsHintSign text= texthl=LspDiagnosticsHint linehl= numhl=
-
-" highlight
 
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
@@ -504,6 +504,35 @@ highlight LspDiagnosticsHint gui=bold guifg=#FFCC33
 let g:diagnostic_enable_virtual_text = 1
 let g:diagnostic_virtual_text_prefix = ' '
 
+nnoremap <silent> [c :PrevDiagnosticCycle<CR>
+nnoremap <silent> ]c :NextDiagnosticCycle<CR>
+
+" set completeopt=noinsert,menuone,noselect
+set completeopt=menuone,noinsert,noselect
+" Avoid showing message extra message when using completion
+set shortmess+=c
+
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+imap <silent> <c-p> <Plug>(completion_trigger)
+
+let g:completion_auto_change_source = 1
+imap <c-j> <Plug>(completion_next_source)
+imap <c-k> <Plug>(completion_prev_source)
+
+let g:completion_chain_complete_list = [
+    \{'complete_items': ['lsp', 'snippet']},
+    \{'mode': '<c-p>'},
+    \{'mode': '<c-n>'}
+\]
+
+let g:completion_matching_strategy_list = ["fuzzy", "exact", "substring", "all"]
+let g:completion_matching_ignore_case = 1
+" TODO: This may be a really bad idea
+let g:completion_matching_smart_case = 1
+
+" TODO: Snippets
+" TODO: Code actions
 
 "call plug#begin('~/.config/nvim/bundle')
 "
