@@ -219,6 +219,8 @@ set guifont=DroidSansMono_Nerd_Font:h15
 " TODO: This was a cause of some pain it the past. Find a way to list unsaved buffers?
 set hidden
 
+set foldlevel=1
+
 " Copy and paste to os clipboard.
 nnoremap <leader>y "+y
 xnoremap <leader>y "+y
