@@ -89,6 +89,10 @@ Plug 'nvim-lua/diagnostic-nvim'
 " Completions fupport for lsp
 Plug 'nvim-lua/completion-nvim'
 
+" Nice code actions???
+Plug 'RishabhRD/popfix'
+Plug 'RishabhRD/nvim-lsputils'
+
 call plug#end()
 
 """ General setup
@@ -478,6 +482,9 @@ local on_attach = function(client)
   require'completion'.on_attach(client)
 end
 require'nvim_lsp'.hls.setup{on_attach=on_attach}
+vim.lsp.callbacks['textDocument/codeAction'] = require'lsputil.codeAction'.code_action_handler
+
+vim.g.lsp_utils_codeaction_opts = { list = { border = false, numbering = false } }
 EOF
 
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
@@ -490,6 +497,7 @@ nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> <leader>l1 <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> <leader>ld <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
 
 call sign_define("LspDiagnosticsErrorSign", {"text" : "✗", "texthl" : "LspDiagnosticsError"})
 call sign_define("LspDiagnosticsWarningSign", {"text" : "", "texthl" : "LspDiagnosticsWarning"})
@@ -532,7 +540,6 @@ let g:completion_matching_ignore_case = 1
 let g:completion_matching_smart_case = 1
 
 " TODO: Snippets
-" TODO: Code actions
 
 "call plug#begin('~/.config/nvim/bundle')
 "
