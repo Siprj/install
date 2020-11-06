@@ -31,6 +31,18 @@
 " This has to be set before polyglot plugin is loaded.
 let g:polyglot_disabled = ['sensible', 'autoindent']
 
+" TODO: Look at following stuff:
+"  * https://github.com/zatchheems/vim-camelsnek
+"  * https://github.com/zatchheems/tokyo-night-alacritty-theme
+"  * https://github.com/mhinz/vim-signify
+"  * https://vim.rtorr.com/
+"  * https://github.com/hrsh7th/vim-vsnip
+"  * https://github.com/Shougo/deoppet.nvim
+"  * https://github.com/vuciv/vim-bujo
+"  * https://github.com/nvim-lua/lsp_extensions.nvim
+"  * https://github.com/norcalli/snippets.nvim
+"  * https://github.com/nvim-lua/lsp-status.nvim
+
 call plug#begin('~/.config/nvim/bundle')
 
 " Color highlighter.
@@ -58,7 +70,7 @@ Plug 'mhinz/vim-startify'
 
 " NerdTree  is nice but I think it is time to try new file explorer :)
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'Siprj/nvim-tree.lua'
+Plug 'kyazdani42/nvim-tree.lua'
 
 " Nice cheatsheet with key bindings.
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
