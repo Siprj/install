@@ -164,6 +164,7 @@ function aur_step () {
     pacman -Q xflux || trizen -S xflux --noedit --noconfirm
     pacman -Q zoom || trizen -S zoom --noedit --noconfirm
     pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
+    pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
 }
 
 function pip_setup() {
@@ -502,6 +503,14 @@ if [ -d "~/.config/nvim/" ]; then
     ln -s "${PROG_DIR}/nvim" ~/.config/nvim
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
+
+mkdir -p ~/.config/jesseduffield/lazygit/
+cat > ~/.config/jesseduffield/lazygit/config.yml <<EOF
+  gui:
+    theme:
+      selectedLineBgColor:
+        - reverse
+EOF
 
 # Set default applications
 
