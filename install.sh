@@ -4,7 +4,6 @@ PROG_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 declare SKIP_AUR=false
 declare SKIP_PIP=false
-declare SKIP_HLS=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_XMONAD=false
@@ -114,7 +113,7 @@ function pacman_setp() {
         remmina
         freerdp
         recoll
-        rust
+        rustup
         # Scanner app
         sane
         scrot
@@ -182,6 +181,7 @@ function haskell_step () {
     ghcup install ghc "8.8.3"
     ghcup set ghc "8.8.3"
     ghcup install cabal
+    ghcup install hls
     cabal update
 }
 
@@ -195,18 +195,6 @@ function xmonad_step () {
     fi
     cabal install xmobar --flags=with_alsa --install-method=copy --overwrite-policy=always
 }
-
-function hie_step () {
-    mkdir -p ~/dev/
-
-    if [ -d ~/dev/haskell-language-server/ ]; then
-        (cd ~/dev/haskell-language-server/ && git pull --rebase)
-    else
-        (cd ~/dev/ && git clone https://github.com/haskell/haskell-language-server --recurse-submodules)
-    fi
-    (cd ~/dev/haskell-language-server/ && cabal v2-run install.hs --project-file install/shake.project -- latest)
-}
-
 
 function system_setup_step() {
 
@@ -558,10 +546,6 @@ case $key in
     DROPBOX=false
     shift # past argument
     ;;
-    -h|--skip-hls)
-    SKIP_HLS=true
-    shift # past argument
-    ;;
     -x|--skip-xmonad)
     SKIP_XMONAD=true
     shift # past argument
@@ -597,14 +581,11 @@ fi
 if [[ ${SKIP_PIP} == false ]]; then
     pip_setup
 fi
-if [[ ${SKIP_HLS} == false || ${SKIP_XMONAD} == false ]]; then
+if [[ ${SKIP_XMONAD} == false ]]; then
     haskell_step
 fi
 if [[ ${SKIP_XMONAD} == false ]]; then
     xmonad_step
-fi
-if [[ ${SKIP_HLS} == false ]]; then
-    hie_step
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
