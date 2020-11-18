@@ -95,9 +95,6 @@ Plug 'junegunn/fzf.vim'
 " lsp hurray
 Plug 'neovim/nvim-lspconfig'
 
-" Nice diagnostics from lsp
-Plug 'nvim-lua/diagnostic-nvim'
-
 " Completions fupport for lsp
 Plug 'nvim-lua/completion-nvim'
 
@@ -340,7 +337,7 @@ let g:lua_tree_hide_dotfiles = 1 "0 by default, this option hides files and fold
 let g:lua_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
 let g:lua_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
 let g:lua_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
-let g:lua_tree_allow_resize = 0 "0 by default, will not resize the tree when opening a file
+let g:lua_tree_allow_resize = 1 "0 by default, will not resize the tree when opening a file
 " TODO: Git feature may be anoying in future.
 let g:lua_tree_show_icons = {
     \ 'git': 1,
@@ -492,13 +489,29 @@ nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 " Configure lsp
 lua <<EOF
 local on_attach = function(client)
-  require'diagnostic'.on_attach(client)
   require'completion'.on_attach(client)
 end
-require'nvim_lsp'.hls.setup{on_attach=on_attach}
+require'lspconfig'.hls.setup{on_attach=on_attach}
+require'lspconfig'.rust_analyzer.setup{on_attach=on_attach}
 vim.lsp.callbacks['textDocument/codeAction'] = require'lsputil.codeAction'.code_action_handler
 
 vim.g.lsp_utils_codeaction_opts = { list = { border = false, numbering = false } }
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    -- Enable underline, use default values
+    underline = true,
+    -- Enable virtual text, override spacing to 4
+    virtual_text = {
+      spacing = 4,
+      prefix = '',
+    },
+    signs = true,
+    -- Disable a feature
+    update_in_insert = false,
+  }
+)
+
 EOF
 
 nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
@@ -513,22 +526,20 @@ nnoremap <silent> <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> <leader>ld <cmd>lua vim.lsp.buf.declaration()<CR>
 nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
 
-call sign_define("LspDiagnosticsErrorSign", {"text" : "✗", "texthl" : "LspDiagnosticsError"})
-call sign_define("LspDiagnosticsWarningSign", {"text" : "", "texthl" : "LspDiagnosticsWarning"})
-call sign_define("LspDiagnosticsInformationSign", {"text" : "", "texthl" : "LspDiagnosticsInformation"})
-call sign_define("LspDiagnosticsHintSign", {"text" : "", "texthl" : "LspDiagnosticsHint"})
+call sign_define("LspDiagnosticsrSignErro", {"text" : "✗", "texthl" : "LspDiagnosticsError"})
+call sign_define("LspDiagnosticsSignWarning", {"text" : "", "texthl" : "LspDiagnosticsWarning"})
+call sign_define("LspDiagnosticsSignInformation", {"text" : "", "texthl" : "LspDiagnosticsInformation"})
+call sign_define("LspDiagnosticsSignHint", {"text" : "", "texthl" : "LspDiagnosticsHint"})
 
-highlight LspDiagnosticsError gui=bold guifg=#F7768E
-highlight LspDiagnosticsWarning gui=bold guifg=#E0AF68
-highlight link LspDiagnosticsInformation TermCursorNC
-highlight LspDiagnosticsHint gui=bold guifg=#FFCC33
+highlight LspDiagnosticsVirtualTextError gui=bold guifg=#F7768E
+highlight LspDiagnosticsVirtualTextWarning gui=bold guifg=#E0AF68
+highlight link LspDiagnosticsVirtualTextInformation TermCursorNC
+highlight LspDiagnosticsVirtualTextHint gui=bold guifg=#FFCC33
 
-let g:diagnostic_enable_virtual_text = 1
-let g:diagnostic_virtual_text_prefix = ' '
+nnoremap <silent> [c :lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> ]c :lua vim.lsp.diagnostic.goto_next()<CR>
 
-nnoremap <silent> [c :PrevDiagnosticCycle<CR>
-nnoremap <silent> ]c :NextDiagnosticCycle<CR>
-
+" Configure completion-nvim
 " set completeopt=noinsert,menuone,noselect
 set completeopt=menuone,noinsert,noselect
 " Avoid showing message extra message when using completion
@@ -538,17 +549,21 @@ inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 imap <silent> <c-p> <Plug>(completion_trigger)
 
+" I don't want to get a seizure :D
+" It is really annoying when stuff trigger on it's own. Maybe it could be fine
+" if it ware relevant?
+let g:completion_enable_auto_popup = 0
 let g:completion_auto_change_source = 1
 imap <c-j> <Plug>(completion_next_source)
 imap <c-k> <Plug>(completion_prev_source)
 
 let g:completion_chain_complete_list = [
-    \{'complete_items': ['lsp', 'snippet']},
+    \{'complete_items': ['<c-n>', 'lsp', 'snippet']},
     \{'mode': '<c-p>'},
     \{'mode': '<c-n>'}
 \]
 
-let g:completion_matching_strategy_list = ["fuzzy", "exact", "substring", "all"]
+let g:completion_matching_strategy_list = ["exact", "substring", "fuzzy", "all"]
 let g:completion_matching_ignore_case = 1
 " TODO: This may be a really bad idea
 let g:completion_matching_smart_case = 1
