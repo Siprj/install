@@ -38,6 +38,7 @@ function pacman_setp() {
         autoconf
     #    autocutsel
         automake
+        bat
         bind-tools
         bluez
         bluez-utils
