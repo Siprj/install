@@ -245,6 +245,7 @@ xautolock -time 20 -locker slock &
 dunst -conf install/dunstrc &
 
 INVOCATION_ID="" maestral start
+INVOCATION_ID="" dropbox &
 
 xflux -l 49 -g 15
 
