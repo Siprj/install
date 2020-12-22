@@ -327,6 +327,7 @@ typeset -U path
 path+=(~/.local/bin)
 path+=(~/.ghcup/bin)
 path+=(~/.cabal/bin)
+path+=(~/.cargo/bin)
 EOF
 
 # Set zsh behaviour
