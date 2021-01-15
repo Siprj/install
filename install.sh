@@ -48,7 +48,6 @@ function pacman_setp() {
         cups
         deluge
         dia
-        dmenu
     #    dnsmasq
         docker
         dolphin
@@ -110,11 +109,12 @@ function pacman_setp() {
         qt5-doc
         qtcreator
         quassel-client
-        rdesktop
-        remmina
         freerdp
+        rdesktop
         recoll
-        rustup
+        remmina
+        # Application picker instead of dmenu
+        rofi
         # Scanner app
         sane
         scrot
@@ -343,8 +343,8 @@ cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
-alias vim="nvim"
-EDITOR=vim
+alias vim="~/.local/bin/nvim"
+EDITOR=nvim
 EOF
 
 if [ -d ~/.oh-my-zsh/plugins/nix-shell ]; then
@@ -354,6 +354,7 @@ else
 fi
 
 cp ${PROG_DIR}/agnoster-nix.zsh-theme ~/.oh-my-zsh/custom/themes
+mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
 
 # Set git behaviour
 git config --global commit.verbose true
@@ -531,7 +532,6 @@ Usage: install.sh [OPTION]
   -a --skip-aur             don't install/update packages form AUR
   -i --skip-pip             don't install packages with pip
   -x --skip-xmonad          don't install/update xmonad
-  -h --skip-hls             don't install/update haskell ide engine (hie)
   -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     sett GPU acceleration method to legacy mode
 EOF
