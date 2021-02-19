@@ -26,10 +26,8 @@ function pacman_setp() {
     # ss is netstat equivalent
     # network-manager-applet run nm-applet
     # recoll document indexing
-    # anki flash cards
     declare -a packages=(
         arandr
-        anki
         ark
         asciidoc
     #    aspell
@@ -57,7 +55,6 @@ function pacman_setp() {
         feh
         firefox
         firewalld
-        flashplugin
         fontconfig
         fping
         freetype2
