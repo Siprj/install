@@ -69,9 +69,10 @@ Plug 'nvim-lua/telescope.nvim'
 " Cool start screen, so I don't need to pick random files to use fuzzy finders.
 Plug 'mhinz/vim-startify'
 
-" NerdTree  is nice but I think it is time to try new file explorer :)
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'kyazdani42/nvim-tree.lua'
+" nerdtree is still more stable then nvim-tree
+Plug 'scrooloose/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
 
 " Nice cheatsheet with key bindings.
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
@@ -262,10 +263,6 @@ tnoremap <c-j> <C-\><C-n><C-w>j
 tnoremap <c-k> <C-\><C-n><C-w>k
 tnoremap <c-l> <C-\><C-n><C-w>l
 
-" Really usefull feature.
-" TODO: I don't think I'm using this wary often. Maybe this remap is not needed?
-nnoremap <F6> :UndotreeToggle<CR>
-
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
 
@@ -290,6 +287,8 @@ func! DeleteTrailingWS()
 endfunc
 
 autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
+
+let g:haskell_indent_disable = 1
 
 
 """ Configure startify
@@ -325,71 +324,37 @@ let g:startify_lists = [
         \ ]
 
 
-""" nvim-tree (lua-tree) configuration
-let g:nvim_tree_side = 'left' "left by default
-let g:nvim_tree_width = 30 "30 by default
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
-let g:nvim_tree_auto_open = 0 "0 by default, opens the tree when typing `vim $DIR` or `vim`
-let g:nvim_tree_auto_close = 0 "0 by default, closes the tree when it's the last window
-let g:nvim_tree_quit_on_open = 1 "0 by default, closes the tree when you open a file
-let g:nvim_tree_follow = 1 "0 by default, this option allows the cursor to be updated when entering a buffer
-let g:nvim_tree_indent_markers = 1 "0 by default, this option shows indent markers when folders are open
-let g:nvim_tree_hide_dotfiles = 1 "0 by default, this option hides files and folders starting with a dot `.`
-let g:nvim_tree_git_hl = 1 "0 by default, will enable file highlight for git attributes (can be used without the icons).
-let g:nvim_tree_root_folder_modifier = ':~' "This is the default. See :help filename-modifiers for more options
-let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
-let g:nvim_tree_allow_resize = 1 "0 by default, will not resize the tree when opening a file
-" TODO: Git feature may be anoying in future.
-let g:nvim_tree_show_icons = {
-    \ 'git': 1,
-    \ 'folders': 1,
-    \ 'files': 1,
-    \ }
+" Close nerdtree after a file is selected
+let NERDTreeQuitOnOpen = 1
 
-" You can edit keybindings be defining this variable
-" You don't have to define all keys.
-" NOTE: the 'edit' key will wrap/unwrap a folder and open a file
-let g:nvim_tree_bindings = {
-    \ 'edit':            ['<CR>', 'o'],
-    \ 'edit_vsplit':     'i',
-    \ 'edit_split':      '<C-x>',
-    \ 'edit_tab':        't',
-    \ 'toggle_ignored':  'I',
-    \ 'toggle_dotfiles': 'H',
-    \ 'refresh':         'R',
-    \ 'preview':         '<Tab>',
-    \ 'cd':              '<C-]>',
-    \ 'create':          'a',
-    \ 'remove':          'd',
-    \ 'rename':          'r',
-    \ 'cut':             'x',
-    \ 'copy':            'c',
-    \ 'paste':           'p',
-    \ 'prev_git_item':   '[c',
-    \ 'next_git_item':   ']c',
-    \ }
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
 
-" default will show icon by default if no icon is provided
-" default shows no icon by default
-let g:nvim_tree_icons = {
-    \ 'default': '',
-    \ 'symlink': '',
-    \ 'git': {
-    \   'unstaged': "",
-    \   'staged': "✓",
-    \   'unmerged': "",
-    \   'renamed': "➜",
-    \   'untracked': ""
-    \   },
-    \ 'folder': {
-    \   'default': "",
-    \   'open': ""
-    \   }
-    \ }
+function! ToggleFindNerd()
+  if IsNERDTreeOpen()
+    exec ':NERDTreeToggle'
+  else
+   exec ':NERDTreeFind'
+  endif
+endfunction
 
-" TODO: Play with lua-tree colors.
-nmap <silent> <leader>o <ESC>:NvimTreeToggle<CR>
+" If nerd tree is closed, find current file, if open, close it/
+nmap <silent> <leader>o <ESC>:call ToggleFindNerd()<CR>
 
+"" Without this there are some '+' or '.' before file names.
+"autocmd FileType nerdtree setlocal nolist
+
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:NERDTreeHighlightFolders = 1 " Enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " Highlights the folder name
+
+" Change NERDTree icon appearance
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 
 """ Configure which key
 "
