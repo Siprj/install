@@ -1,32 +1,4 @@
 set runtimepath+=/home/yrid//.local/share/nvim/runtime
-" `<leader>ss` command
-" TODO: look at:
-" :earlier {count}	Go to older text state {count} times.
-" :earlier {N}s		Go to older text state about {N} seconds before.
-" :earlier {N}m		Go to older text state about {N} minutes before.
-" :earlier {N}h		Go to older text state about {N} hours before.
-" :earlier {N}d		Go to older text state about {N} days before.
-" :earlier {N}f		Go to older text state {N} file writes before.
-" 			When changes were made since the last write
-" 			":earlier 1f" will revert the text to the state when
-" 			it was written.  Otherwise it will go to the write
-" 			before that.
-" 			When at the state of the first file write, or when
-" 			the file was not written, ":earlier 1f" will go to
-" 			before the first change.
-" 
-" 							*g+*
-" g+			Go to newer text state.  With a count repeat that many
-" 			times.
-" 							*:lat* *:later*
-" :later {count}		Go to newer text state {count} times.
-" :later {N}s		Go to newer text state about {N} seconds later.
-" :later {N}m		Go to newer text state about {N} minutes later.
-" :later {N}h		Go to newer text state about {N} hours later.
-" :later {N}d		Go to newer text state about {N} days later.
-" 
-" :later {N}f		Go to newer text state {N} file writes later.
-
 
 " Polyglot should only do syntax parsing and filetype detection.
 " This has to be set before polyglot plugin is loaded.
@@ -35,14 +7,9 @@ let g:polyglot_disabled = ['sensible', 'autoindent']
 " TODO: Look at following stuff:
 "  * https://github.com/zatchheems/vim-camelsnek
 "  * https://github.com/zatchheems/tokyo-night-alacritty-theme
-"  * https://github.com/mhinz/vim-signify
 "  * https://vim.rtorr.com/
-"  * https://github.com/hrsh7th/vim-vsnip
-"  * https://github.com/Shougo/deoppet.nvim
-"  * https://github.com/vuciv/vim-bujo
 "  * https://github.com/nvim-lua/lsp_extensions.nvim
 "  * https://github.com/norcalli/snippets.nvim
-"  * https://github.com/nvim-lua/lsp-status.nvim
 
 call plug#begin('~/.config/nvim/bundle')
 
@@ -79,7 +46,7 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 
 Plug 'mbbill/undotree'
 
-" Really nice and fluid way to move around the file without the need for 
+" Really nice and fluid way to move around the file without the need for
 " complicated commands.
 Plug 'easymotion/vim-easymotion'
 
@@ -101,8 +68,12 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
 
 " Nice code actions???
-Plug 'RishabhRD/popfix'
-Plug 'RishabhRD/nvim-lsputils'
+" Plug 'RishabhRD/popfix'
+" Plug 'RishabhRD/nvim-lsputils'
+Plug 'glepnir/lspsaga.nvim'
+
+Plug 'nvim-lua/lsp-status.nvim'
+Plug 'hoob3rt/lualine.nvim'
 
 call plug#end()
 
@@ -436,7 +407,6 @@ command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
 nnoremap <leader>gg :GGrep 
 nnoremap <silent> <leader>gb :Gblame<CR>
 
-
 " Configure LazyGit
 " TODO: Look at some advanced configuration with remote nvim.
 nnoremap <silent> <leader>lg :LazyGit<CR>
@@ -454,56 +424,75 @@ nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 
 " Configure lsp
 lua <<EOF
+
+local lsp_status = require('lsp-status')
+lsp_status.register_progress()
+
 local on_attach = function(client)
   require'completion'.on_attach(client)
+  lsp_status.on_attach(client)
 end
-require'lspconfig'.hls.setup{on_attach=on_attach}
-require'lspconfig'.rust_analyzer.setup{on_attach=on_attach}
-vim.lsp.callbacks['textDocument/codeAction'] = require'lsputil.codeAction'.code_action_handler
-
-vim.g.lsp_utils_codeaction_opts = { list = { border = false, numbering = false } }
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- Enable underline, use default values
-    underline = true,
-    -- Enable virtual text, override spacing to 4
-    virtual_text = {
-      spacing = 4,
-      prefix = '',
-    },
-    signs = true,
-    -- Disable a feature
-    update_in_insert = false,
-  }
-)
+require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"haskell-language-server", "--lsp"}}
+require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
+local saga = require 'lspsaga'
+saga.init_lsp_saga{
+--  use_saga_diagnostic_sign = true
+--  dianostic_header_icon = '   ',
+--  code_action_icon = ' ',
+--  code_action_keys = { quit = 'q',exec = '<CR>' }
+--  finder_definition_icon = '  ',
+--  finder_reference_icon = '  ',
+--  max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
+--  finder_action_keys = {
+--    open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
+--  },
+--  code_action_keys = {
+--    quit = 'q',exec = '<CR>'
+--  },
+--  rename_action_keys = {
+--    quit = '<C-c>',exec = '<CR>'  -- quit can be a table
+--  },
+--  definition_preview_icon = '  '
+--  1: thin border | 2: rounded border | 3: thick border | 4: ascii border
+--  border_style = 1,
+--  rename_prompt_prefix = '➤',
+--  if you don't use nvim-lspconfig you must pass your server name and
+--  the related filetypes into this table
+  border_style = 2,
+  error_sign = '✗',
+  warn_sign = '',
+  hint_sign = '',
+  infor_sign = '',
+}
 
 EOF
 
-nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
+
+nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+" scroll down hover doc or scroll in definition preview
+nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
+" scroll up hover doc
+nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 
+nnoremap <silent> <leader>lh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+nnoremap <silent> <leader>lpd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
+nnoremap <silent> <leader>ls <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
+vnoremap <silent> <leader>la <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+nnoremap <silent> <leader>la <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+nnoremap <silent> <leader>lr <cmd>lua require('lspsaga.rename').rename()<CR>
+
+nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>
+
+nnoremap <silent> [c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>
+nnoremap <silent> ]c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>
+
+
 nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <leader><c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> <leader>lD <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> <leader>l1 <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> <leader>ld <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
-
-call sign_define("LspDiagnosticsrSignErro", {"text" : "✗", "texthl" : "LspDiagnosticsError"})
-call sign_define("LspDiagnosticsSignWarning", {"text" : "", "texthl" : "LspDiagnosticsWarning"})
-call sign_define("LspDiagnosticsSignInformation", {"text" : "", "texthl" : "LspDiagnosticsInformation"})
-call sign_define("LspDiagnosticsSignHint", {"text" : "", "texthl" : "LspDiagnosticsHint"})
-
-highlight LspDiagnosticsVirtualTextError gui=bold guifg=#F7768E
-highlight LspDiagnosticsVirtualTextWarning gui=bold guifg=#E0AF68
-highlight link LspDiagnosticsVirtualTextInformation TermCursorNC
-highlight LspDiagnosticsVirtualTextHint gui=bold guifg=#FFCC33
-
-nnoremap <silent> [c :lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> ]c :lua vim.lsp.diagnostic.goto_next()<CR>
 
 " Configure completion-nvim
 " set completeopt=noinsert,menuone,noselect
@@ -513,7 +502,10 @@ set shortmess+=c
 
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+imap <Tab> <Plug>(completion_smart_tab)
+imap <S-Tab> <Plug>(completion_smart_s_tab)
 imap <silent> <c-p> <Plug>(completion_trigger)
+imap <silent> <c-n> <Plug>(completion_trigger)
 
 " I don't want to get a seizure :D
 " It is really annoying when stuff trigger on it's own. Maybe it could be fine
@@ -536,500 +528,37 @@ let g:completion_matching_smart_case = 1
 
 " TODO: Snippets
 
+" lualine
+lua <<EOF
+local lualine = require('lualine')
+    lualine.options = {
+      theme = 'nightfly',
+      section_separators = {'', ''},
+      component_separators = {'', ''},
+      icons_enabled = true,
+    }
+    function getStatusFunc () return require('lsp-status').status() end
+
+    lualine.sections = {
+      lualine_a = { 'mode' },
+      lualine_b = { 'branch' },
+      lualine_c = { 'filename' },
+      lualine_x = { 'encoding', 'fileformat', 'filetype' },
+      lualine_y = { getStatusFunc, 'progress' },
+      lualine_z = { 'location'  },
+    }
+    lualine.inactive_sections = {
+      lualine_a = {  },
+      lualine_b = {  },
+      lualine_c = { 'filename' },
+      lualine_x = { 'location' },
+      lualine_y = {  },
+      lualine_z = {   }
+    }
+    lualine.extensions = { 'fzf' }
+    lualine.status()
+EOF
+
 "call plug#begin('~/.config/nvim/bundle')
 "
-"Plug 'thaerkh/vim-indentguides'
-"Plug 'tpope/vim-fugitive'
-"Plug 'int3/vim-extradite'
-"Plug 'scrooloose/nerdtree'
-"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-"Plug 'vim-airline/vim-airline'
-"Plug 'majutsushi/tagbar'
-"Plug 'junegunn/fzf'
-"Plug 'junegunn/fzf.vim'
-"Plug 'mbbill/undotree'
 "Plug 'easymotion/vim-easymotion'
-"Plug 'ConradIrwin/vim-bracketed-paste'
-"Plug 'vim-scripts/DoxygenToolkit.vim'
-"Plug 'neovimhaskell/haskell-vim', { 'for': 'haskell' }
-"Plug 'purescript-contrib/purescript-vim'
-"Plug 'FrigoEU/psc-ide-vim'
-"Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
-"Plug 'neoclide/coc-snippets'
-"Plug 'ryanoasis/vim-devicons'
-"" Plug 'jremmen/vim-ripgrep'
-"
-"Plug 'dracula/vim'
-"
-"call plug#end()
-"
-"" Leader key timeout
-"set tm=2000
-"
-"" Use par for prettier line formatting
-"set formatprg=par
-"let $PARINIT = 'rTbgqR B=.,?_A_a Q=_s>|'
-"
-"" Kill the damned Ex mode.
-"nnoremap Q <nop>
-"
-"" Make <c-h> work like <c-h> again (this is a problem with libterm)
-"nnoremap <BS> <C-w>h
-"
-"set noshowmode
-"
-"" Set 7 lines to the cursor - when moving vertically using j/k
-"set so=7
-"
-"" Turn on the WiLd menu
-"set wildmenu
-"" Tab-complete files up to longest unambiguous prefix
-"set wildmode=list:longest,full
-"
-"" Always show current position
-"set ruler
-"set number
-"
-"" Show trailing whitespace
-"set list
-"" But only interesting whitespace
-"if &listchars ==# 'eol:$'
-"  set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
-"endif
-"
-"" Height of the command bar
-"set cmdheight=2
-"
-"" Configure backspace so it acts as it should act
-"set backspace=eol,start,indent
-"set whichwrap+=<,>,h,l
-"
-"" Ignore case when searching
-"set ignorecase
-"
-"" When searching try to be smart about cases
-"set smartcase
-"
-"" Highlight search results
-"set hlsearch
-"
-"" Makes search act like search in modern browsers
-"set incsearch
-"
-"" Don't redraw while executing macros (good performance config)
-"set lazyredraw
-"
-"" For regular expressions turn magic on
-"set magic
-"
-"" Show matching brackets when text indicator is over them
-"set showmatch
-"" How many tenths of a second to blink when matching brackets
-"set mat=2
-"
-"" No annoying sound on errors
-"set noerrorbells
-"set vb t_vb=
-"
-"" Force redraw
-"map <silent> <leader>r :redraw!<CR>
-"
-"" Turn mouse mode on
-"nnoremap <leader>ma :set mouse=a<cr>
-"
-"" Turn mouse mode off
-"nnoremap <leader>mo :set mouse=<cr>
-"
-"" Default to mouse mode off
-"set mouse=
-"
-"try
-"  colorscheme dracula
-"catch
-"endtry
-"
-"" Adjust signscolumn to match wombat
-""hi! link SignColumn LineNr
-""
-"
-""" Searing red very visible cursor
-""hi Cursor guibg=red
-"
-"" Don't blink normal mode cursor
-"set guicursor=n-v-c:block-Cursor
-"set guicursor+=n-v-c:blinkon0
-"
-"" Use Unix as the standard file type
-"set ffs=unix,dos,mac
-"
-"" Use powerline fonts for airline
-"if !exists('g:airline_symbols')
-"  let g:airline_symbols = {}
-"endif
-"
-"let g:airline_powerline_fonts = 1
-"let g:airline_symbols.space = "\ua0"
-"let g:airline#extensions#disable_rtp_load = 1
-"let g:airline_extensions = ['branch', 'hunks', 'coc']
-"
-"let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
-"let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
-"
-"" Turn backup off, since most stuff is in Git anyway...
-"set nobackup
-"set nowb
-"set noswapfile
-"
-"" Source the vimrc file after saving it
-"augroup sourcing
-"  autocmd!
-"    autocmd bufwritepost init.vim source $MYVIMRC
-"augroup END
-"
-"" Fuzzy find files
-"nnoremap <silent> <Leader><space> :FZF<CR>
-"
-"" Use spaces instead of tabs
-"set expandtab
-"
-"" Be smart when using tabs ;)
-"set smarttab
-"
-"" 1 tab == 4 spaces
-"set shiftwidth=4
-"set tabstop=4
-"autocmd Filetype cpp,c setlocal tabstop=2 shiftwidth=2
-"
-"" Linebreak on 500 characters
-"set lbr
-"set tw=500
-"
-""set ai "Auto indent
-""set si "Smart indent
-""set wrap "Wrap lines
-"
-"" Copy and paste to os clipboard
-"nnoremap <leader>y "+y
-"xnoremap <leader>y "+y
-"nnoremap <leader>d "+d
-"xnoremap <leader>d "+d
-"nnoremap <leader>p "+p
-"xnoremap <leader>p "+p
-"
-"" Moving around, tabs, windows and buffers {{{
-"
-"" Treat long lines as break lines (useful when moving around in them)
-"nnoremap j gj
-"nnoremap k gk
-"
-"" Disable highlight when <leader><cr> is pressed
-"" but preserve cursor coloring
-"nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
-"
-"" Return to last edit position when opening files (You want this!)
-"augroup last_edit
-"  autocmd!
-"  autocmd BufReadPost *
-"       \ if line("'\"") > 0 && line("'\"") <= line("$") |
-"       \   exe "normal! g`\"" |
-"       \ endif
-"augroup END
-"
-"" Remember info about open buffers on close
-"set viminfo^=%
-"
-"" Open window splits in various places
-"nnoremap <leader>sh :leftabove  vnew<CR>
-"nnoremap <leader>sl :rightbelow vnew<CR>
-"nnoremap <leader>sk :leftabove  new<CR>
-"nnoremap <leader>sj :rightbelow new<CR>
-"
-"" don't close buffers when you aren't displaying them
-"set hidden
-"
-"
-"let g:indentLine_char = '┆'
-"
-"set colorcolumn=80
-"
-"set guifont=DroidSansMono_Nerd_Font:h15
-"
-""" previous buffer, next buffer
-""nnoremap <leader>bp :bp<cr>
-""nnoremap <leader>bn :bn<cr>
-""
-"
-"" Neovim terminal configurations
-"" Use <Esc> to escape terminal insert mode
-"tnoremap <Esc> <C-\><C-n>
-"
-"" Make terminal split moving behave like normal neovim
-"tnoremap <c-h> <C-\><C-n><C-w>h
-"tnoremap <c-j> <C-\><C-n><C-w>j
-"tnoremap <c-k> <C-\><C-n><C-w>k
-"tnoremap <c-l> <C-\><C-n><C-w>l
-"
-"" Always show the status line
-"set laststatus=2
-"
-"" Utility function to delete trailing white space
-"func! DeleteTrailingWS()
-"    let l:save = winsaveview()
-"    %s/\s\+$//e
-"    call winrestview(l:save)
-"endfunc
-"
-"autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
-"
-"nnoremap <F6> :UndotreeToggle<cr>
-"
-"" Pressing ,ss will toggle and untoggle spell checking
-"map <leader>ss :setlocal spell!<cr>
-"
-"nmap f <Plug>(easymotion-f)
-"nmap F <Plug>(easymotion-F)
-"nmap <silent> <leader>w <Plug>(easymotion-w)
-"nmap <silent> <leader>W <Plug>(easymotion-W)
-"nmap <silent> <leader>e <Plug>(easymotion-e)
-"nmap <silent> <leader>E <Plug>(easymotion-E)
-"nmap <silent> <leader>j <Plug>(easymotion-j)
-"nmap <silent> <leader>k <Plug>(easymotion-l)
-"xmap f <Plug>(easymotion-f)
-"xmap F <Plug>(easymotion-F)
-"xmap <silent> <leader>w <Plug>(easymotion-w)
-"xmap <silent> <leader>W <Plug>(easymotion-W)
-"xmap <silent> <leader>e <Plug>(easymotion-e)
-"xmap <silent> <leader>E <Plug>(easymotion-E)
-"xmap <silent> <leader>j <Plug>(easymotion-j)
-"xmap <silent> <leader>k <Plug>(easymotion-l)
-"omap f <Plug>(easymotion-f)
-"omap F <Plug>(easymotion-F)
-"omap <silent> <leader>w <Plug>(easymotion-w)
-"omap <silent> <leader>W <Plug>(easymotion-W)
-"omap <silent> <leader>e <Plug>(easymotion-e)
-"omap <silent> <leader>E <Plug>(easymotion-E)
-"omap <silent> <leader>j <Plug>(easymotion-j)
-"omap <silent> <leader>k <Plug>(easymotion-l)
-"
-"" Close nerdtree after a file is selected
-"let NERDTreeQuitOnOpen = 1
-"
-"function! IsNERDTreeOpen()
-"  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
-"
-"function! ToggleFindNerd()
-"  if IsNERDTreeOpen()
-"    exec ':NERDTreeToggle'
-"  else
-"   exec ':NERDTreeFind'
-"  endif
-"endfunction
-"
-"" If nerd tree is closed, find current file, if open, close it/
-"nmap <silent> <leader>o <ESC>:call ToggleFindNerd()<CR>
-"
-""" Without this there are some '+' or '.' before file names.
-""autocmd FileType nerdtree setlocal nolist
-"
-"let g:NERDTreeFileExtensionHighlightFullName = 1
-"let g:NERDTreeExactMatchHighlightFullName = 1
-"let g:NERDTreePatternMatchHighlightFullName = 1
-"
-"let g:NERDTreeHighlightFolders = 1 " Enables folder icon highlighting using exact match
-"let g:NERDTreeHighlightFoldersFullName = 1 " Highlights the folder name
-"
-"" Change NERDTree icon appearance
-"let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"
-"" Tags {{{
-"
-"map <leader>tt :TagbarToggle<CR>
-"
-"set tags=tags;/
-"set cst
-"set csverb
-"
-"" Tagbar setup
-"let g:tagbar_type_haskell = {
-"    \ 'ctagsbin'  : 'fast-tags',
-"    \ 'ctagsargs' : '-o -',
-"    \ 'kinds'     : [
-"        \  'm:modules:0:1',
-"        \  'd:data: 0:1',
-"        \  'd_gadt: data gadt:0:1',
-"        \  't:type names:0:1',
-"        \  'nt:new types:0:1',
-"        \  'c:classes:0:1',
-"        \  'cons:constructors:1:1',
-"        \  'c_gadt:constructor gadt:1:1',
-"        \  'c_a:constructor accessors:1:1',
-"        \  'f:function types:0:1',
-"        \  'o:others:0:1'
-"    \ ],
-"    \ 'sro'        : '.',
-"    \ 'kind2scope' : {
-"        \ 'm' : 'module',
-"        \ 'c' : 'class',
-"        \ 'd' : 'data',
-"        \ 't' : 'type'
-"    \ },
-"    \ 'scope2kind' : {
-"        \ 'module' : 'm',
-"        \ 'class'  : 'c',
-"        \ 'data'   : 'd',
-"        \ 'type'   : 't'
-"    \ }
-"\ }
-"
-"let g:extradite_width = 60
-"" Hide messy Ggrep output and copen automatically
-"function! NonintrusiveGitGrep(term)
-"  execute "copen"
-"  " Map 't' to open selected item in new tab
-"  execute "nnoremap <silent> <buffer> t <C-W><CR><C-W>T"
-"  execute "silent! Ggrep " . a:term
-"  execute "redraw!"
-"endfunction
-"
-"command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
-"nmap <leader>gs :Gstatus<CR>
-"nmap <leader>gg :copen<CR>:GGrep 
-"nmap <leader>gl :Extradite!<CR>
-"nmap <leader>gd :Gdiff<CR>
-"nmap <leader>gb :Gblame<CR>
-"
-"" Use <c-space> for trigger completion.
-"inoremap <silent><expr> <c-space> coc#refresh()
-"
-"" Use <cr> for confirm completion, `<C-g>u` means break undo chain at current
-"" position. Coc only does snippet and additional edit on confirm.
-"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"
-"" Use `[c` and `]c` for navigate diagnostics
-"nmap <silent> [c <Plug>(coc-diagnostic-prev)
-"nmap <silent> ]c <Plug>(coc-diagnostic-next)
-"
-"" Remap keys for gotos
-"nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-"nmap <silent> gi <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)<Paste>
-"
-"" Remap for do codeAction of current line
-"nmap <leader>ac <Plug>(coc-codeaction)
-"
-"" Remap for do action format
-"nnoremap <silent> <leader>cf :call CocAction('format')<CR>
-"
-"" Show signature help
-"autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-"
-"" Highlight symbol under cursor on CursorHold
-"autocmd CursorHold * silent call CocActionAsync('highlight')
-"
-"" Use K for show documentation in preview window
-"nnoremap <silent> K :call <SID>show_documentation()<CR>
-"
-"function! s:show_documentation()
-"  if &filetype == 'vim'
-"    execute 'h '.expand('<cword>')
-"  else
-"    call CocAction('doHover')
-"  endif
-"endfunction
-"
-"" Remap for rename current word
-"nmap <leader>rn <Plug>(coc-rename)
-"
-"" Show all diagnostics
-"nnoremap <silent> <space>a :<C-u>CocList diagnostics<cr>
-"" Find symbol of current document
-"nnoremap <silent> <space>o :<C-u>CocList outline<cr>
-"" Search workspace symbols
-"nnoremap <silent> <space>s :<C-u>CocList -I symbols<cr>
-"" Do default action for next item.
-"nnoremap <silent> <space>j :<C-u>CocNext<CR>
-"" Do default action for previous item.
-"nnoremap <silent> <space>k :<C-u>CocPrev<CR>
-"" Resume latest coc list
-"nnoremap <silent> <space>p :<C-u>CocListResume<CR>
-"
-"" Close preview (shown for hover / signature help)
-"nnoremap <leader> <Esc> :pclose<CR>
-"
-"
-"call coc#config('languageserver', {
-"    \ "clangd": {
-"    \   "command": "clangd",
-"    \   "rootPatterns": ["compile_commands.json"],
-"    \   "filetypes": ["c", "cpp", "h", "hpp"]
-"    \ },
-"    \ "haskell-ide": {
-"    \   "command": "haskell-language-server-wrapper",
-"    \   "args": ["--lsp"],
-"    \   "rootPatterns": [
-"    \     "*.cabal",
-"    \     "stack.yaml",
-"    \     "cabal.project",
-"    \     "package.yaml"
-"    \   ],
-"    \   "filetypes": [
-"    \     "hs",
-"    \     "lhs",
-"    \     "haskell"
-"    \   ],
-"    \   "initializationOptions": {
-"    \     "languageServerHaskell": {
-"    \     }
-"    \   }
-"    \ }
-"    \})
-"
-""set completeopt=noinsert,menuone,noselect
-""" use <tab> for trigger completion and navigate to next complete item
-""function! s:check_back_space() abort
-""  let col = col('.') - 1
-""  return !col || getline('.')[col - 1]  =~ '\s'
-""endfunction
-""
-""inoremap <silent><expr> <TAB>
-""      \ pumvisible() ? "\<C-n>" :
-""      \ <SID>check_back_space() ? "\<TAB>" :
-""      \ coc#refresh()
-""
-""inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-""inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-""inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-""autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-""
-""
-""
-""function! s:show_documentation()
-""  if &filetype == 'vim'
-""    execute 'h '.expand('<cword>')
-""  else
-""    call CocAction('doHover')
-""  endif
-""endfunction
-""
-""nnoremap <F5> :CocList<CR>
-""" Or map each action separately
-""nnoremap <silent> <leader>K :call <SID>show_documentation()<CR>
-""nmap <silent> <F2> <Plug>(coc-rename)
-""
-""nmap <silent> <leader>gd <Plug>(coc-definition)
-""nmap <silent> <leader>gy <Plug>(coc-type-definition)
-""nmap <silent> <leader>gi <Plug>(coc-implementation)
-""nmap <silent> <leader>gr <Plug>(coc-references)
-""
-""" Highlight symbol under cursor on CursorHold
-""autocmd CursorHold * silent call CocActionAsync('highlight')
-""
-""nmap <silent> <leader>< <Plug>(coc-diagnostic-prev)
-""nmap <silent> <leader>> <Plug>(coc-diagnostic-next)
-""nmap <silent> <leader>c <Plug>(coc-fix-current)
-""
-""
-""" }}} coc
