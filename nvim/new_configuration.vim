@@ -67,9 +67,6 @@ Plug 'neovim/nvim-lspconfig'
 " Completions fupport for lsp
 Plug 'nvim-lua/completion-nvim'
 
-" Nice code actions???
-" Plug 'RishabhRD/popfix'
-" Plug 'RishabhRD/nvim-lsputils'
 Plug 'glepnir/lspsaga.nvim'
 
 Plug 'nvim-lua/lsp-status.nvim'
@@ -432,7 +429,7 @@ local on_attach = function(client)
   require'completion'.on_attach(client)
   lsp_status.on_attach(client)
 end
-require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"haskell-language-server", "--lsp"}}
+require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"run-hls.sh", "--lsp"}}
 require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
 local saga = require 'lspsaga'
 saga.init_lsp_saga{

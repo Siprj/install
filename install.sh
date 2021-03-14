@@ -505,6 +505,8 @@ if [ -d "~/.config/nvim/" ]; then
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
+cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin"
+
 mkdir -p ~/.config/jesseduffield/lazygit/
 cat > ~/.config/jesseduffield/lazygit/config.yml <<EOF
   gui:
