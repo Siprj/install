@@ -177,8 +177,8 @@ function haskell_step () {
 
     which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
     which ghcup || curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
-    ghcup install ghc "8.8.3"
-    ghcup set ghc "8.8.3"
+    ghcup install ghc "8.10.4"
+    ghcup set ghc "8.10.4"
     ghcup install cabal
     ghcup install hls
     cabal update
