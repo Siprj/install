@@ -254,7 +254,7 @@ func! DeleteTrailingWS()
     call winrestview(l:save)
 endfunc
 
-autocmd FileType c,cpp,java,haskell,javascript,python autocmd BufWritePre <buffer> :call DeleteTrailingWS()
+autocmd FileType c,cpp,java,haskell,javascript,python,elm autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
 let g:haskell_indent_disable = 1
 
@@ -418,10 +418,8 @@ nnoremap <silent> <leader>t :lua require'telescope.builtin'.builtin()<CR>
 nnoremap <silent> <leader>tl :lua require'telescope.builtin'.live_grep()<CR>
 nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 
-
 " Configure lsp
 lua <<EOF
-
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
@@ -431,6 +429,7 @@ local on_attach = function(client)
 end
 require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"run-hls.sh", "--lsp"}}
 require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
+require'lspconfig'.elmls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
 local saga = require 'lspsaga'
 saga.init_lsp_saga{
 --  use_saga_diagnostic_sign = true
@@ -525,37 +524,37 @@ let g:completion_matching_smart_case = 1
 
 " TODO: Snippets
 
+
 " lualine
 lua <<EOF
-local lualine = require('lualine')
-    lualine.options = {
-      theme = 'nightfly',
-      section_separators = {'', ''},
-      component_separators = {'', ''},
-      icons_enabled = true,
-    }
-    function getStatusFunc () return require('lsp-status').status() end
+    local lualine = require('lualine')
 
-    lualine.sections = {
-      lualine_a = { 'mode' },
-      lualine_b = { 'branch' },
-      lualine_c = { 'filename' },
-      lualine_x = { 'encoding', 'fileformat', 'filetype' },
-      lualine_y = { getStatusFunc, 'progress' },
-      lualine_z = { 'location'  },
+    function getStatusFunc () return require('lsp-status').status() end
+    local config = { 
+      options = {
+        theme = 'nightfly',
+        section_separators = {'', ''},
+        component_separators = {'', ''},
+        icons_enabled = true
+      },
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch' },
+        lualine_c = { 'filename' },
+        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { getStatusFunc, 'progress' },
+        lualine_z = { 'location'  }
+      },
+      inactive_sections = {
+        lualine_a = {  },
+        lualine_b = {  },
+        lualine_c = { 'filename' },
+        lualine_x = { 'location' },
+        lualine_y = {  },
+        lualine_z = {   }
+      },
+      extensions = { 'fzf' }
     }
-    lualine.inactive_sections = {
-      lualine_a = {  },
-      lualine_b = {  },
-      lualine_c = { 'filename' },
-      lualine_x = { 'location' },
-      lualine_y = {  },
-      lualine_z = {   }
-    }
-    lualine.extensions = { 'fzf' }
-    lualine.status()
+    lualine.setup(config)
 EOF
 
-"call plug#begin('~/.config/nvim/bundle')
-"
-"Plug 'easymotion/vim-easymotion'
