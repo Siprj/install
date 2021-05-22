@@ -61,6 +61,7 @@ function pacman_setp() {
         gcc-multilib
         gdb
         git
+        git-lfs
         gitg
     #    gnome-logs
         graphviz
@@ -163,6 +164,9 @@ function aur_step () {
     pacman -Q zoom || trizen -S zoom --noedit --noconfirm
     pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
     pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
+    pacman -Q polybar || trizen -S polybar --noedit --noconfirm
+    pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
+    pacman -Q siji || trizen -S siji --noedit --noconfirm
 }
 
 function pip_setup() {
