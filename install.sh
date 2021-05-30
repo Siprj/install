@@ -237,7 +237,7 @@ xrdb ~/.Xresources
 
 # xsetroot -cursor_name left_ptr
 
-trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 5 --transparent true --tint 0x000000 --height 17 --monitor primary --alpha 0 &
+# trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 5 --transparent true --tint 0x000000 --height 17 --monitor primary --alpha 0 &
 
 xautolock -time 20 -locker slock &
 
@@ -245,12 +245,14 @@ xautolock -time 20 -locker slock &
 
 dunst -conf install/dunstrc &
 
-INVOCATION_ID="" dropbox &
-
 xflux -l 49 -g 15
 
 export XDG_CURRENT_DESKTOP="qt5ct"
 export QT_QPA_PLATFORMTHEME="qt5ct"
+
+polybar example &
+
+INVOCATION_ID="" dropbox &
 
 exec xmonad
 EOF
