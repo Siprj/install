@@ -49,6 +49,7 @@ function pacman_setp() {
     #    dnsmasq
         docker
         dolphin
+        ffmpegthumbs
         dunst
     #    evince
         expac
