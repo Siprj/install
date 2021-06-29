@@ -49,7 +49,10 @@ function pacman_setp() {
     #    dnsmasq
         docker
         dolphin
+        kdegraphics-thumbnailers
+        dolphin-plugins
         ffmpegthumbs
+        ffmpegthumbnailer
         dunst
     #    evince
         expac
@@ -102,6 +105,7 @@ function pacman_setp() {
         pulseaudio
         python-neovim
         python-pip
+        bpython
         qemu
         qt5
         qt5ct
