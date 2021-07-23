@@ -525,6 +525,9 @@ cat > ~/.config/jesseduffield/lazygit/config.yml <<EOF
         - reverse
 EOF
 
+# Install polybar configuration
+cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config"
+
 # Set default applications
 
 xdg-mime default org.kde.dolphin.desktop inode/directory
