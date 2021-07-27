@@ -526,6 +526,7 @@ cat > ~/.config/jesseduffield/lazygit/config.yml <<EOF
 EOF
 
 # Install polybar configuration
+mkdir -p "${HOME}/.config/polybar"
 cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config"
 
 # Set default applications
