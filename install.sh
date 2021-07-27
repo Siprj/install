@@ -171,7 +171,7 @@ function aur_step () {
     pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
     pacman -Q polybar-git || trizen -S polybar-git --noedit --noconfirm
     pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
-    pacman -Q siji || trizen -S siji --noedit --noconfirm
+    pacman -Q siji-git || trizen -S siji-git --noedit --noconfirm
 }
 
 function pip_setup() {
