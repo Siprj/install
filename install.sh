@@ -18,7 +18,6 @@ function pacman_setp() {
     # feh can setup wallpaper -- used by xmonad-wallpaper package
     # Bit torrent deluge client.
     # File manager nautilus
-    # libasound2-dev for xmobar
     # ubuntu-drivers-common driver installer
     # xautolock can automatically lock computer when no activity
     # scrot is screen capture utility
@@ -30,6 +29,7 @@ function pacman_setp() {
         arandr
         ark
         asciidoc
+        alacritty
     #    aspell
     #    aspell-cs
     #    aspell-en
@@ -144,7 +144,6 @@ function pacman_setp() {
         xorg-xmessage
         xsel
         yarn
-    #    xterm
         zsh
         )
 
@@ -201,7 +200,6 @@ function xmonad_step () {
         (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
         (cd ~/xmonadrc && stack install)
     fi
-    cabal install xmobar --flags=with_alsa --install-method=copy --overwrite-policy=always
 }
 
 function system_setup_step() {
@@ -510,7 +508,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p ~/.config/
-if [ -d "~/.config/nvim/" ]; then
+if [ -L "~/.config/nvim" ]; then
     ln -s "${PROG_DIR}/nvim" ~/.config/nvim
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
@@ -528,6 +526,11 @@ EOF
 # Install polybar configuration
 mkdir -p "${HOME}/.config/polybar"
 cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config"
+
+# Install alacritty configuration
+if [ ! -L "~/.config/alacritty" ]; then
+    ln -s "${PROG_DIR}/alacritty" ~/.config/alacritty
+fi
 
 # Set default applications
 

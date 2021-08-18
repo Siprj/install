@@ -41,9 +41,6 @@ Plug 'scrooloose/nerdtree'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 
-" Nice cheatsheet with key bindings.
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-
 Plug 'mbbill/undotree'
 
 " Really nice and fluid way to move around the file without the need for
@@ -323,43 +320,6 @@ let g:NERDTreeHighlightFoldersFullName = 1 " Highlights the folder name
 " Change NERDTree icon appearance
 let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-
-""" Configure which key
-"
-" TODO: Create leader key_map.
-function! WhichKeyLeader()
-    WhichKey(g:mapleader)
-endfunction
-
-" autocmd! User vim-which-key call which_key#register(',', 'g:leader_which_key_map')
-autocmd! User vim-which-key call which_key#register('', 'g:which_key_map')
-nmap <silent> <Space> :<C-u>WhichKey ''<CR>
-nmap <silent> <leader> :call WhichKeyLeader()<CR>
-
-let g:leader_which_key_map = {
-      \ 'name' : '+leader ',
-      \ 'o' : [mapleader . 'o', 'open file explorer'],
-      \ 'm' : {
-      \   'name' : '+mouse',
-      \   'a': [mapleader . 'ma', 'mouse on'],
-      \   'o': [mapleader . 'mo', 'mouse off'],
-      \   },
-      \ }
-let g:which_key_map = {}
-let g:which_key_map['w'] = {
-      \ 'name' : '+windows <C-w>',
-      \ 'w' : ['<C-W>w', 'other-window'],
-      \ 'c' : ['<C-W>c', 'delete-window'],
-      \ 's' : ['<C-W>s', 'split-window-below'],
-      \ 'v' : ['<C-W>v', 'split-window-right'],
-      \ 'h' : ['<C-W>h', 'window-left'],
-      \ 'j' : ['<C-W>j', 'window-below'],
-      \ 'l' : ['<C-W>l', 'window-right'],
-      \ 'k' : ['<C-W>k', 'window-up'],
-      \ '=' : ['<C-W>=', 'balance-window'],
-      \ }
-let g:which_key_map[','] = g:leader_which_key_map
-
 
 " Configure easymotion
 " TODO: Look at it again there are some interesting examples in README.
