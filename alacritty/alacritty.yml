@@ -427,7 +427,7 @@ font:
   bold: 
     family: FiraCode Nerd Font
     style: Bold
-  size: 7
+  size: 10
 
 scrolling:
   # Maximum number of lines in the scrollback buffer.

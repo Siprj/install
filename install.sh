@@ -163,14 +163,12 @@ function aur_step () {
     pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
     # pacman -Q spotify || trizen -S spotify --noedit --noconfirm
     pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
-    pacman -Q universal-ctags-git || trizen -S universal-ctags-git --noedit --noconfirm
     pacman -Q xflux || trizen -S xflux --noedit --noconfirm
     pacman -Q zoom || trizen -S zoom --noedit --noconfirm
     pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
     pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
     pacman -Q polybar-git || trizen -S polybar-git --noedit --noconfirm
     pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
-    pacman -Q siji-git || trizen -S siji-git --noedit --noconfirm
 }
 
 function pip_setup() {
@@ -240,8 +238,6 @@ xrdb ~/.Xresources
 
 # xsetroot -cursor_name left_ptr
 
-# trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype percent --width 5 --transparent true --tint 0x000000 --height 17 --monitor primary --alpha 0 &
-
 xautolock -time 20 -locker slock &
 
 .screenlayout/two-monitors.sh
@@ -253,7 +249,7 @@ xflux -l 49 -g 15
 export XDG_CURRENT_DESKTOP="qt5ct"
 export QT_QPA_PLATFORMTHEME="qt5ct"
 
-polybar example &
+polybar main &
 
 INVOCATION_ID="" dropbox &
 
