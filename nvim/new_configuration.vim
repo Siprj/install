@@ -384,7 +384,6 @@ local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
 local on_attach = function(client)
-  require'completion'.on_attach(client)
   lsp_status.on_attach(client)
 end
 require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"run-hls.sh", "--lsp"}}
@@ -463,6 +462,9 @@ imap <S-Tab> <Plug>(completion_smart_s_tab)
 imap <silent> <c-p> <Plug>(completion_trigger)
 imap <silent> <c-n> <Plug>(completion_trigger)
 
+" Enable completion for all buffers
+autocmd BufEnter * lua require'completion'.on_attach()
+
 " I don't want to get a seizure :D
 " It is really annoying when stuff trigger on it's own. Maybe it could be fine
 " if it ware relevant?
@@ -472,7 +474,7 @@ imap <c-j> <Plug>(completion_next_source)
 imap <c-k> <Plug>(completion_prev_source)
 
 let g:completion_chain_complete_list = [
-    \{'complete_items': ['<c-n>', 'lsp', 'snippet']},
+    \{'complete_items': ['lsp', 'snippet']},
     \{'mode': '<c-p>'},
     \{'mode': '<c-n>'}
 \]
