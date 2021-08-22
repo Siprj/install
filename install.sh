@@ -504,7 +504,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 mkdir -p ~/.config/
-if [ -L "~/.config/nvim" ]; then
+if [ ! -L "${HOME}/.config/nvim" ]; then
     ln -s "${PROG_DIR}/nvim" ~/.config/nvim
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
@@ -524,7 +524,7 @@ mkdir -p "${HOME}/.config/polybar"
 cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config"
 
 # Install alacritty configuration
-if [ ! -L "~/.config/alacritty" ]; then
+if [ ! -L "${HOME}/.config/alacritty" ]; then
     ln -s "${PROG_DIR}/alacritty" ~/.config/alacritty
 fi
 
