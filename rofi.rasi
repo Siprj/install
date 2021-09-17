@@ -84,11 +84,23 @@ mainbox {
 }
 
 element {
-    background-color:               @al;
-    text-color:                     @fg;
-    orientation:                    horizontal;
-    border-radius:                  0%;
-    padding:                        0.5% 0.5% 0.5% 0.5%;
+    cursor:           pointer;
+    text-color:       @fg;
+    padding:          0.5000% ;
+    orientation:      horizontal;
+    background-color: @al;
+    border-radius:    0.0000% ;
+    border:           0;
+    spacing:          5px ;
+}
+
+element normal.normal {
+    background-color: @al;
+    text-color:       @fg;
+}
+element alternate.normal {
+    background-color: @al;
+    text-color:       @fg;
 }
 
 element-icon {
