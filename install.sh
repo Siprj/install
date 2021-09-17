@@ -344,7 +344,7 @@ cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
-alias vim="~/.local/bin/nvim"
+alias vim="nvim"
 EDITOR=nvim
 EOF
 
