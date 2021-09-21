@@ -50,9 +50,6 @@ Plug 'easymotion/vim-easymotion'
 " I use only git blame form this. TODO: Maybe I can get rid of it?
 Plug 'tpope/vim-fugitive'
 
-" Lazygit integration for neovim. Uses lua :).
-Plug 'kdheepak/lazygit.nvim'
-
 " Fuzzy file exploration.
 " Fzf has much better fuzzy finder than telescope for now.
 Plug 'junegunn/fzf'
@@ -64,7 +61,7 @@ Plug 'neovim/nvim-lspconfig'
 " Completions fupport for lsp
 Plug 'nvim-lua/completion-nvim'
 
-Plug 'glepnir/lspsaga.nvim'
+" Plug 'glepnir/lspsaga.nvim'
 
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'hoob3rt/lualine.nvim'
@@ -362,12 +359,7 @@ endfunction
 
 command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
 nnoremap <leader>gg :GGrep 
-nnoremap <silent> <leader>gb :Gblame<CR>
-
-" Configure LazyGit
-" TODO: Look at some advanced configuration with remote nvim.
-nnoremap <silent> <leader>lg :LazyGit<CR>
-
+nnoremap <silent> <leader>gb :Git blame<CR>
 
 " Configure fzf
 nnoremap <silent> <leader><space> :Files<CR>
@@ -389,58 +381,79 @@ end
 require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"run-hls.sh", "--lsp"}}
 require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
 require'lspconfig'.elmls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
-local saga = require 'lspsaga'
-saga.init_lsp_saga{
---  use_saga_diagnostic_sign = true
---  dianostic_header_icon = '   ',
---  code_action_icon = ' ',
---  code_action_keys = { quit = 'q',exec = '<CR>' }
---  finder_definition_icon = '  ',
---  finder_reference_icon = '  ',
---  max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
---  finder_action_keys = {
---    open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
---  },
---  code_action_keys = {
---    quit = 'q',exec = '<CR>'
---  },
---  rename_action_keys = {
---    quit = '<C-c>',exec = '<CR>'  -- quit can be a table
---  },
---  definition_preview_icon = '  '
---  1: thin border | 2: rounded border | 3: thick border | 4: ascii border
---  border_style = 1,
---  rename_prompt_prefix = '➤',
---  if you don't use nvim-lspconfig you must pass your server name and
---  the related filetypes into this table
-  border_style = 2,
-  error_sign = '✗',
-  warn_sign = '',
-  hint_sign = '',
-  infor_sign = '',
-}
+-- local saga = require 'lspsaga'
+-- saga.init_lsp_saga{
+-- --  use_saga_diagnostic_sign = true
+-- --  dianostic_header_icon = '   ',
+-- --  code_action_icon = ' ',
+-- --  code_action_keys = { quit = 'q',exec = '<CR>' }
+-- --  finder_definition_icon = '  ',
+-- --  finder_reference_icon = '  ',
+-- --  max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
+-- --  finder_action_keys = {
+-- --    open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
+-- --  },
+-- --  code_action_keys = {
+-- --    quit = 'q',exec = '<CR>'
+-- --  },
+-- --  rename_action_keys = {
+-- --    quit = '<C-c>',exec = '<CR>'  -- quit can be a table
+-- --  },
+-- --  definition_preview_icon = '  '
+-- --  1: thin border | 2: rounded border | 3: thick border | 4: ascii border
+-- --  border_style = 1,
+-- --  rename_prompt_prefix = '➤',
+-- --  if you don't use nvim-lspconfig you must pass your server name and
+-- --  the related filetypes into this table
+--   border_style = 4,
+--   error_sign = '✗',
+--   warn_sign = '',
+--   hint_sign = '',
+--   infor_sign = '',
+-- }
 
 EOF
 
 
-nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
-" scroll down hover doc or scroll in definition preview
-nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
-" scroll up hover doc
-nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
+" nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+" " scroll down hover doc or scroll in definition preview
+" nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>
+" " scroll up hover doc
+" nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
+" nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
+" 
+" nnoremap <silent> <leader>lh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+" nnoremap <silent> <leader>lpd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
+" nnoremap <silent> <leader>ls <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
+" vnoremap <silent> <leader>la <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
+" nnoremap <silent> <leader>la <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+" nnoremap <silent> <leader>lr <cmd>lua require('lspsaga.rename').rename()<CR>
+" 
+" nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>
+" 
+" nnoremap <silent> [c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>
+" nnoremap <silent> ]c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>
+" 
+" 
+" nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
+" nnoremap <silent> <leader>lD <cmd>lua vim.lsp.buf.type_definition()<CR>
+" nnoremap <silent> <leader>l1 <cmd>lua vim.lsp.buf.document_symbol()<CR>
+" nnoremap <silent> <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+" nnoremap <silent> <leader>ld <cmd>lua vim.lsp.buf.declaration()<CR>
+
+nnoremap <silent> K <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 
-nnoremap <silent> <leader>lh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
-nnoremap <silent> <leader>lpd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
-nnoremap <silent> <leader>ls <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
-vnoremap <silent> <leader>la <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
-nnoremap <silent> <leader>la <cmd>lua require('lspsaga.codeaction').code_action()<CR>
-nnoremap <silent> <leader>lr <cmd>lua require('lspsaga.rename').rename()<CR>
+nnoremap <silent> <leader>ls <cmd>lua vim.lsp.buf.signature_help()<CR>
+vnoremap <silent> <leader>la <cmd>'<,'>lua vim.lsp.buf.range_code_action()<CR>
+nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.references()<CR>
 
-nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>
+nnoremap <silent><leader>cd <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 
-nnoremap <silent> [c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>
-nnoremap <silent> ]c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>
+nnoremap <silent> [c <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent> ]c <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 
 
 nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
@@ -448,6 +461,31 @@ nnoremap <silent> <leader>lD <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> <leader>l1 <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> <leader>lw <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> <leader>ld <cmd>lua vim.lsp.buf.declaration()<CR>
+
+autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+
+" Create wrapper which is able to show both of them??? Maybe use lsp-utils???
+" vim.lsp.buf.signature_help()
+" vim.lsp.buf.hover()
+
+" Create wrapper which jumps on either one of them???
+" vim.lsp.buf.declaration()
+" vim.lsp.buf.definition()
+
+" Things to put into some picker
+" vim.lsp.buf.document_symbol()
+" vim.lsp.buf.formatting()
+" vim.lsp.buf.implementation()
+" vim.lsp.buf.incoming_calls()
+" vim.lsp.buf.outgoing_calls()
+" vim.lsp.buf.range_formatting()
+
+" vim.lsp.buf.type_definition()
+
+" lsputils vs. lspsaga can be used for extending the LSP experience
+
 
 " Configure completion-nvim
 " set completeopt=noinsert,menuone,noselect
