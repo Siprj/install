@@ -59,7 +59,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'neovim/nvim-lspconfig'
 
 " Completions fupport for lsp
-Plug 'nvim-lua/completion-nvim'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 
 " Plug 'glepnir/lspsaga.nvim'
 
@@ -370,17 +374,93 @@ nnoremap <silent> <leader>t :lua require'telescope.builtin'.builtin()<CR>
 nnoremap <silent> <leader>tl :lua require'telescope.builtin'.live_grep()<CR>
 nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 
-" Configure lsp
+" Configure lsp and completion
 lua <<EOF
+local has_words_before = function()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+    return false
+  end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), "n", true)
+end
+
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+
+cmp.setup({
+
+  -- ... Your other configuration ...
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
+
+  mapping = {
+
+    -- ... Your other mappings ...
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if vim.fn.pumvisible() == 1 then
+        feedkey("<C-n>")
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
+      else
+        fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+      end
+    end, { "i", "s" }),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if vim.fn.pumvisible() == 1 then
+        feedkey("<C-p>")
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    })
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+    { name = 'buffer' },
+  },
+
+  -- ... Your other configuration ...
+})
+
 local lsp_status = require('lsp-status')
 lsp_status.register_progress()
 
 local on_attach = function(client)
   lsp_status.on_attach(client)
 end
-require'lspconfig'.hls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities, cmd = {"run-hls.sh", "--lsp"}}
-require'lspconfig'.rust_analyzer.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
-require'lspconfig'.elmls.setup{on_attach=on_attach, capabilities = lsp_status.capabilities}
+local lsp_config = require('lspconfig')
+
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
+capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+
+lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"run-hls.sh", "--lsp"}}
+lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
+lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
+
+
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
 -- --  use_saga_diagnostic_sign = true
@@ -489,72 +569,75 @@ autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 
 " Configure completion-nvim
 " set completeopt=noinsert,menuone,noselect
-set completeopt=menuone,noinsert,noselect
-" Avoid showing message extra message when using completion
-set shortmess+=c
+"set completeopt=menuone,noinsert,noselect
+"" Avoid showing message extra message when using completion
+"set shortmess+=c
+"
+"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"imap <Tab> <Plug>(completion_smart_tab)
+"imap <S-Tab> <Plug>(completion_smart_s_tab)
+"imap <silent> <c-p> <Plug>(completion_trigger)
+"imap <silent> <c-n> <Plug>(completion_trigger)
+"
+"" Enable completion for all buffers
+"autocmd BufEnter * lua require'completion'.on_attach()
+"
+"" I don't want to get a seizure :D
+"" It is really annoying when stuff trigger on it's own. Maybe it could be fine
+"" if it ware relevant?
+"let g:completion_enable_auto_popup = 0
+"let g:completion_auto_change_source = 1
+"imap <c-j> <Plug>(completion_next_source)
+"imap <c-k> <Plug>(completion_prev_source)
+"
+"let g:completion_chain_complete_list = [
+"    \{'complete_items': ['lsp', 'snippet']},
+"    \{'mode': '<c-p>'},
+"    \{'mode': '<c-n>'}
+"\]
+"
+"let g:completion_matching_strategy_list = ["exact", "substring", "fuzzy", "all"]
+"let g:completion_matching_ignore_case = 1
+"" TODO: This may be a really bad idea
+"let g:completion_matching_smart_case = 1
+"
+"" TODO: Snippets
 
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-imap <Tab> <Plug>(completion_smart_tab)
-imap <S-Tab> <Plug>(completion_smart_s_tab)
-imap <silent> <c-p> <Plug>(completion_trigger)
-imap <silent> <c-n> <Plug>(completion_trigger)
-
-" Enable completion for all buffers
-autocmd BufEnter * lua require'completion'.on_attach()
-
-" I don't want to get a seizure :D
-" It is really annoying when stuff trigger on it's own. Maybe it could be fine
-" if it ware relevant?
-let g:completion_enable_auto_popup = 0
-let g:completion_auto_change_source = 1
-imap <c-j> <Plug>(completion_next_source)
-imap <c-k> <Plug>(completion_prev_source)
-
-let g:completion_chain_complete_list = [
-    \{'complete_items': ['lsp', 'snippet']},
-    \{'mode': '<c-p>'},
-    \{'mode': '<c-n>'}
-\]
-
-let g:completion_matching_strategy_list = ["exact", "substring", "fuzzy", "all"]
-let g:completion_matching_ignore_case = 1
-" TODO: This may be a really bad idea
-let g:completion_matching_smart_case = 1
-
-" TODO: Snippets
+lua <<EOF
+EOF
 
 
 " lualine
 lua <<EOF
-    local lualine = require('lualine')
+local lualine = require('lualine')
 
-    function getStatusFunc () return require('lsp-status').status() end
-    local config = { 
-      options = {
-        theme = 'nightfly',
-        section_separators = {'', ''},
-        component_separators = {'', ''},
-        icons_enabled = true
-      },
-      sections = {
-        lualine_a = { 'mode' },
-        lualine_b = { 'branch' },
-        lualine_c = { 'filename' },
-        lualine_x = { 'encoding', 'fileformat', 'filetype' },
-        lualine_y = { getStatusFunc, 'progress' },
-        lualine_z = { 'location'  }
-      },
-      inactive_sections = {
-        lualine_a = {  },
-        lualine_b = {  },
-        lualine_c = { 'filename' },
-        lualine_x = { 'location' },
-        lualine_y = {  },
-        lualine_z = {   }
-      },
-      extensions = { 'fzf' }
-    }
-    lualine.setup(config)
+function getStatusFunc () return require('lsp-status').status() end
+local config = {
+  options = {
+    theme = 'nightfly',
+    section_separators = {'', ''},
+    component_separators = {'', ''},
+    icons_enabled = true
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch' },
+    lualine_c = { 'filename' },
+    lualine_x = { 'encoding', 'fileformat', 'filetype' },
+    lualine_y = { getStatusFunc, 'progress' },
+    lualine_z = { 'location'  }
+  },
+  inactive_sections = {
+    lualine_a = {  },
+    lualine_b = {  },
+    lualine_c = { 'filename' },
+    lualine_x = { 'location' },
+    lualine_y = {  },
+    lualine_z = {   }
+  },
+  extensions = { 'fzf' }
+}
+lualine.setup(config)
 EOF
 
