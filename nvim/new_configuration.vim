@@ -70,6 +70,9 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-lua/lsp-status.nvim'
 Plug 'hoob3rt/lualine.nvim'
 
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'folke/trouble.nvim'
+
 call plug#end()
 
 """ General setup
@@ -424,7 +427,8 @@ cmp.setup({
         fallback()
       end
     end, { "i", "s" }),
-
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -443,23 +447,34 @@ cmp.setup({
   -- ... Your other configuration ...
 })
 
-local lsp_status = require('lsp-status')
-lsp_status.register_progress()
+-- local lsp_status = require('lsp-status')
+-- lsp_status.register_progress()
 
 local on_attach = function(client)
-  lsp_status.on_attach(client)
+  -- lsp_status.on_attach(client)
 end
 local lsp_config = require('lspconfig')
 
 local cmp_nvim_lsp = require('cmp_nvim_lsp')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
+--capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
 capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
 lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"run-hls.sh", "--lsp"}}
 lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
 lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
+-- TODO: Add key bind for Trouble actions
+-- TODO: Add Trouble to status line and maybe replace lsp-status???
+local trouble = require("trouble")
+trouble.setup {
+  auto_close = true,
+}
+
+vim.fn.sign_define("LspDiagnosticsSignError", {text="", texthl="LspDiagnosticsSignError", linehl="", numgl=""})
+vim.fn.sign_define("LspDiagnosticsSignWarning",  {text="", texthl="LspDiagnosticsSignWarning", linehl="", numgl=""})
+vim.fn.sign_define("LspDiagnosticsSignInformation",  {text="", texthl="LspDiagnosticsSignInformation", linehl="", numgl=""})
+vim.fn.sign_define("LspDiagnosticsSignHint",  {text="", texthl="LspDiagnosticsSignHint", linehl="", numgl=""})
 
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
@@ -613,6 +628,24 @@ lua <<EOF
 local lualine = require('lualine')
 
 function getStatusFunc () return require('lsp-status').status() end
+
+local function lsp_progress()
+  local messages = vim.lsp.util.get_progress_messages()
+  if #messages == 0 then
+    return "lsp: DONE"
+  end
+  local status = {}
+  for _, msg in pairs(messages) do
+    print(vim.inspect(msg))
+    table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
+  end
+  local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
+  local ms = vim.loop.hrtime() / 1000000
+  local frame = math.floor(ms / 120) % #spinners
+  return table.concat(status, " | ") .. " " .. spinners[frame + 1]
+end
+
+
 local config = {
   options = {
     theme = 'nightfly',
@@ -623,10 +656,10 @@ local config = {
   sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'branch' },
-    lualine_c = { 'filename' },
-    lualine_x = { 'encoding', 'fileformat', 'filetype' },
-    lualine_y = { getStatusFunc, 'progress' },
-    lualine_z = { 'location'  }
+    lualine_c = { { "diagnostics", sources = { "nvim_lsp" } }, 'filename' },
+    lualine_x = { },
+    lualine_y = { 'encoding', 'fileformat', 'filetype', lsp_progress },
+    lualine_z = { 'progress', 'location' }
   },
   inactive_sections = {
     lualine_a = {  },
