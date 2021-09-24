@@ -45,7 +45,7 @@ Plug 'mbbill/undotree'
 
 " Really nice and fluid way to move around the file without the need for
 " complicated commands.
-Plug 'easymotion/vim-easymotion'
+Plug 'phaazon/hop.nvim'
 
 " I use only git blame form this. TODO: Maybe I can get rid of it?
 Plug 'tpope/vim-fugitive'
@@ -328,31 +328,15 @@ let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 " Configure easymotion
 " TODO: Look at it again there are some interesting examples in README.
 " Combination with `incsearch.vim` and `incsearch-fuzzy.vim` looks really nice.
-nmap f <Plug>(easymotion-f)
-nmap F <Plug>(easymotion-F)
-nmap <silent> <leader>w <Plug>(easymotion-w)
-nmap <silent> <leader>W <Plug>(easymotion-W)
-nmap <silent> <leader>e <Plug>(easymotion-e)
-nmap <silent> <leader>E <Plug>(easymotion-E)
-nmap <silent> <leader>j <Plug>(easymotion-j)
-nmap <silent> <leader>k <Plug>(easymotion-l)
-xmap f <Plug>(easymotion-f)
-xmap F <Plug>(easymotion-F)
-xmap <silent> <leader>w <Plug>(easymotion-w)
-xmap <silent> <leader>W <Plug>(easymotion-W)
-xmap <silent> <leader>e <Plug>(easymotion-e)
-xmap <silent> <leader>E <Plug>(easymotion-E)
-xmap <silent> <leader>j <Plug>(easymotion-j)
-xmap <silent> <leader>k <Plug>(easymotion-l)
-omap f <Plug>(easymotion-f)
-omap F <Plug>(easymotion-F)
-omap <silent> <leader>w <Plug>(easymotion-w)
-omap <silent> <leader>W <Plug>(easymotion-W)
-omap <silent> <leader>e <Plug>(easymotion-e)
-omap <silent> <leader>E <Plug>(easymotion-E)
-omap <silent> <leader>j <Plug>(easymotion-j)
-omap <silent> <leader>k <Plug>(easymotion-l)
+nmap f <cmd>lua require'hop'.hint_char1()<CR>
+xmap f <cmd>lua require'hop'.hint_char1()<CR>
+omap f <cmd>lua require'hop'.hint_char1()<CR>
+vmap f <cmd>lua require'hop'.hint_char1()<CR>
 
+nmap f <cmd>lua require'hop'.hint_char1()<CR>
+xmap f <cmd>lua require'hop'.hint_char1()<CR>
+omap f <cmd>lua require'hop'.hint_char1()<CR>
+vmap f <cmd>lua require'hop'.hint_char1()<CR>
 
 " Configure vim-fugitive
 " Hide messy Ggrep output and copen automatically
@@ -481,6 +465,8 @@ telescope.setup {
     },
   },
 }
+
+require'hop'.setup()
 
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
