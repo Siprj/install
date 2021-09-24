@@ -443,29 +443,22 @@ cmp.setup({
     { name = 'luasnip' },
     { name = 'buffer' },
   },
-
-  -- ... Your other configuration ...
 })
-
--- local lsp_status = require('lsp-status')
--- lsp_status.register_progress()
 
 local on_attach = function(client)
   -- lsp_status.on_attach(client)
 end
 local lsp_config = require('lspconfig')
 
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
 local capabilities = vim.lsp.protocol.make_client_capabilities()
---capabilities = vim.tbl_extend('keep', capabilities, lsp_status.capabilities)
+
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
 capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
 lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"run-hls.sh", "--lsp"}}
 lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
 lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
--- TODO: Add key bind for Trouble actions
--- TODO: Add Trouble to status line and maybe replace lsp-status???
 local trouble = require("trouble")
 trouble.setup {
   auto_close = true,
@@ -475,6 +468,19 @@ vim.fn.sign_define("LspDiagnosticsSignError", {text="", texthl="LspDiagnostic
 vim.fn.sign_define("LspDiagnosticsSignWarning",  {text="", texthl="LspDiagnosticsSignWarning", linehl="", numgl=""})
 vim.fn.sign_define("LspDiagnosticsSignInformation",  {text="", texthl="LspDiagnosticsSignInformation", linehl="", numgl=""})
 vim.fn.sign_define("LspDiagnosticsSignHint",  {text="", texthl="LspDiagnosticsSignHint", linehl="", numgl=""})
+
+local trouble_telescope = require("trouble.providers.telescope")
+
+local telescope = require("telescope")
+
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = { ["<c-t>"] = trouble_telescope.open_with_trouble },
+      n = { ["<c-t>"] = trouble_telescope.open_with_trouble },
+    },
+  },
+}
 
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
@@ -561,6 +567,9 @@ autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
 autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
 autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 
+nnoremap <silent> <leader>tt <cmd>TroubleToggle<CR>
+nnoremap <silent> <leader>tr <cmd>TroubleToggle lsp_references<CR>
+
 " Create wrapper which is able to show both of them??? Maybe use lsp-utils???
 " vim.lsp.buf.signature_help()
 " vim.lsp.buf.hover()
@@ -635,9 +644,12 @@ local function lsp_progress()
     return "lsp: DONE"
   end
   local status = {}
-  for _, msg in pairs(messages) do
-    print(vim.inspect(msg))
-    table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
+  for k, msg in pairs(messages) do
+    if msg.name ~= "hls" then
+      table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
+    else
+      table.insert(status, "lsp: ")
+    end
   end
   local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
   local ms = vim.loop.hrtime() / 1000000
@@ -658,7 +670,7 @@ local config = {
     lualine_b = { 'branch' },
     lualine_c = { { "diagnostics", sources = { "nvim_lsp" } }, 'filename' },
     lualine_x = { },
-    lualine_y = { 'encoding', 'fileformat', 'filetype', lsp_progress },
+    lualine_y = { lsp_progress, 'encoding', 'fileformat', 'filetype' },
     lualine_z = { 'progress', 'location' }
   },
   inactive_sections = {
