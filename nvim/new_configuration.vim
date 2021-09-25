@@ -73,6 +73,12 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
 
+Plug 'karb94/neoscroll.nvim'
+
+Plug 'windwp/nvim-spectre'
+
+Plug 'lukas-reineke/indent-blankline.nvim'
+
 call plug#end()
 
 """ General setup
@@ -349,7 +355,7 @@ function! NonintrusiveGitGrep(term)
 endfunction
 
 command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
-nnoremap <leader>gg :GGrep 
+nnoremap <leader>gg :GGrep
 nnoremap <silent> <leader>gb :Git blame<CR>
 
 " Configure fzf
@@ -466,7 +472,37 @@ telescope.setup {
   },
 }
 
-require'hop'.setup()
+-- TODO: Look into scrolling a bit
+local neoscroll = require('neoscroll')
+neoscroll.setup({
+  mappings = {'<C-u>', '<C-d>', '<C-b>', '<C-f>',
+              '<C-y>', '<C-e>', 'zt', 'zz', 'zb'},
+})
+
+
+local hop = require('hop')
+hop.setup()
+
+-- TODO: Think about making the lines colorful to make level identification
+-- easier.
+-- TODO: Can support treesitter.
+local indent_blankline = require('indent_blankline')
+indent_blankline.setup {
+  char = "┆",
+  show_first_indent_level = false,
+--  buftype_exclude = {"terminal", "help"},
+  buftype = {
+    "vim",
+    "rust",
+    "haskell",
+    "c",
+    "cpp",
+    "java",
+    "javascript",
+    "python",
+    "elm"},
+  show_trailing_blankline_indent = true,
+}
 
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
@@ -508,20 +544,20 @@ EOF
 " " scroll up hover doc
 " nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>
 " nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
-" 
+"
 " nnoremap <silent> <leader>lh <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
 " nnoremap <silent> <leader>lpd <cmd>lua require'lspsaga.provider'.preview_definition()<CR>
 " nnoremap <silent> <leader>ls <cmd>lua require('lspsaga.signaturehelp').signature_help()<CR>
 " vnoremap <silent> <leader>la <cmd>'<,'>lua require('lspsaga.codeaction').range_code_action()<CR>
 " nnoremap <silent> <leader>la <cmd>lua require('lspsaga.codeaction').code_action()<CR>
 " nnoremap <silent> <leader>lr <cmd>lua require('lspsaga.rename').rename()<CR>
-" 
+"
 " nnoremap <silent><leader>cd <cmd>lua require'lspsaga.diagnostic'.show_line_diagnostics()<CR>
-" 
+"
 " nnoremap <silent> [c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_prev()<CR>
 " nnoremap <silent> ]c <cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>
-" 
-" 
+"
+"
 " nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
 " nnoremap <silent> <leader>lD <cmd>lua vim.lsp.buf.type_definition()<CR>
 " nnoremap <silent> <leader>l1 <cmd>lua vim.lsp.buf.document_symbol()<CR>
@@ -614,9 +650,12 @@ nnoremap <silent> <leader>tr <cmd>TroubleToggle lsp_references<CR>
 "
 "" TODO: Snippets
 
-lua <<EOF
-EOF
-
+" Specter binding. Binding for stuff in the specter window can be found in
+" `:help specter` or https://github.com/windwp/nvim-spectre#customize`.
+nnoremap <silent> <leader>S :lua require('spectre').open()<CR>
+nnoremap <silent> <leader>Sw :lua require('spectre').open_visual({select_word=true})<CR>
+vnoremap <silent> <leader>S :lua require('spectre').open_visual()<CR>
+nnoremap <silent> <leader>Sp viw:lua require('spectre').open_file_search()<cr>
 
 " lualine
 lua <<EOF
@@ -627,7 +666,7 @@ function getStatusFunc () return require('lsp-status').status() end
 local function lsp_progress()
   local messages = vim.lsp.util.get_progress_messages()
   if #messages == 0 then
-    return "lsp: DONE"
+    return "lsp: OK"
   end
   local status = {}
   for k, msg in pairs(messages) do
