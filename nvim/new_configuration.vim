@@ -79,6 +79,8 @@ Plug 'windwp/nvim-spectre'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
 
+Plug 'alvarosevilla95/luatab.nvim'
+
 call plug#end()
 
 """ General setup
@@ -193,7 +195,7 @@ set lbr
 set tw=500
 
 " Default to mouse mode off.
-set mouse=
+set mouse+=a
 
 " Show nice line at 80 character mark.
 set colorcolumn=80
@@ -221,12 +223,6 @@ nnoremap k gk
 
 " Force redraw.
 map <silent> <leader>r :redraw!<CR>
-
-" Turn mouse mode on.
-nnoremap <leader>ma :set mouse=a<CR>
-
-" Turn mouse mode off.
-nnoremap <leader>mo :set mouse=<CR>
 
 " Neovim terminal configurations
 " Use <Esc> to escape terminal insert mode
@@ -264,7 +260,6 @@ endfunc
 autocmd FileType c,cpp,java,haskell,javascript,python,elm autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
 let g:haskell_indent_disable = 1
-
 
 """ Configure startify
 "
@@ -364,6 +359,7 @@ nnoremap <silent> <leader><space> :Files<CR>
 
 " Configure telescope
 nnoremap <silent> <leader>t :lua require'telescope.builtin'.builtin()<CR>
+nnoremap <silent> <leader>b :lua require'telescope.builtin'.buffers()<CR>
 nnoremap <silent> <leader>tl :lua require'telescope.builtin'.live_grep()<CR>
 nnoremap <silent> <leader>tg :lua require'telescope.builtin'.git_files()<CR>
 
@@ -490,7 +486,7 @@ local indent_blankline = require('indent_blankline')
 indent_blankline.setup {
   char = "┆",
   show_first_indent_level = false,
---  buftype_exclude = {"terminal", "help"},
+  buftype_exclude = {"terminal", "help"},
   buftype = {
     "vim",
     "rust",
@@ -503,6 +499,12 @@ indent_blankline.setup {
     "elm"},
   show_trailing_blankline_indent = true,
 }
+
+diagnostics_indicator = function(count, level, diagnostics_dict, context)
+  return "("..count..")"
+end
+-- vim.api.nvim_set_keymap('n', 'bn', '<cmd> bnext<CR>', {silent=true, noremap = true})
+-- vim.api.nvim_set_keymap('n', 'bN', '<cmd> bprevious<CR>', {silent=true, noremap = true})
 
 -- local saga = require 'lspsaga'
 -- saga.init_lsp_saga{
@@ -534,6 +536,18 @@ indent_blankline.setup {
 --   hint_sign = '',
 --   infor_sign = '',
 -- }
+
+vim.o.tabline = "%!v:lua.require'luatab'.tabline()"
+local formatTab = require'luatab'.formatTab
+Tabline = function()
+    local i = 1
+    local line = ''
+    while i <= vim.fn.tabpagenr('$') do
+        line = line .. formatTab(i)
+        i = i + 1
+    end
+    return  line .. '%T%#TabLineFill#%='
+end
 
 EOF
 
@@ -672,8 +686,9 @@ local function lsp_progress()
   for k, msg in pairs(messages) do
     if msg.name ~= "hls" then
       table.insert(status, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
-    else
+  else
       table.insert(status, "lsp: ")
+      break
     end
   end
   local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
@@ -692,8 +707,8 @@ local config = {
   },
   sections = {
     lualine_a = { 'mode' },
-    lualine_b = { 'branch' },
-    lualine_c = { { "diagnostics", sources = { "nvim_lsp" } }, 'filename' },
+    lualine_b = { 'branch', 'filename' },
+    lualine_c = { { "diagnostics", sources = { "nvim_lsp" } } },
     lualine_x = { },
     lualine_y = { lsp_progress, 'encoding', 'fileformat', 'filetype' },
     lualine_z = { 'progress', 'location' }
