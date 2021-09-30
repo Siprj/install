@@ -237,6 +237,9 @@ tnoremap <c-l> <C-\><C-n><C-w>l
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<CR>
 
+" Disable search highlight
+nmap <silent> <leader><cr> :noh\|hi Cursor guibg=red<cr>
+
 " Remember info about open buffers on close so we can open them later on the
 " same position.
 set shada^=%
