@@ -350,7 +350,7 @@ function! NonintrusiveGitGrep(term)
 endfunction
 
 command! -nargs=1 GGrep call NonintrusiveGitGrep(<q-args>)
-nnoremap <leader>gg :GGrep
+nnoremap <leader>gg :GGrep 
 nnoremap <silent> <leader>gb :Git blame<CR>
 
 " Configure fzf
