@@ -592,8 +592,8 @@ nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.references()<CR>
 
 nnoremap <silent><leader>cd <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 
-nnoremap <silent> [c <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
-nnoremap <silent> ]c <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> [c <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <silent> ]c <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 
 
 nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
