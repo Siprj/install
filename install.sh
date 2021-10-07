@@ -511,12 +511,15 @@ nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin"
 
-mkdir -p ~/.config/jesseduffield/lazygit/
-cat > ~/.config/jesseduffield/lazygit/config.yml <<EOF
+mkdir -p ~/.config/lazygit/
+cat > ~/.config/lazygit/config.yml <<EOF
   gui:
     theme:
       selectedLineBgColor:
         - reverse
+  git:
+    pull:
+      mode: 'rebase'
 EOF
 
 # Install polybar configuration
