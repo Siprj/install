@@ -72,7 +72,7 @@ function pacman_setp() {
         gwenview
         glu
     #    hicolor-icon-theme
-        htop
+        btop
         hunspell
         hunspell-en_GB
         iptables
