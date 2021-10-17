@@ -7,6 +7,7 @@ declare SKIP_PIP=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_XMONAD=false
+declare SKIP_RUST=false
 declare GPU_ACCELERATION=false
 declare DROPBOX=true
 
@@ -117,6 +118,7 @@ function pacman_setp() {
         rdesktop
         recoll
         remmina
+        rustup
         # Application picker instead of dmenu
         rofi
         # Scanner app
@@ -189,6 +191,12 @@ function haskell_step () {
     ghcup install cabal
     ghcup install hls
     cabal update
+}
+
+function rust_step () {
+    rustup toolchain install nightly
+    rustup +nightly component add rust-analyzer-preview
+    rustup default nightly
 }
 
 function xmonad_step () {
@@ -580,6 +588,10 @@ case $key in
     SKIP_XMONAD=true
     shift # past argument
     ;;
+    -x|--skip-rust)
+    SKIP_RUST=true
+    shift # past argument
+    ;;
     -s|--skip-system-setup)
     SKIP_SYSTEM_SETUP=true
     shift # past argument
@@ -613,6 +625,9 @@ if [[ ${SKIP_PIP} == false ]]; then
 fi
 if [[ ${SKIP_XMONAD} == false ]]; then
     haskell_step
+fi
+if [[ ${SKIP_RUST} == false ]]; then
+    rust_step
 fi
 if [[ ${SKIP_XMONAD} == false ]]; then
     xmonad_step
