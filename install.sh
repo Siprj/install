@@ -89,6 +89,7 @@ function pacman_setp() {
         linux-headers
         lyx
         make
+        systemd-resolvconf
     # Audio player
         moc
         nautilus
@@ -208,6 +209,8 @@ sudo systemctl enable libvirtd
 sudo systemctl start libvirtd
 sudo systemctl enable nix-daemon
 sudo systemctl start nix-daemon
+sudo systemctl enable systemd-resolved.service
+sudo systemctl start systemd-resolved.service
 
 # Disable beep...
 sudo bash -c 'cat > /etc/modprobe.d/nobeep.conf <<EOF
