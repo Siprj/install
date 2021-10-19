@@ -31,11 +31,7 @@ function pacman_setp() {
         ark
         asciidoc
         alacritty
-    #    aspell
-    #    aspell-cs
-    #    aspell-en
         autoconf
-    #    autocutsel
         automake
         bat
         bind-tools
@@ -47,7 +43,6 @@ function pacman_setp() {
         cups
         deluge
         dia
-    #    dnsmasq
         docker
         dolphin
         kdegraphics-thumbnailers
@@ -55,7 +50,6 @@ function pacman_setp() {
         ffmpegthumbs
         ffmpegthumbnailer
         dunst
-    #    evince
         expac
         feh
         firefox
@@ -68,11 +62,9 @@ function pacman_setp() {
         git
         git-lfs
         gitg
-    #    gnome-logs
         graphviz
         gwenview
         glu
-    #    hicolor-icon-theme
         btop
         hunspell
         hunspell-en_GB
@@ -161,17 +153,16 @@ function pacman_setp() {
 function aur_step () {
     pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
     pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
-    # pacman -Q ncurses5-compat-libs || trizen -S ncurses5-compat-libs --noedit --noconfirm
     pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
     pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
-    # pacman -Q spotify || trizen -S spotify --noedit --noconfirm
-    pacman -Q trayer-srg || trizen -S trayer-srg --noedit --noconfirm
+    pacman -Q spotify || trizen -S spotify --noedit --noconfirm
     pacman -Q xflux || trizen -S xflux --noedit --noconfirm
     pacman -Q zoom || trizen -S zoom --noedit --noconfirm
     pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
     pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
     pacman -Q polybar-git || trizen -S polybar-git --noedit --noconfirm
     pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
+    pacman -Q teleport-bin || trizen -S teleport-bin --noedit --noconfirm
 }
 
 function pip_setup() {
