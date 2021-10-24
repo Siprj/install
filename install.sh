@@ -9,6 +9,7 @@ declare SKIP_SYSTEM_SETUP=false
 declare SKIP_XMONAD=false
 declare SKIP_RUST=false
 declare GPU_ACCELERATION=false
+declare SETUP_TELEPORT=false
 declare DROPBOX=true
 
 function pacman_setp() {
@@ -201,6 +202,8 @@ function xmonad_step () {
 }
 
 function system_setup_step() {
+
+sudo systemctl daemon-reload
 
 sudo systemctl enable NetworkManager.service
 sudo systemctl start NetworkManager.service
@@ -541,6 +544,38 @@ xdg-mime default firefox.desktop x-scheme-handler/http
 xdg-mime default firefox.desktop x-scheme-handler/https
 }
 
+function setup_teleport() {
+
+    read -p "teleport proxy domain name: " TELEPORT_PROXY_NAME
+    tsh login --ttl=20 -o /tmp/short-lived-teleport-key --proxy="${TELEPORT_PROXY_NAME}"
+    TOKEN_AND_CA_PIN=$(tctl -i /tmp/short-lived-teleport-key --auth-server="${TELEPORT_PROXY_NAME}" nodes add)
+    TOKEN=$(echo ${TOKEN_AND_CA_PIN} | grep "\-\-token=" | sed "s/.*token=\(\S*\).*/\1/")
+    CA_PIN=$(echo ${TOKEN_AND_CA_PIN} | grep "\-\-ca-pin=" | sed "s/.*ca-pin=\(\S*\).*/\1/")
+
+    sudo mkdir -p /etc/teleport/
+
+    sudo bash -c "cat > /etc/teleport/teleport.yaml" <<EOF
+teleport:
+  nodename: "$(cat /etc/hostname)"
+  auth_token: "${TOKEN}"
+  ca_pin:
+    - "${CA_PIN}"
+  auth_servers:
+    - "https://${TELEPORT_PROXY_NAME}:443"
+auth_service:
+  enabled: false
+proxy_service:
+  enabled: false
+ssh_service:
+  enabled: true
+  labels:
+    env: personal
+EOF
+
+    sudo systemctl enable teleport.service
+    sudo systemctl start teleport.service
+}
+
 function print_help() {
 cat << EOF
 Usage: install.sh [OPTION]
@@ -550,9 +585,11 @@ Usage: install.sh [OPTION]
   -i --skip-pip             don't install packages with pip
   -x --skip-xmonad          don't install/update xmonad
   -s --skip-system-setup    don't try to setup system setup
-  -g --gpu-acceleration     sett GPU acceleration method to legacy mode
+  -g --gpu-acceleration     set GPU acceleration method to legacy mode
+  -t --teleport             configure this machine as teleport node
 EOF
 }
+
 
 while [[ $# -gt 0 ]]
 do
@@ -589,6 +626,10 @@ case $key in
     ;;
     -g|--gpu-acceleration)
     GPU_ACCELERATION=true
+    shift # past argument
+    ;;
+    -t|--teleport)
+    SETUP_TELEPORT=true
     shift # past argument
     ;;
     -h|--help)
@@ -632,3 +673,8 @@ if [[ ${GPU_ACCELERATION} == true ]]; then
     sudo cp "${PROG_DIR}/20-amdgpu.conf" "/etc/X11/xorg.conf.d/"
     sudo cp "${PROG_DIR}/20-intell.conf" "/etc/X11/xorg.conf.d/"
 fi
+
+if [[ ${SETUP_TELEPORT} == true ]]; then
+    setup_teleport
+fi
+
