@@ -187,8 +187,11 @@ function haskell_step () {
 
 function rust_step () {
     rustup toolchain install nightly
-    rustup +nightly component add rust-analyzer-preview
     rustup default nightly
+    rustup component add rust-src
+    rustup update
+    curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.local/bin/rust-analyzer
+    chmod +x ~/.local/bin/rust-analyzer
 }
 
 function xmonad_step () {

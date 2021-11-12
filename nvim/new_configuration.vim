@@ -260,7 +260,7 @@ func! DeleteTrailingWS()
     call winrestview(l:save)
 endfunc
 
-autocmd FileType c,cpp,java,haskell,javascript,python,elm autocmd BufWritePre <buffer> :call DeleteTrailingWS()
+autocmd FileType c,cpp,java,haskell,javascript,python,elm,rust autocmd BufWritePre <buffer> :call DeleteTrailingWS()
 
 let g:haskell_indent_disable = 1
 
@@ -540,7 +540,7 @@ end
 --   infor_sign = '',
 -- }
 
-vim.o.tabline = "%!v:lua.require'luatab'.tabline()"
+require('luatab').setup({})
 local formatTab = require'luatab'.formatTab
 Tabline = function()
     local i = 1
