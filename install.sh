@@ -62,6 +62,7 @@ function pacman_setp() {
         gdb
         git
         git-lfs
+        github-cli
         gitg
         graphviz
         gwenview
