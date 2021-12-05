@@ -6,21 +6,16 @@ let g:polyglot_disabled = ['sensible', 'autoindent']
 
 " TODO: Look at following stuff:
 "  * https://github.com/zatchheems/vim-camelsnek
-"  * https://github.com/zatchheems/tokyo-night-alacritty-theme
 "  * https://vim.rtorr.com/
 "  * https://github.com/nvim-lua/lsp_extensions.nvim
-"  * https://github.com/norcalli/snippets.nvim
 
 call plug#begin('~/.config/nvim/bundle')
 
 " Color highlighter.
 Plug 'norcalli/nvim-colorizer.lua'
 
-" Allows to write colorschemes in lua.
-Plug 'tjdevries/colorbuddy.vim'
-
 " Better syntax highlighting for grate number of filetypes.
-Plug 'sheerun/vim-polyglot'
+" Plug 'sheerun/vim-polyglot'
 
 " My new colorscheme.
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -32,11 +27,6 @@ Plug 'nvim-lua/telescope.nvim'
 
 " Cool start screen, so I don't need to pick random files to use fuzzy finders.
 Plug 'mhinz/vim-startify'
-
-" nerdtree is still more stable then nvim-tree
-Plug 'scrooloose/nerdtree'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'ryanoasis/vim-devicons'
 
 Plug 'kyazdani42/nvim-tree.lua'
 
@@ -81,6 +71,10 @@ Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'alvarosevilla95/luatab.nvim'
 
 Plug 'pwntester/octo.nvim'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'numToStr/Comment.nvim'
 
 call plug#end()
 
@@ -316,7 +310,7 @@ function! ToggleFindNerd()
 endfunction
 
 " If nerd tree is closed, find current file, if open, close it/
-nmap <silent> <leader>o <ESC>:call ToggleFindNerd()<CR>
+nmap <silent> <leader>o <ESC>:NvimTreeToggle<CR>
 
 "" Without this there are some '+' or '.' before file names.
 "autocmd FileType nerdtree setlocal nolist
@@ -453,7 +447,7 @@ lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
 local trouble = require("trouble")
 trouble.setup {
-  auto_close = true,
+  auto_close = false,
 }
 
 vim.fn.sign_define("LspDiagnosticsSignError", {text="", texthl="LspDiagnosticsSignError", linehl="", numgl=""})
@@ -543,8 +537,7 @@ end
 --   infor_sign = '',
 -- }
 
--- require('luatab').setup({})
-local formatTab = require'luatab'.formatTab
+-- local formatTab = require'luatab'.formatTab
 Tabline = function()
     local i = 1
     local line = ''
@@ -794,6 +787,7 @@ nnoremap <silent> <leader>tr <cmd>TroubleToggle lsp_references<CR>
 "" TODO: This may be a really bad idea
 "let g:completion_matching_smart_case = 1
 "
+
 "" TODO: Snippets
 
 " Specter binding. Binding for stuff in the specter window can be found in
@@ -857,6 +851,9 @@ local config = {
 }
 lualine.setup(config)
 
+
+local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+vim.g.nvim_tree_quit_on_open = 1
 -- following options are the default
 -- each of these are documented in `:help nvim-tree.OPTION_NAME`
 require'nvim-tree'.setup {
@@ -864,7 +861,7 @@ require'nvim-tree'.setup {
   hijack_netrw        = true,
   open_on_setup       = false,
   ignore_ft_on_setup  = {},
-  auto_close          = false,
+  auto_close          = true,
   open_on_tab         = false,
   hijack_cursor       = false,
   update_cwd          = false,
@@ -907,7 +904,11 @@ require'nvim-tree'.setup {
     auto_resize = false,
     mappings = {
       custom_only = false,
-      list = {}
+      list = {
+        { key = "i", cb = tree_cb("vsplit") },
+        { key = "s", cb = tree_cb("split") },
+        { key = "t", cb = tree_cb("tabnew") }
+      }
     },
     number = false,
     relativenumber = false
@@ -917,5 +918,78 @@ require'nvim-tree'.setup {
     require_confirm = true
   }
 }
-EOF
 
+require 'nvim-treesitter.install'.compilers = { "clang", "gcc"  }
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
+  ignore_install = {}, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+}
+
+require('Comment').setup {
+  ---Add a space b/w comment and the line
+  ---@type boolean
+  padding = true,
+
+  ---Whether the cursor should stay at its position
+  ---NOTE: This only affects NORMAL mode mappings and doesn't work with dot-repeat
+  ---@type boolean
+  sticky = true,
+
+  ---Lines to be ignored while comment/uncomment.
+  ---Could be a regex string or a function that returns a regex string.
+  ---Example: Use '^$' to ignore empty lines
+  ---@type string|function
+  ignore = nil,
+
+  ---LHS of toggle mappings in NORMAL + VISUAL mode
+  ---@type table
+  toggler = {
+      ---line-comment keymap
+      line = 'gcc',
+      ---block-comment keymap
+      block = 'gbc',
+  },
+
+  ---LHS of operator-pending mappings in NORMAL + VISUAL mode
+  ---@type table
+  opleader = {
+      ---line-comment keymap
+      line = 'gc',
+      ---block-comment keymap
+      block = 'gb',
+  },
+
+  ---Create basic (operator-pending) and extended mappings for NORMAL + VISUAL mode
+  ---@type table
+  mappings = {
+      ---operator-pending mapping
+      ---Includes `gcc`, `gcb`, `gc[count]{motion}` and `gb[count]{motion}`
+      ---NOTE: These mappings can be changed individually by `opleader` and `toggler` config
+      basic = true,
+      ---extra mapping
+      ---Includes `gco`, `gcO`, `gcA`
+      extra = true,
+      ---extended mapping
+      ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
+      extended = false,
+  },
+
+  ---Pre-hook, called before commenting the line
+  ---@type fun(ctx: Ctx):string
+  pre_hook = nil,
+
+  ---Post-hook, called after commenting is done
+  ---@type fun(ctx: Ctx)
+  post_hook = nil,
+}
+EOF
