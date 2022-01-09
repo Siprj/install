@@ -257,6 +257,7 @@ xflux -l 49 -g 15
 
 export XDG_CURRENT_DESKTOP="qt5ct"
 export QT_QPA_PLATFORMTHEME="qt5ct"
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 polybar main &
 
