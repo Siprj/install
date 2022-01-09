@@ -67,6 +67,7 @@ function pacman_setp() {
         graphviz
         gwenview
         glu
+        ghidra
         btop
         hunspell
         hunspell-en_GB
