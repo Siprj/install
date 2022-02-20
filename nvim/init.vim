@@ -498,7 +498,8 @@ indent_blankline.setup {
     "java",
     "javascript",
     "python",
-    "elm"},
+    "elm",
+    "lua"},
   show_trailing_blankline_indent = true,
 }
 
@@ -714,10 +715,10 @@ nnoremap <silent> <leader>la <cmd>lua vim.lsp.buf.code_action()<CR>
 nnoremap <silent> <leader>lr <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <silent> <leader>lt <cmd>lua vim.lsp.buf.references()<CR>
 
-nnoremap <silent><leader>cd <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <silent><leader>cd <cmd>lua vim.diagnostic.open_float()<CR>
 
-nnoremap <silent> [c <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap <silent> ]c <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+nnoremap <silent> [c <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent> ]c <cmd>lua vim.diagnostic.goto_next()<CR>
 
 
 nnoremap <silent> <leader>li <cmd>lua vim.lsp.buf.implementation()<CR>
@@ -836,7 +837,7 @@ local config = {
   sections = {
     lualine_a = { 'mode' },
     lualine_b = { 'branch', 'filename' },
-    lualine_c = { { "diagnostics", sources = { "nvim_lsp" } } },
+    lualine_c = { { "diagnostics", sources = { "nvim_diagnostic" } } },
     lualine_x = { },
     lualine_y = { lsp_progress, 'encoding', 'fileformat', 'filetype' },
     lualine_z = { 'progress', 'location' }
