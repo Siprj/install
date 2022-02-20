@@ -143,6 +143,8 @@ function pacman_setp() {
         xsel
         yarn
         zsh
+        soundfont-fluid
+        fluidsynth
         )
 
     sudo pacman -Sy --noconfirm
