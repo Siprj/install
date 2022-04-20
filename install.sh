@@ -104,6 +104,7 @@ function pacman_setp() {
         bpython
         qemu
         qt5
+        qt5-svg
         qt5ct
         qt5-doc
         qtcreator
