@@ -83,7 +83,6 @@ function pacman_setp() {
         libxft
         libzip
         linux-headers
-        lyx
         make
         systemd-resolvconf
     # Audio player
@@ -148,7 +147,7 @@ function pacman_setp() {
         )
 
     sudo pacman -Sy --noconfirm
-    sudo pacman -Sy --needed "${packages[@]}" --noconfirm
+    sudo pacman -Sy --needed "${packages[@]}"
 
     # I hate nano.
     pacman -Q nano &> /dev/null && sudo pacman -R nano || true
@@ -163,7 +162,6 @@ function aur_step () {
     pacman -Q spotify || trizen -S spotify --noedit --noconfirm
     pacman -Q xflux || trizen -S xflux --noedit --noconfirm
     pacman -Q zoom || trizen -S zoom --noedit --noconfirm
-    pacman -Q nix-bin || trizen -S nix-bin --noedit --noconfirm
     pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
     pacman -Q polybar-git || trizen -S polybar-git --noedit --noconfirm
     pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
@@ -216,8 +214,6 @@ sudo systemctl enable NetworkManager.service
 sudo systemctl start NetworkManager.service
 sudo systemctl enable libvirtd
 sudo systemctl start libvirtd
-sudo systemctl enable nix-daemon
-sudo systemctl start nix-daemon
 sudo systemctl enable systemd-resolved.service
 sudo systemctl start systemd-resolved.service
 
@@ -346,12 +342,12 @@ EOF
 
 # Set zsh behaviour
 ZSHRC="${HOME}/.zshrc"
-sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster-nix\"/g" "${ZSHRC}"
+sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" "${ZSHRC}"
 sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" "${ZSHRC}"
 sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
 sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
-sed -i "s/^.*plugins=.*/plugins=(git thefuck nix-shell)/g" "${ZSHRC}"
+sed -i "s/^.*plugins=.*/plugins=(git thefuck)/g" "${ZSHRC}"
 
 cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
 autoload -U +X compinit && compinit
@@ -361,13 +357,7 @@ alias vim="nvim"
 EDITOR=nvim
 EOF
 
-if [ -d ~/.oh-my-zsh/plugins/nix-shell ]; then
-    (cd ~/.oh-my-zsh/plugins/nix-shell && git pull --rebase)
-else
-  git clone https://github.com/chisui/zsh-nix-shell.git ~/.oh-my-zsh/plugins/nix-shell
-fi
 
-cp ${PROG_DIR}/agnoster-nix.zsh-theme ~/.oh-my-zsh/custom/themes
 mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
 
 # Set git behaviour
@@ -550,6 +540,13 @@ xdg-mime default org.kde.dolphin.desktop inode/directory
 xdg-mime default org.kde.okular.desktop application/pdf
 xdg-mime default firefox.desktop x-scheme-handler/http
 xdg-mime default firefox.desktop x-scheme-handler/https
+
+# Configure mouse acceleration....
+# https://wiki.archlinux.org/title/Mouse_acceleration
+if [[ ! -f "/etc/X11/xorg.conf.d/50-mouse-acceleration.conf" ]]; then
+    sudo cp "${PROG_DIR}/50-mouse-acceleration.conf" /etc/X11/xorg.conf.d/50-mouse-acceleration.conf
+fi
+
 }
 
 function setup_teleport() {
