@@ -180,7 +180,7 @@ function haskell_step () {
     PATH="${PATH}:${HOME}/.local/bin/:${HOME}/ghcup/bin/"
 
     which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
-    which ghcup || curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+    which ghcup || curl --proto '=https' https://gitlab.haskell.org/haskell/ghcup/raw/master/bootstrap-haskell -sSf | sh
     ghcup install ghc "8.10.4"
     ghcup set ghc "8.10.4"
     ghcup install cabal
