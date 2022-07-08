@@ -24,6 +24,7 @@ Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-lua/telescope.nvim'
+Plug 'mrjones2014/tldr.nvim'
 
 " Cool start screen, so I don't need to pick random files to use fuzzy finders.
 Plug 'mhinz/vim-startify'
@@ -468,6 +469,9 @@ telescope.setup {
       n = { ["<c-t>"] = trouble_telescope.open_with_trouble },
     },
   },
+  extensions = {
+      tldr_command = 'tldr'
+  }
 }
 
 -- TODO: Look into scrolling a bit
@@ -863,11 +867,10 @@ require'nvim-tree'.setup {
   hijack_netrw        = true,
   open_on_setup       = false,
   ignore_ft_on_setup  = {},
-  auto_close          = true,
   open_on_tab         = false,
   hijack_cursor       = false,
   update_cwd          = false,
-  update_to_buf_dir   = {
+  hijack_directories   = {
     enable = true,
     auto_open = true,
   },
@@ -903,7 +906,6 @@ require'nvim-tree'.setup {
     height = 30,
     hide_root_folder = false,
     side = 'left',
-    auto_resize = false,
     mappings = {
       custom_only = false,
       list = {
@@ -921,7 +923,8 @@ require'nvim-tree'.setup {
   },
   actions = {
     open_file = {
-      quit_on_open = true
+      quit_on_open = true,
+      resize_window = false
     }
   }
 }

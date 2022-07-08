@@ -145,6 +145,7 @@ function pacman_setp() {
         zsh
         soundfont-fluid
         fluidsynth
+        tealdeer
         )
 
     sudo pacman -Sy --noconfirm
