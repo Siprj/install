@@ -10,7 +10,6 @@ declare SKIP_XMONAD=false
 declare SKIP_RUST=false
 declare GPU_ACCELERATION=false
 declare SETUP_TELEPORT=false
-declare DROPBOX=true
 
 function pacman_setp() {
     # Application nmtui is ncurse network manager part of the network-manager package.
@@ -152,28 +151,41 @@ function pacman_setp() {
     sudo pacman -Sy --needed "${packages[@]}"
 
     # I hate nano.
-    pacman -Q nano &> /dev/null && sudo pacman -R nano || true
+    pacman -Q nano &> /dev/null && sudo pacman -Rscn nano || true
+    # I don't want to use trizen any more
+    pacman -Q trizen &> /dev/null && sudo pacman -Rscn trizen || true
 
+    # Try to enable pacman colors
+    sudo sed -i "s/#Color/Color/" "/etc/pacman.conf"
+}
+
+function install_paru () {
+    mkdir -p "${HOME}/dev/"
+    ( cd "${HOME}/dev/" &&
+        git clone https://aur.archlinux.org/paru.git &&
+        cd paru &&
+        makepkg -si
+    )
 }
 
 function aur_step () {
-    pacman -Q google-chrome || trizen -S google-chrome  --noedit --noconfirm
-    pacman -Q libcurl-gnutls || trizen -S libcurl-gnutls --noedit --noconfirm
-    pacman -Q nerd-fonts-complete || trizen -S nerd-fonts-complete --noedit --noconfirm
-    pacman -Q powerline-fonts-git || trizen  -S powerline-fonts-git --noedit --noconfirm
-    pacman -Q spotify || trizen -S spotify --noedit --noconfirm
-    pacman -Q xflux || trizen -S xflux --noedit --noconfirm
-    pacman -Q zoom || trizen -S zoom --noedit --noconfirm
-    pacman -Q lazygit || trizen -S lazygit --noedit --noconfirm
-    pacman -Q polybar-git || trizen -S polybar-git --noedit --noconfirm
-    pacman -Q xmonad-log || trizen -S xmonad-log --noedit --noconfirm
-    pacman -Q teleport-bin || trizen -S teleport-bin --noedit --noconfirm
+    pacman -Q paru || install_paru
+    pacman -Q google-chrome || paru -S google-chrome --noconfirm
+    # required by spotify
+    pacman -Q libcurl-gnutls || paru -S libcurl-gnutls --noconfirm
+    pacman -Q nerd-fonts-complete || paru -S nerd-fonts-complete --noconfirm
+    pacman -Q powerline-fonts-git || paru  -S powerline-fonts-git --noconfirm
+    pacman -Q spotify || paru -S spotify --noconfirm
+    pacman -Q xflux || paru -S xflux --noconfirm
+    pacman -Q zoom || paru -S zoom --noconfirm
+    pacman -Q lazygit || paru -S lazygit --noconfirm
+    pacman -Q polybar-git || paru -S polybar-git --noconfirm
+    pacman -Q xmonad-log || paru -S xmonad-log --noconfirm
+    pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
 }
 
 function pip_setup() {
-    if [[ ${DROPBOX} == false ]]; then
-        which maestral || pip install --upgrade maestral maestral-qt
-    fi
+    echo "pip: nothing to do for now"
 }
 
 function haskell_step () {
@@ -182,8 +194,8 @@ function haskell_step () {
 
     which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
     which ghcup || curl --proto '=https' https://gitlab.haskell.org/haskell/ghcup/raw/master/bootstrap-haskell -sSf | sh
-    ghcup install ghc "8.10.4"
-    ghcup set ghc "8.10.4"
+    ghcup install ghc "9.2.2"
+    ghcup set ghc "9.2.2"
     ghcup install cabal
     ghcup install hls
     cabal update
@@ -613,10 +625,6 @@ case $key in
     ;;
     -i|--skip-pip)
     SKIP_PIP=true
-    shift # past argument
-    ;;
-    -m|--maestral)
-    DROPBOX=false
     shift # past argument
     ;;
     -x|--skip-xmonad)
