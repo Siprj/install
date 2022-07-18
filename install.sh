@@ -151,9 +151,9 @@ function pacman_setp() {
     sudo pacman -Sy --needed "${packages[@]}"
 
     # I hate nano.
-    pacman -Q nano &> /dev/null && sudo pacman -Rscn nano || true
+    pacman -Q nano &> /dev/null && sudo pacman -Rscun nano || true
     # I don't want to use trizen any more
-    pacman -Q trizen &> /dev/null && sudo pacman -Rscn trizen || true
+    pacman -Q trizen &> /dev/null && sudo pacman -Rscun trizen || true
 
     # Try to enable pacman colors
     sudo sed -i "s/#Color/Color/" "/etc/pacman.conf"
