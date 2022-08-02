@@ -126,9 +126,8 @@ augroup sourcing
     autocmd bufwritepost old_configuration.vim source $MYVIMRC
 augroup END
 
-" Use par for prettier line formatting.
-set formatprg=par
-let $PARINIT = 'rTbgqR B=.,?_A_a Q=_s>|'
+" Use fmt for prettier line formatting.
+set formatprg=fmt\ -w80
 
 " Kill the damned Ex mode.
 nnoremap Q <nop>
