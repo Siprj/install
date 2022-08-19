@@ -63,8 +63,6 @@ Plug 'hoob3rt/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'folke/trouble.nvim'
 
-Plug 'karb94/neoscroll.nvim'
-
 Plug 'windwp/nvim-spectre'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
@@ -472,14 +470,6 @@ telescope.setup {
       tldr_command = 'tldr'
   }
 }
-
--- TODO: Look into scrolling a bit
-local neoscroll = require('neoscroll')
-neoscroll.setup({
-  mappings = {'<C-u>', '<C-d>', '<C-b>', '<C-f>',
-              '<C-y>', '<C-e>', 'zt', 'zz', 'zb'},
-})
-
 
 local hop = require('hop')
 hop.setup()
