@@ -145,6 +145,8 @@ function pacman_setp() {
         soundfont-fluid
         fluidsynth
         tealdeer
+        noto-fonts
+        noto-fonts-emoji
         )
 
     sudo pacman -Sy --noconfirm
@@ -560,6 +562,10 @@ xdg-mime default firefox.desktop x-scheme-handler/https
 if [[ ! -f "/etc/X11/xorg.conf.d/50-mouse-acceleration.conf" ]]; then
     sudo cp "${PROG_DIR}/50-mouse-acceleration.conf" /etc/X11/xorg.conf.d/50-mouse-acceleration.conf
 fi
+
+# Rescan fonts
+
+fc-cache -r -v
 
 }
 
