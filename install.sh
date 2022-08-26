@@ -147,6 +147,7 @@ function pacman_setp() {
         tealdeer
         noto-fonts
         noto-fonts-emoji
+        zk
         )
 
     sudo pacman -Sy --noconfirm
