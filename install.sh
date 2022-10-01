@@ -530,8 +530,6 @@ if [ ! -L "${HOME}/.config/nvim" ]; then
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
-cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin"
-
 mkdir -p ~/.config/lazygit/
 cat > ~/.config/lazygit/config.yml <<EOF
   gui:
