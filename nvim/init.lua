@@ -35,6 +35,7 @@ require'packer'.startup(function(use)
   use{"phaazon/hop.nvim"}
   use{"j-hui/fidget.nvim"}
   use{"https://git.sr.ht/~whynothugo/lsp_lines.nvim"}
+  use{"folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim"}
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -379,4 +380,20 @@ if not packer_bootstrap then
   -- ls_lines.nvim
   require'lsp_lines'.setup()
 
+  -- todo-comments.nvim
+  local todo_comments_config = {
+    signs = true, -- show icons in the signs column
+    search = {
+      command = "rg",
+      args = {
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--hidden",
+      }
+    }
+  }
+  require'todo-comments'.setup(todo_comments_config)
 end
