@@ -326,6 +326,21 @@ if not packer_bootstrap then
   vim.keymap.set({"n"}, "<leader>ld", vim.lsp.buf.declaration)
   vim.keymap.set({"n"}, "<leader>cd", vim.diagnostic.open_float)
 
+  -- Update time for CursorHold/I is derived from the option `updatetime`
+  -- which sets the time to wait before the swap file is written. But I don't
+  -- use swap files so it is OK to set it to what ever
+  vim.opt.updatetime = 200
+  vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
+    callback = function()
+      if vim.tbl_count(vim.lsp.get_active_clients()) ~= 0 then
+        vim.lsp.buf.document_highlight()
+      end
+    end
+  })
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    callback = vim.lsp.buf.clear_references
+  })
+
   -- zk-nvim
   require'zk'.setup({
     picker = "telescope",
