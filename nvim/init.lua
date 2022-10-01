@@ -34,6 +34,7 @@ require'packer'.startup(function(use)
   use{"tpope/vim-fugitive"}
   use{"phaazon/hop.nvim"}
   use{"j-hui/fidget.nvim"}
+  use{"https://git.sr.ht/~whynothugo/lsp_lines.nvim"}
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -373,6 +374,9 @@ if not packer_bootstrap then
   vim.keymap.set({"n", "x", "o", "v"}, "F", require'hop'.hint_char1)
 
   -- fidget; show nice LSP status outside the status line
-  require"fidget".setup{}
+  require'fidget'.setup{}
+
+  -- ls_lines.nvim
+  require'lsp_lines'.setup()
 
 end
