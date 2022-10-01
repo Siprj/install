@@ -91,12 +91,7 @@ if not packer_bootstrap then
   vim.opt.mouse = "a"
   vim.opt.colorcolumn = "80"
 
-  -- TODO: Configure fold level????
-  -- set foldlevel=1
-
-  -- vim.opt.shada:prepend("%")
-  -- TODO: The last_edit function is missing
-  local init_group_id = vim.api.nvim_create_augroup("last_edit", { clear = true })
+  local init_group_id = vim.api.nvim_create_augroup("init_group", { clear = true })
   vim.api.nvim_create_autocmd("BufReadPost", {
     pattern = {"*"},
     group = init_group_id,
@@ -304,7 +299,12 @@ if not packer_bootstrap then
   local cmp_nvim_lsp = require'cmp_nvim_lsp'
   capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 
-  lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"haskell-language-server-wrapper", "--lsp"}}
+  lsp_config.hls.setup{
+    on_attach=on_attach,
+    capabilities = capabilities,
+    cmd = {"docker", "compose", "-f" ,"docker/docker-compose.yml", "exec", "devel", "haskell-language-server-wrapper", "--lsp"}
+  }
+  -- lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"haskell-language-server-wrapper", "--lsp"}}
   lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
   lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
@@ -327,6 +327,7 @@ if not packer_bootstrap then
   vim.keymap.set({"n"}, "<leader>lw", vim.lsp.buf.workspace_symbol)
   vim.keymap.set({"n"}, "<leader>ld", vim.lsp.buf.declaration)
   vim.keymap.set({"n"}, "<leader>cd", vim.diagnostic.open_float)
+  -- TODO: look into codelens a bit.
 
   -- Update time for CursorHold/I is derived from the option `updatetime`
   -- which sets the time to wait before the swap file is written. But I don't
