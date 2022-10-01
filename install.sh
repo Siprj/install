@@ -371,7 +371,8 @@ autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
 alias vim="nvim"
-EDITOR=nvim
+export EDITOR=nvim
+export ZK_NOTEBOOK_DIR=${HOME}/Dropbox/notes
 EOF
 
 
