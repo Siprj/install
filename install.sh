@@ -42,7 +42,6 @@ function pacman_setp() {
         calibre
         cups
         deluge
-        dia
         docker
         dolphin
         kdegraphics-thumbnailers
