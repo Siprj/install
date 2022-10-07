@@ -333,9 +333,19 @@ if not packer_bootstrap then
   -- which sets the time to wait before the swap file is written. But I don't
   -- use swap files so it is OK to set it to what ever
   vim.opt.updatetime = 200
+
   vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
     callback = function()
-      if vim.tbl_count(vim.lsp.get_active_clients()) ~= 0 then
+      local clients = vim.lsp.get_active_clients()
+      local client_count = vim.tbl_count(clients)
+      if client_count ~= 0 then
+	if client_count == 1 then
+          for k, v in pairs(clients) do
+            if v["name"] == "zk" then
+	      return
+	    end
+          end
+	end
         vim.lsp.buf.document_highlight()
       end
     end
