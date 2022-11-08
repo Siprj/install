@@ -105,7 +105,7 @@ if not packer_bootstrap then
   end
 
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua"},
+    pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua", "cabal", "yaml", "dockerfile"},
     group = init_group_id,
     callback = function() vim.api.nvim_create_autocmd("BufWritePre", { pattern = "<buffer>", callback = deleteTrailingWhitespaces }) end
   })
@@ -295,16 +295,15 @@ if not packer_bootstrap then
 
   -- nvim-lspconfig
   local lsp_config = require'lspconfig'
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
   local cmp_nvim_lsp = require'cmp_nvim_lsp'
-  capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+  capabilities = cmp_nvim_lsp.default_capabilities()
 
   lsp_config.hls.setup{
     on_attach=on_attach,
     capabilities = capabilities,
-    cmd = {"docker", "compose", "-f" ,"docker/docker-compose.yml", "exec", "devel", "haskell-language-server-wrapper", "--lsp"}
+    cmd = {"haskell-language-server-wrapper", "--lsp"}
+    --cmd = {"docker", "compose", "-f", "docker/docker-compose.yml", "exec", "devel", "haskell-language-server-wrapper", "--lsp"}
   }
-  -- lsp_config.hls.setup{on_attach=on_attach, capabilities = capabilities, cmd = {"haskell-language-server-wrapper", "--lsp"}}
   lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
   lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
@@ -390,6 +389,12 @@ if not packer_bootstrap then
 
   -- ls_lines.nvim
   require'lsp_lines'.setup()
+
+  function toggle_diagnostics()
+    vim.diagnostic.config{ virtual_text = not require'lsp_lines'.toggle() }
+  end
+  vim.keymap.set({"n"}, "<leader>ll", toggle_diagnostics)
+
 
   -- todo-comments.nvim
   local todo_comments_config = {
