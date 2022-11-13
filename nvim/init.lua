@@ -301,8 +301,7 @@ if not packer_bootstrap then
   lsp_config.hls.setup{
     on_attach=on_attach,
     capabilities = capabilities,
-    cmd = {"haskell-language-server-wrapper", "--lsp"}
-    --cmd = {"docker", "compose", "-f", "docker/docker-compose.yml", "exec", "devel", "haskell-language-server-wrapper", "--lsp"}
+    cmd = {"run-hls.sh", "--lsp"}
   }
   lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
   lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
