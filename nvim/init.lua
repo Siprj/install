@@ -26,7 +26,7 @@ require'packer'.startup(function(use)
       }
     }
   }
-  use{"hrsh7th/nvim-cmp", requires = {"hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp"}}
+  use{"hrsh7th/nvim-cmp", requires = {"hrsh7th/cmp-buffer", "hrsh7th/cmp-nvim-lsp", "hrsh7th/cmp-nvim-lsp-signature-help", "saadparwaiz1/cmp_luasnip"}}
   use{"nvim-lualine/lualine.nvim"}
   use{"lukas-reineke/indent-blankline.nvim"}
   use{"neovim/nvim-lspconfig"}
@@ -36,6 +36,8 @@ require'packer'.startup(function(use)
   use{"j-hui/fidget.nvim"}
   use{"https://git.sr.ht/~whynothugo/lsp_lines.nvim"}
   use{"folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim"}
+  use{"L3MON4D3/LuaSnip", requires = {"honza/vim-snippets"}}
+  -- For now lets use some snippet collection
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -202,6 +204,25 @@ if not packer_bootstrap then
   local live_grep_options = { additional_args = function(opts) return {"--hidden"} end}
   vim.keymap.set("n", "<leader>gg", function() telescope_builtin.live_grep(live_grep_options) end)
 
+  -- LuaSnip
+  local luasnip = require("luasnip")
+  local luasnip = require'luasnip'
+  local types = require'luasnip.util.types'
+
+  luasnip.config.set_config{
+    history = true,
+    -- Update more often, :h events for more info.
+    update_events = "TextChanged,TextChangedI",
+    ext_opts = {
+      [types.choiceNode] = {
+        active = {
+          virt_text = { { "<-", "Error" } },
+        },
+      },
+    },
+  }
+  require'luasnip.loaders.from_snipmate'.load({})
+
   -- nvim-cmp
   local has_words_before = function()
     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -211,20 +232,22 @@ if not packer_bootstrap then
   cmp.setup{
     mapping = {
 
-      -- ... Your other mappings ...
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
+        elseif luasnip.expand_or_jumpable() then
+          luasnip.expand_or_jump()
         elseif has_words_before() then
           cmp.complete()
         else
-          fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
+          fallback()
         end
       end, { "i", "s" }),
-
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
         else
           fallback()
         end
@@ -240,11 +263,18 @@ if not packer_bootstrap then
         select = true,
       })
     },
-    sources = {
+    snippet = {
+      expand = function(args)
+        require'luasnip'.lsp_expand(args.body)
+      end
+    },
+    sources = cmp.config.sources({
+      { name = "luasnip" },
       { name = "nvim_lsp" },
       { name = "buffer" },
-      -- TODO: Add snippet source...
-    },
+      { name = "nvim_lsp_signature_help" },
+      -- TODO: Add sninvim_lsp_signature_helpppet source...
+    }),
   }
 
   -- lualine.nvim
@@ -313,7 +343,6 @@ if not packer_bootstrap then
   vim.keymap.set({"n"}, "]c", vim.diagnostic.goto_next)
 
   vim.keymap.set({"n"}, "<leader>ls", vim.lsp.buf.signature_help)
-  vim.keymap.set({"v"}, "<leader>la", vim.lsp.buf.range_code_action)
   vim.keymap.set({"n"}, "<leader>la", vim.lsp.buf.code_action)
   vim.keymap.set({"n"}, "<leader>lr", vim.lsp.buf.rename)
   vim.keymap.set({"n"}, "<leader>lt", vim.lsp.buf.references)
@@ -335,15 +364,11 @@ if not packer_bootstrap then
   vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
     callback = function()
       local clients = vim.lsp.get_active_clients()
-      local client_count = vim.tbl_count(clients)
-      if client_count ~= 0 then
-	if client_count == 1 then
-          for k, v in pairs(clients) do
-            if v["name"] == "zk" then
-	      return
-	    end
-          end
-	end
+      local has_capability = false;
+      for k, v in pairs(clients) do
+        has_capability = has_capability or v.server_capabilities.documentHighlightProvider
+      end
+      if has_capability then
         vim.lsp.buf.document_highlight()
       end
     end
@@ -359,6 +384,7 @@ if not packer_bootstrap then
       config = {
         cmd = { "zk", "lsp" },
         name = "zk",
+        capabilities = capabilities
       },
       auto_attach = {
         enabled = true,
@@ -411,4 +437,5 @@ if not packer_bootstrap then
     }
   }
   require'todo-comments'.setup(todo_comments_config)
+
 end
