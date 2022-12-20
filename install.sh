@@ -212,7 +212,7 @@ xautolock -time 20 -locker slock &
 
 dunst -conf install/dunstrc &
 
-redshift -l 49:15
+redshift -l 49:15 &
 
 export XDG_CURRENT_DESKTOP="qt5ct"
 export QT_QPA_PLATFORMTHEME="qt5ct"
