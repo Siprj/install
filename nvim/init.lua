@@ -35,7 +35,7 @@ require'packer'.startup(function(use)
   use{"j-hui/fidget.nvim"}
   use{"https://git.sr.ht/~whynothugo/lsp_lines.nvim"}
   use{"folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim"}
-  use{"L3MON4D3/LuaSnip", requires = {"honza/vim-snippets"}}
+  use{"L3MON4D3/LuaSnip"}
   -- For now lets use some snippet collection
 
   if packer_bootstrap then
@@ -204,7 +204,6 @@ if not packer_bootstrap then
   vim.keymap.set("n", "<leader>gg", function() telescope_builtin.live_grep(live_grep_options) end)
 
   -- LuaSnip
-  local luasnip = require("luasnip")
   local luasnip = require'luasnip'
   local types = require'luasnip.util.types'
 
@@ -220,7 +219,38 @@ if not packer_bootstrap then
       },
     },
   }
-  require'luasnip.loaders.from_snipmate'.load({})
+  local s = luasnip.snippet
+  local p = require("luasnip.extras").partial
+  local t = luasnip.text_node
+  local i = luasnip.insert_node
+  luasnip.add_snippets("all", {
+    s("date", p(os.date, "%Y-%m-%d")),
+  })
+  local get_haskell_module_path = function()
+    return vim.fn.substitute(vim.fn.substitute(vim.fn.expand("%:r"), "/",".","g"), "^\\%(\\l*\\.\\)\\?", "", "")
+  end
+  luasnip.add_snippets("haskell", {
+    s("lang", {
+      t("{-# LANGUAGE "),
+      i(0,"OverloadedStrings"),
+      t(" #-}"),
+    }),
+    s("ghc", {
+      t("{-# OPTIONS_GHC "),
+      i(0,"-fno-warn-unused-imports"),
+      t(" #-}"),
+    }),
+    s("inline", {
+      t("{-# INLINE "),
+      i(0,"name"),
+      t(" #-}"),
+    }),
+    s("module", {
+      t("module "),
+      p(get_haskell_module_path),
+      t({"", "  (", "  )", "where", ""}),
+    }),
+  })
 
   -- nvim-cmp
   local has_words_before = function()
