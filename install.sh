@@ -10,6 +10,7 @@ declare SKIP_XMONAD=false
 declare SKIP_RUST=false
 declare GPU_ACCELERATION=false
 declare SETUP_TELEPORT=false
+declare SKIP_FONTS=false
 
 function pacman_setp() {
     # Application nmtui is ncurse network manager part of the network-manager package.
@@ -133,15 +134,20 @@ function install_paru () {
 function aur_step () {
     pacman -Q paru || install_paru
     pacman -Q google-chrome || paru -S google-chrome --noconfirm
-    # required by spotify
-    pacman -Q nerd-fonts-complete || paru -S nerd-fonts-complete --noconfirm
-    pacman -Q powerline-fonts-git || paru  -S powerline-fonts-git --noconfirm
     pacman -Q spotify || paru -S spotify --noconfirm
     pacman -Q zoom || paru -S zoom --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q polybar-git || paru -S polybar-git --noconfirm
     pacman -Q xmonad-log || paru -S xmonad-log --noconfirm
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
+}
+
+function font_step () {
+    mkdir -p ~/.local/share/fonts/
+
+    curl -L --proto '=https' https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip -o /tmp/FireCode.zip
+    (cd ~/.local/share/fonts/ && unzip -o /tmp/FireCode.zip)
+    rm /tmp/FireCode.zip
 }
 
 function haskell_step () {
@@ -411,7 +417,9 @@ Usage: install.sh [OPTION]
   -p --skip-pacman          don't install/update standard arch packages
   -a --skip-aur             don't install/update packages form AUR
   -i --skip-pip             don't install packages with pip
+  -f --skip-fonts           don't install fonts
   -x --skip-xmonad          don't install/update xmonad
+  -r --skip-rust            don't install/update rust tool chain
   -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     set GPU acceleration method to legacy mode
   -t --teleport             configure this machine as teleport node
@@ -432,6 +440,10 @@ case $key in
     SKIP_AUR=true
     shift # past argument
     ;;
+    -f|--skip-fonts)
+    SKIP_FONTS=true
+    shift # past argument
+    ;;
     -i|--skip-pip)
     SKIP_PIP=true
     shift # past argument
@@ -440,7 +452,7 @@ case $key in
     SKIP_XMONAD=true
     shift # past argument
     ;;
-    -x|--skip-rust)
+    -r|--skip-rust)
     SKIP_RUST=true
     shift # past argument
     ;;
@@ -475,6 +487,9 @@ if [[ ${SKIP_PACMAN} == false ]]; then
 fi
 if [[ ${SKIP_AUR} == false ]]; then
     aur_step
+fi
+if [[ ${SKIP_FONTS} == false ]]; then
+    font_step
 fi
 if [[ ${SKIP_XMONAD} == false ]]; then
     haskell_step
