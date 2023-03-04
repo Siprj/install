@@ -170,7 +170,8 @@ if not packer_bootstrap then
         list = {
           { key = "i", cb = tree_callback("vsplit") },
           { key = "s", cb = tree_callback("split") },
-          { key = "t", cb = tree_callback("tabnew") }
+          { key = "t", cb = tree_callback("tabnew") },
+          { key = "o", cb = tree_callback("system_open") },
         }
       },
     },

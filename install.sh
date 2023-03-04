@@ -44,6 +44,7 @@ function pacman_setp() {
         thunar
         ffmpegthumbnailer
         gvfs
+        gvfs-smb
 
         # Desktop notifications
         dunst

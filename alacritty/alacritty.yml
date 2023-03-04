@@ -62,7 +62,7 @@ colors: *tokyo-night2
 font:
   normal:
     family: FiraCode Nerd Font
-  bold: 
+  bold:
     family: FiraCode Nerd Font
     style: Bold
   size: 10
@@ -70,7 +70,7 @@ font:
 scrolling:
   # Maximum number of lines in the scrollback buffer.
   # Specifying '0' will disable scrolling.
-  history: 10000
+  history: 100000
 
   # Scrolling distance multiplier.
   multiplier: 3
