@@ -39,6 +39,7 @@ function pacman_setp() {
         calibre
         cups
         docker
+        docker-buildx
 
         #file manager and supporting packages
         thunar
