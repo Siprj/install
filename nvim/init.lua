@@ -37,6 +37,11 @@ require'packer'.startup(function(use)
   use{"folke/todo-comments.nvim", requires = "nvim-lua/plenary.nvim"}
   use{"L3MON4D3/LuaSnip"}
   -- For now lets use some snippet collection
+  use{"AckslD/nvim-neoclip.lua", requires = {"nvim-telescope/telescope.nvim"}}
+  use{"tenxsoydev/karen-yank.nvim"}
+
+  use{"kosayoda/nvim-lightbulb"}
+  use{"weilbith/nvim-code-action-menu"}
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -195,6 +200,7 @@ if not packer_bootstrap then
 
   telescope.setup()
   telescope.load_extension("fzf")
+  telescope.load_extension("neoclip")
   vim.keymap.set("n", "<leader><space>", telescope_builtin.find_files, { silent = true })
   vim.keymap.set("n", "<leader>t", telescope_builtin.builtin)
   vim.keymap.set("n", "<leader>b", telescope_builtin.buffers, { silent = true })
@@ -373,7 +379,7 @@ if not packer_bootstrap then
   vim.keymap.set({"n"}, "]c", vim.diagnostic.goto_next)
 
   vim.keymap.set({"n"}, "<leader>ls", vim.lsp.buf.signature_help)
-  vim.keymap.set({"n"}, "<leader>la", vim.lsp.buf.code_action)
+  vim.keymap.set({"n"}, "<leader>la", require'code_action_menu'.open_code_action_menu)
   vim.keymap.set({"n"}, "<leader>lr", vim.lsp.buf.rename)
   vim.keymap.set({"n"}, "<leader>lt", vim.lsp.buf.references)
 
@@ -400,6 +406,7 @@ if not packer_bootstrap then
       end
       if has_capability then
         vim.lsp.buf.document_highlight()
+        require'nvim-lightbulb'.update_lightbulb()
       end
     end
   })
@@ -468,4 +475,11 @@ if not packer_bootstrap then
   }
   require'todo-comments'.setup(todo_comments_config)
 
+  -- nvim-neoclip.lua
+  require'neoclip'.setup()
+  vim.keymap.set({"n"}, "<leader>n", ":Telescope neoclip<CR>")
+  vim.keymap.set({"v"}, "<leader>n", ":Telescope neoclip<CR>")
+
+  -- karen-yank.nvim
+  require("karen-yank").setup()
 end
