@@ -454,7 +454,7 @@ if not packer_bootstrap then
   vim.keymap.set({"n", "x", "o", "v"}, "F", require'hop'.hint_char1)
 
   -- fidget; show nice LSP status outside the status line
-  --require'fidget'.setup{}
+  require'fidget'.setup{}
 
   -- ls_lines.nvim
   require'lsp_lines'.setup()
@@ -494,6 +494,7 @@ if not packer_bootstrap then
   -- noice.nvim
   require'noice'.setup({
     lsp = {
+      progress = {enabled = false},
       hover = {enabled = false},
       signature = {enabled = false},
     },
