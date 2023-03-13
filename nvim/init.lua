@@ -42,6 +42,9 @@ require'packer'.startup(function(use)
 
   use{"kosayoda/nvim-lightbulb"}
   use{"weilbith/nvim-code-action-menu"}
+  use{"jubnzv/virtual-types.nvim"}
+  use{"folke/noice.nvim"}
+  use{"MunifTanjim/nui.nvim"}
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -201,6 +204,7 @@ if not packer_bootstrap then
   telescope.setup()
   telescope.load_extension("fzf")
   telescope.load_extension("neoclip")
+  telescope.load_extension("noice")
   vim.keymap.set("n", "<leader><space>", telescope_builtin.find_files, { silent = true })
   vim.keymap.set("n", "<leader>t", telescope_builtin.builtin)
   vim.keymap.set("n", "<leader>b", telescope_builtin.buffers, { silent = true })
@@ -362,7 +366,10 @@ if not packer_bootstrap then
   -- nvim-lspconfig
   local lsp_config = require'lspconfig'
   local cmp_nvim_lsp = require'cmp_nvim_lsp'
-  capabilities = cmp_nvim_lsp.default_capabilities()
+  local capabilities = cmp_nvim_lsp.default_capabilities()
+  local on_attach = function(client, bufnr)
+    require'virtualtypes'.on_attach(client, bufnr)
+  end
 
   lsp_config.hls.setup{
     on_attach=on_attach,
@@ -447,7 +454,7 @@ if not packer_bootstrap then
   vim.keymap.set({"n", "x", "o", "v"}, "F", require'hop'.hint_char1)
 
   -- fidget; show nice LSP status outside the status line
-  require'fidget'.setup{}
+  --require'fidget'.setup{}
 
   -- ls_lines.nvim
   require'lsp_lines'.setup()
@@ -481,5 +488,13 @@ if not packer_bootstrap then
   vim.keymap.set({"v"}, "<leader>n", ":Telescope neoclip<CR>")
 
   -- karen-yank.nvim
-  require("karen-yank").setup()
+  require'karen-yank'.setup()
+
+  -- noice.nvim
+  require'noice'.setup({
+    lsp = {
+      hover = {enabled = false},
+      signature = {enabled = false},
+    },
+  })
 end
