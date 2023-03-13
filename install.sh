@@ -378,6 +378,8 @@ fc-cache -r -v
 
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 
+cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
+
 }
 
 function setup_teleport() {
