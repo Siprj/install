@@ -45,6 +45,7 @@ require'packer'.startup(function(use)
   use{"jubnzv/virtual-types.nvim"}
   use{"folke/noice.nvim"}
   use{"MunifTanjim/nui.nvim"}
+  use{"folke/trouble.nvim", requires = "nvim-tree/nvim-web-devicons"}
 
   if packer_bootstrap then
     require'packer'.sync()
@@ -309,11 +310,10 @@ if not packer_bootstrap then
       end
     },
     sources = cmp.config.sources({
+      { name = "nvim_lsp_signature_help" },
       { name = "luasnip" },
       { name = "nvim_lsp" },
       { name = "buffer" },
-      { name = "nvim_lsp_signature_help" },
-      -- TODO: Add sninvim_lsp_signature_helpppet source...
     }),
   }
 
@@ -464,6 +464,7 @@ if not packer_bootstrap then
   end
   vim.keymap.set({"n"}, "<leader>ll", toggle_diagnostics)
 
+  require'trouble'.setup()
 
   -- todo-comments.nvim
   local todo_comments_config = {
