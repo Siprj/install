@@ -43,7 +43,6 @@ function pacman_setp() {
 
         #file manager and supporting packages
         thunar
-        ffmpegthumbnailer
         gvfs
         gvfs-smb
 
@@ -110,6 +109,7 @@ function pacman_setp() {
         tealdeer
         zk
         redshift
+        krita
         )
 
     sudo pacman -Sy --noconfirm

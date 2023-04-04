@@ -375,7 +375,11 @@ if not packer_bootstrap then
     cmd = {"run-hls.sh", "--lsp"}
   }
   lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
-  lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
+  lsp_config.elmls.setup{
+    on_attach=on_attach,
+    capabilities = capabilities,
+    cmd = {"npx", "elm-language-server"}
+  }
 
   vim.keymap.set({"n"}, "K", vim.lsp.buf.hover)
   vim.keymap.set({"n"}, "gd", telescope_builtin.lsp_definitions)
