@@ -38,10 +38,9 @@ require'packer'.startup(function(use)
   use{"L3MON4D3/LuaSnip"}
   -- For now lets use some snippet collection
   use{"AckslD/nvim-neoclip.lua", requires = {"nvim-telescope/telescope.nvim"}}
-  use{"tenxsoydev/karen-yank.nvim"}
 
   use{"kosayoda/nvim-lightbulb"}
-  use{"weilbith/nvim-code-action-menu"}
+  use{"aznhe21/actions-preview.nvim"}
   use{"jubnzv/virtual-types.nvim"}
   use{"folke/noice.nvim"}
   use{"MunifTanjim/nui.nvim"}
@@ -211,7 +210,6 @@ if not packer_bootstrap then
   vim.keymap.set("n", "<leader>b", telescope_builtin.buffers, { silent = true })
   vim.keymap.set("n", "<leader>tl", telescope_builtin.live_grep)
   vim.keymap.set("n", "<leader>tg", telescope_builtin.git_files)
-  -- TODO: I could probably use telescope for LSP as well :thinking_face:
   local live_grep_options = { additional_args = function(opts) return {"--hidden"} end}
   vim.keymap.set("n", "<leader>gg", function() telescope_builtin.live_grep(live_grep_options) end)
 
@@ -380,23 +378,21 @@ if not packer_bootstrap then
   lsp_config.elmls.setup{on_attach=on_attach, capabilities = capabilities}
 
   vim.keymap.set({"n"}, "K", vim.lsp.buf.hover)
-  vim.keymap.set({"n"}, "gd", vim.lsp.buf.definition)
+  vim.keymap.set({"n"}, "gd", telescope_builtin.lsp_definitions)
 
   vim.keymap.set({"n"}, "[c", vim.diagnostic.goto_prev)
   vim.keymap.set({"n"}, "]c", vim.diagnostic.goto_next)
 
   vim.keymap.set({"n"}, "<leader>ls", vim.lsp.buf.signature_help)
-  vim.keymap.set({"n"}, "<leader>la", require'code_action_menu'.open_code_action_menu)
+  vim.keymap.set({"n"}, "<leader>la", require("actions-preview").code_actions)
   vim.keymap.set({"n"}, "<leader>lr", vim.lsp.buf.rename)
-  vim.keymap.set({"n"}, "<leader>lt", vim.lsp.buf.references)
+  vim.keymap.set({"n"}, "<leader>lt", telescope_builtin.lsp_references)
 
-  vim.keymap.set({"n"}, "<leader>cd", vim.diagnostic.open_float)
-  vim.keymap.set({"n"}, "<leader>li", vim.lsp.buf.implementation)
-  vim.keymap.set({"n"}, "<leader>lD", vim.lsp.buf.type_definition)
-  vim.keymap.set({"n"}, "<leader>l1", vim.lsp.buf.document_symbol)
-  vim.keymap.set({"n"}, "<leader>lw", vim.lsp.buf.workspace_symbol)
-  vim.keymap.set({"n"}, "<leader>ld", vim.lsp.buf.declaration)
-  vim.keymap.set({"n"}, "<leader>cd", vim.diagnostic.open_float)
+  vim.keymap.set({"n"}, "<leader>li", telescope_builtin.lsp_implementations)
+  vim.keymap.set({"n"}, "<leader>lD", telescope_builtin.lsp_type_definitions)
+  vim.keymap.set({"n"}, "<leader>l1", telescope_builtin.lsp_document_symbols)
+  vim.keymap.set({"n"}, "<leader>lw", telescope_builtin.lsp_workspace_symbols)
+  vim.keymap.set({"n"}, "<leader>ld", telescope_builtin.lsp_definitions)
   -- TODO: look into codelens a bit.
 
   -- Update time for CursorHold/I is derived from the option `updatetime`
@@ -487,9 +483,6 @@ if not packer_bootstrap then
   require'neoclip'.setup()
   vim.keymap.set({"n"}, "<leader>n", ":Telescope neoclip<CR>")
   vim.keymap.set({"v"}, "<leader>n", ":Telescope neoclip<CR>")
-
-  -- karen-yank.nvim
-  require'karen-yank'.setup()
 
   -- noice.nvim
   require'noice'.setup({
