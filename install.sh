@@ -110,6 +110,8 @@ function pacman_setp() {
         zk
         redshift
         krita
+        gnome-keyring
+        seahorse
         )
 
     sudo pacman -Sy --noconfirm
@@ -213,6 +215,10 @@ cat > ~/.xinitrc <<EOF
 # .xsession
 
 xrdb ~/.Xresources
+
+run-parts --verbose --regex="\.sh" /etc/X11/xinit/xinitrc.d/
+
+gnome-keyring-daemon --components=secrets --daemonize --start
 
 xautolock -time 20 -locker slock &
 
