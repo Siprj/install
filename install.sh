@@ -112,6 +112,7 @@ function pacman_setp() {
         krita
         gnome-keyring
         seahorse
+        element-desktop
         )
 
     sudo pacman -Sy --noconfirm
