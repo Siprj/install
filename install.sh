@@ -111,6 +111,7 @@ function pacman_setp() {
         element-desktop
         i3-wm
         xss-lock
+        yaml-language-server
         )
 
     sudo pacman -Sy --noconfirm
@@ -136,7 +137,6 @@ function install_paru () {
 
 function aur_step () {
     pacman -Q paru || install_paru
-    pacman -Q google-chrome || paru -S google-chrome --noconfirm
     pacman -Q spotify || paru -S spotify --noconfirm
     pacman -Q zoom || paru -S zoom --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
@@ -290,6 +290,8 @@ cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
 
 cp "${PROG_DIR}/toggle-keyboard.sh" "${HOME}/.local/bin/"
+
+cp "${PROG_DIR}/switch-workspace.py" "${HOME}/.local/bin/"
 
 }
 
