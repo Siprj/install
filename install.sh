@@ -6,7 +6,6 @@ declare SKIP_AUR=false
 declare SKIP_PIP=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
-declare SKIP_XMONAD=false
 declare SKIP_RUST=false
 declare GPU_ACCELERATION=false
 declare SETUP_TELEPORT=false
@@ -17,11 +16,9 @@ function pacman_setp() {
     # PDF viewer evince or okular
     # Printer CUPS
     # SANE is scanner app
-    # feh can setup wallpaper -- used by xmonad-wallpaper package
     # Bit torrent deluge client.
     # File manager nautilus
     # ubuntu-drivers-common driver installer
-    # xautolock can automatically lock computer when no activity
     # scrot is screen capture utility
     # autocutsel synchronize clipboards
     # ss is netstat equivalent
@@ -104,7 +101,6 @@ function pacman_setp() {
         vlc
         wget
         wireshark-qt
-        xautolock
         zsh
         tealdeer
         zk
@@ -113,6 +109,8 @@ function pacman_setp() {
         gnome-keyring
         seahorse
         element-desktop
+        i3-wm
+        xss-lock
         )
 
     sudo pacman -Sy --noconfirm
@@ -143,7 +141,6 @@ function aur_step () {
     pacman -Q zoom || paru -S zoom --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q polybar-git || paru -S polybar-git --noconfirm
-    pacman -Q xmonad-log || paru -S xmonad-log --noconfirm
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
 }
 
@@ -155,36 +152,12 @@ function font_step () {
     rm /tmp/FireCode.zip
 }
 
-function haskell_step () {
-    # Bootstrap path
-    PATH="${PATH}:${HOME}/.local/bin/:${HOME}/ghcup/bin/"
-
-    which stack || curl -sSL https://get.haskellstack.org/ | sh -s - -d ${HOME}/.local/bin/
-    which ghcup || curl --proto '=https' https://gitlab.haskell.org/haskell/ghcup/raw/master/bootstrap-haskell -sSf | sh
-    ghcup install ghc "9.4.2"
-    ghcup set ghc "9.4.2"
-    ghcup install cabal
-    ghcup install hls
-    cabal update
-}
-
 function rust_step () {
     rustup toolchain install nightly
     rustup default nightly
     rustup component add rust-src
+    rustup component add rust-analyzer
     rustup update
-    curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.local/bin/rust-analyzer
-    chmod +x ~/.local/bin/rust-analyzer
-}
-
-function xmonad_step () {
-
-    if [ -d ~/xmonadrc ]; then
-        (cd ~/xmonadrc && git pull --rebase && stack install --install-ghc)
-    else
-        (cd ~/ && git clone https://github.com/Siprj/xmonadrc.git)
-        (cd ~/xmonadrc && stack install)
-    fi
 }
 
 function system_setup_step() {
@@ -214,91 +187,13 @@ sudo usermod --append --groups docker `whoami`
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
 # .xsession
-
-xrdb ~/.Xresources
-
 run-parts --verbose --regex="\.sh" /etc/X11/xinit/xinitrc.d/
 
 gnome-keyring-daemon --components=secrets --daemonize --start
 
-xautolock -time 20 -locker slock &
-
 .screenlayout/two-monitors.sh
 
-dunst -conf install/dunstrc &
-
-redshift -l 49:15 &
-
-export XDG_CURRENT_DESKTOP="qt5ct"
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export _JAVA_AWT_WM_NONREPARENTING=1
-
-polybar main &
-
-INVOCATION_ID="" dropbox &
-
-exec xmonad
-EOF
-
-cat > ~/.Xresources <<EOF
-! {{{ xmessage
-
-xmessage*form.okay.shapeStyle: rectangle
-xmessage*form.okay.background: black
-xmessage*form.okay.foreground: rgb:e/b/b
-xmessage*message*background: black
-xmessage*background: black
-xmessage*foreground: gray85
-xmessage*Scrollbar.width: 1
-xmessage*Scrollbar.borderWidth: 0
-xmessage*Text.?.cursorColor: rgb:d/5/5
-xmessage*Text.borderColor: gray65
-xmessage*Text*background: gray95
-xmessage*Command.highlightThickness: 2
-xmessage*Command.internalWidth: 5
-xmessage*Command.internalHeight: 3
-xmessage*Command.borderColor: gray40
-xmessage*Command.shapeStyle: Rectangle
-xmessage*Command.background: gray90
-Xmessage*international: true
-
-! }}} xmessage
-
-! {{{ terminal colors
-
-xterm*bellIsUrgent: true
-xterm*background: #001419
-xterm*foreground: #b4cbcc
-! xterm*font:     *-fixed-*-*-*-18-*
-xterm*faceName: Droid Sans Mono for Powerline
-xterm*faceSize: 12
-
-*color0:  #04222a
-*color1:  #dc322f
-*color2:  #cde300
-*color3:  #b58900
-*color4:  #268bd2
-*color5:  #d33682
-*color6:  #2aa198
-*color7:  #eee8d5
-*color8:  #002b36
-*color9:  #cb4b16
-*color10:  #aaff00
-*color11:  #657b83
-*color12:  #839496
-*color13:  #6c71c4
-*color14:  #93a1a1
-*color15:  #fdf6e3
-*color16:  #06303b
-*color17:  #93211f
-*color18:  #5e6a00
-*color19:  #8a6700
-*color20:  #144d73
-*color21:  #781e4b
-*color22:  #185e58
-
-! }}} terminal colors
-
+exec i3
 EOF
 
 # install oh-my-zsh
@@ -331,6 +226,8 @@ autoload -U +X bashcompinit && bashcompinit
 alias vim="nvim"
 export EDITOR=nvim
 export ZK_NOTEBOOK_DIR=${HOME}/Dropbox/notes
+export TERMINFO='/usr/share/terminfo/'
+alias hx="helix"
 EOF
 
 
@@ -360,7 +257,8 @@ EOF
 
 # Install polybar configuration
 mkdir -p "${HOME}/.config/polybar"
-cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config"
+rm -f "${HOME}/.config/polybar/config"
+cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config.ini"
 
 # Install alacritty configuration
 if [ ! -L "${HOME}/.config/alacritty" ]; then
@@ -380,12 +278,18 @@ if [[ ! -f "/etc/X11/xorg.conf.d/50-mouse-acceleration.conf" ]]; then
     sudo cp "${PROG_DIR}/50-mouse-acceleration.conf" /etc/X11/xorg.conf.d/50-mouse-acceleration.conf
 fi
 
+# Configure i3
+mkdir -p "${HOME}/.config/i3"
+cp "${PROG_DIR}/i3.config" "${HOME}/.config/i3/config"
+
 # Rescan fonts
 fc-cache -r -v
 
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 
 cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
+
+cp "${PROG_DIR}/toggle-keyboard.sh" "${HOME}/.local/bin/"
 
 }
 
@@ -429,7 +333,6 @@ Usage: install.sh [OPTION]
   -a --skip-aur             don't install/update packages form AUR
   -i --skip-pip             don't install packages with pip
   -f --skip-fonts           don't install fonts
-  -x --skip-xmonad          don't install/update xmonad
   -r --skip-rust            don't install/update rust tool chain
   -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     set GPU acceleration method to legacy mode
@@ -457,10 +360,6 @@ case $key in
     ;;
     -i|--skip-pip)
     SKIP_PIP=true
-    shift # past argument
-    ;;
-    -x|--skip-xmonad)
-    SKIP_XMONAD=true
     shift # past argument
     ;;
     -r|--skip-rust)
@@ -502,14 +401,8 @@ fi
 if [[ ${SKIP_FONTS} == false ]]; then
     font_step
 fi
-if [[ ${SKIP_XMONAD} == false ]]; then
-    haskell_step
-fi
 if [[ ${SKIP_RUST} == false ]]; then
     rust_step
-fi
-if [[ ${SKIP_XMONAD} == false ]]; then
-    xmonad_step
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
