@@ -1,0 +1,28 @@
+theme = "github_dark_high_contrast"
+
+[editor]
+line-number = "absolute"
+true-color = true
+auto-pairs = false
+
+[editor.statusline]
+left = ["mode", "version-control", "spinner", "file-name"]
+center = []
+right = ["diagnostics", "selections", "file-encoding", "file-line-ending", "file-type", "separator", "position-percentage", "position"]
+separator = "│"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.indent-guides]
+render = true
+character = "┆"
+
+# [editor.jump-mode]
+# dim-during-jump = true
+# num-chars-before-label = 1
+# jump-keys = "laskdjfhgpmoinqzubwxyvecrt"

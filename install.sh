@@ -112,6 +112,7 @@ function pacman_setp() {
         i3-wm
         xss-lock
         yaml-language-server
+        helix
         )
 
     sudo pacman -Sy --noconfirm
