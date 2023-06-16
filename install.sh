@@ -188,6 +188,10 @@ sudo usermod --append --groups docker `whoami`
 # setup .xinitrc
 cat > ~/.xinitrc <<EOF
 # .xsession
+
+export XDG_CURRENT_DESKTOP="qt5ct"
+export QT_QPA_PLATFORMTHEME="qt5ct"
+
 run-parts --verbose --regex="\.sh" /etc/X11/xinit/xinitrc.d/
 
 gnome-keyring-daemon --components=secrets --daemonize --start
