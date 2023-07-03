@@ -7,6 +7,7 @@ declare SKIP_PIP=false
 declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_RUST=false
+declare SKIP_RUST_TOOLS=false
 declare GPU_ACCELERATION=false
 declare SETUP_TELEPORT=false
 declare SKIP_FONTS=false
@@ -122,6 +123,17 @@ function pacman_setp() {
         xf86-input-libinput
         mesa
         polkit
+
+        # Alternative tools
+        lsd
+        exa
+        zoxide
+        dust
+        fd
+        sd
+        procs
+        bottom
+        broot
         )
 
     sudo pacman -Sy --noconfirm
@@ -149,7 +161,6 @@ function install_paru () {
 function aur_step () {
     pacman -Q paru || install_paru
     pacman -Q spotify || paru -S spotify --noconfirm
-    pacman -Q zoom || paru -S zoom --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q polybar-git || paru -S polybar-git --noconfirm
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
@@ -169,6 +180,11 @@ function rust_step () {
     rustup component add rust-src
     rustup component add rust-analyzer
     rustup update
+}
+
+function rust_tools_step() {
+    cargo install xcp
+    cargo install topgrade
 }
 
 function system_setup_step() {
@@ -247,7 +263,7 @@ export TERMINFO='/usr/share/terminfo/'
 alias hx="helix"
 EOF
 
-usermod --shell /bin/zsh `whoami`
+sudo usermod --shell /bin/zsh `whoami`
 
 mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
 
@@ -356,6 +372,7 @@ Usage: install.sh [OPTION]
   -i --skip-pip             don't install packages with pip
   -f --skip-fonts           don't install fonts
   -r --skip-rust            don't install/update rust tool chain
+  -t --skip-rust-tools      don't install/update tools build in rust
   -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     set GPU acceleration method to legacy mode
   -t --teleport             configure this machine as teleport node
@@ -386,6 +403,10 @@ case $key in
     ;;
     -r|--skip-rust)
     SKIP_RUST=true
+    shift # past argument
+    ;;
+    -t|--skip-rust-tools)
+    SKIP_RUST_TOOLS=true
     shift # past argument
     ;;
     -s|--skip-system-setup)
@@ -425,6 +446,9 @@ if [[ ${SKIP_AUR} == false ]]; then
 fi
 if [[ ${SKIP_FONTS} == false ]]; then
     font_step
+fi
+if [[ ${SKIP_RUST_TOOLS} == false ]]; then
+    rust_tools_step
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
