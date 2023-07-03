@@ -120,9 +120,11 @@ function pacman_setp() {
         xorg-xinit
         xorg-xkill
         xorg-xinput
+        xclip
         xf86-input-libinput
         mesa
         polkit
+        ripgrep
 
         # Alternative tools
         lsd
