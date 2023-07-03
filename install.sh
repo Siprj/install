@@ -247,6 +247,7 @@ export TERMINFO='/usr/share/terminfo/'
 alias hx="helix"
 EOF
 
+usermod --shell /bin/zsh `whoami`
 
 mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
 
