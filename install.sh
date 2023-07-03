@@ -113,6 +113,15 @@ function pacman_setp() {
         xss-lock
         yaml-language-server
         helix
+
+        xorg-server
+        xorg-apps
+        xorg-xinit
+        xorg-xkill
+        xorg-xinput
+        xf86-input-libinput
+        mesa
+        polkit
         )
 
     sudo pacman -Sy --noconfirm
@@ -129,10 +138,11 @@ function pacman_setp() {
 
 function install_paru () {
     mkdir -p "${HOME}/dev/"
-    ( cd "${HOME}/dev/" &&
-        git clone https://aur.archlinux.org/paru.git &&
-        cd paru &&
-        makepkg -si
+    ( cd "${HOME}/dev/"
+      rm -r -f "${HOME}/dev/paru/"
+      git clone https://aur.archlinux.org/paru.git
+      cd paru
+      makepkg -si
     )
 }
 
@@ -201,8 +211,10 @@ gnome-keyring-daemon --components=secrets --daemonize --start
 exec i3
 EOF
 
+ls ~/ -lah | grep ".oh-my-zsh"
+
 # install oh-my-zsh
-if [ -d "~/.oh-my-zsh" ]; then
+if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 fi
 
@@ -290,6 +302,8 @@ cp "${PROG_DIR}/i3.config" "${HOME}/.config/i3/config"
 # Rescan fonts
 fc-cache -r -v
 
+
+mkdir -p "${HOME}/.local/bin/"
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 
 cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
@@ -402,14 +416,14 @@ done
 if [[ ${SKIP_PACMAN} == false ]]; then
     pacman_setp
 fi
+if [[ ${SKIP_RUST} == false ]]; then
+    rust_step
+fi
 if [[ ${SKIP_AUR} == false ]]; then
     aur_step
 fi
 if [[ ${SKIP_FONTS} == false ]]; then
     font_step
-fi
-if [[ ${SKIP_RUST} == false ]]; then
-    rust_step
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
