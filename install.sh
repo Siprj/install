@@ -136,6 +136,7 @@ function pacman_setp() {
         procs
         bottom
         broot
+        pulseaudio-bluetooth
         )
 
     sudo pacman -Sy --noconfirm
