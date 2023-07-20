@@ -137,6 +137,7 @@ function pacman_setp() {
         bottom
         broot
         pulseaudio-bluetooth
+        taplo-cli
         )
 
     sudo pacman -Sy --noconfirm
