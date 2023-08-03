@@ -27,7 +27,6 @@ function pacman_setp() {
     # recoll document indexing
     declare -a packages=(
         arandr
-        alacritty
         autoconf
         automake
         bat
@@ -38,6 +37,7 @@ function pacman_setp() {
         cups
         docker
         docker-buildx
+        wezterm
 
         #file manager and supporting packages
         thunar
@@ -301,6 +301,11 @@ cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config.ini"
 # Install alacritty configuration
 if [ ! -L "${HOME}/.config/alacritty" ]; then
     ln -s "${PROG_DIR}/alacritty" ~/.config/alacritty
+fi
+
+# Install wezterm configuration
+if [ ! -L "${HOME}/.wezterm.lua" ]; then
+    ln -s "${PROG_DIR}/wezterm.lua" ~/.wezterm.lua
 fi
 
 # Set default applications
