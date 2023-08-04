@@ -14,7 +14,7 @@ require'packer'.startup(function(use)
   use{"wbthomason/packer.nvim"}
   use{"folke/tokyonight.nvim"}
   use{"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
-  use{"p00f/nvim-ts-rainbow"}
+  use{"https://gitlab.com/HiPhish/rainbow-delimiters.nvim"}
   use{"kyazdani42/nvim-web-devicons"}
   use{"kyazdani42/nvim-tree.lua"}
   use{"nvim-telescope/telescope.nvim",
@@ -87,7 +87,7 @@ if not packer_bootstrap then
   -- TODO: Do I really want this? Maybe it would be better to create function
   -- which will turn case sensitivity searches and then turns it back on.
   vim.opt.smartcase = true
-  vim.opt.lazyredraw = true
+  --vim.opt.lazyredraw = true
   -- Show matching brackets when text indicator is over them.
   vim.opt.showmatch = true
 
@@ -156,14 +156,6 @@ if not packer_bootstrap then
       -- Instead of true it can also be a list of languages
       additional_vim_regex_highlighting = false,
     },
-    rainbow = {
-      enable = true,
-      -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
-      extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-      max_file_lines = nil, -- Do not enable for files with more than n lines, int
-      -- colors = {}, -- table of hex strings
-      -- termcolors = {} -- table of colour name strings
-    }
   }
 
   -- nvim-web-devicons
