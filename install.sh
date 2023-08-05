@@ -11,50 +11,18 @@ declare SKIP_RUST_TOOLS=false
 declare GPU_ACCELERATION=false
 declare SETUP_TELEPORT=false
 declare SKIP_FONTS=false
+declare INSTALL_TUXEDO=false
 
 function pacman_setp() {
-    # Application nmtui is ncurse network manager part of the network-manager package.
-    # PDF viewer evince or okular
-    # Printer CUPS
-    # SANE is scanner app
-    # Bit torrent deluge client.
-    # File manager nautilus
-    # ubuntu-drivers-common driver installer
-    # scrot is screen capture utility
-    # autocutsel synchronize clipboards
-    # ss is netstat equivalent
-    # network-manager-applet run nm-applet
-    # recoll document indexing
     declare -a packages=(
-        arandr
-        autoconf
-        automake
-        bat
-        bluez
-        bluez-utils
-        bridge-utils
-        calibre
+        base-devel
         cups
         docker
         docker-buildx
         wezterm
-
-        #file manager and supporting packages
-        thunar
-        gvfs
-        gvfs-smb
-
-        # Desktop notifications
-        dunst
-        feh
-        firefox
-
-        # firewall
+        neovim
+        # Firewall
         ufw
-
-        fontconfig
-        freetype2
-        gcc-multilib
         gdb
         git
         git-lfs
@@ -62,72 +30,39 @@ function pacman_setp() {
         graphviz
         gwenview
         ghidra
-        btop
         hunspell
         hunspell-en_GB
         jq
         kate
         libreoffice-fresh
-        make
-        systemd-resolvconf
-        networkmanager
-        network-manager-applet
-        neovim
         okular
-        openssh
-        pavucontrol
-        pkgconf
-        pulseaudio
         freerdp
         rdesktop
-        recoll
         remmina
         rustup
-        # Application picker instead of dmenu
-        rofi
         # Scanner app
         sane
-        scrot
-        slock
         steam
         teamspeak3
-        texlive-core
-        texlive-langgreek
-        texlive-latexextra
         thefuck
-        thunderbird
         tree
         unrar
         unzip
         vlc
         wget
         wireshark-qt
-        zsh
         tealdeer
         zk
-        redshift
         krita
-        gnome-keyring
-        seahorse
         element-desktop
-        i3-wm
-        xss-lock
         yaml-language-server
         helix
-
-        xorg-server
-        xorg-apps
-        xorg-xinit
-        xorg-xkill
-        xorg-xinput
-        xclip
-        xf86-input-libinput
-        mesa
-        polkit
         ripgrep
-
+        taplo-cli
         # Alternative tools
         lsd
+        bat
+        btop
         exa
         zoxide
         dust
@@ -136,37 +71,19 @@ function pacman_setp() {
         procs
         bottom
         broot
-        pulseaudio-bluetooth
-        taplo-cli
         )
 
     sudo pacman -Sy --noconfirm
     sudo pacman -Sy --needed "${packages[@]}"
 
-    # I hate nano.
-    pacman -Q nano &> /dev/null && sudo pacman -Rscun nano || true
-    # I don't want to use trizen any more
-    pacman -Q trizen &> /dev/null && sudo pacman -Rscun trizen || true
-
     # Try to enable pacman colors
     sudo sed -i "s/#Color/Color/" "/etc/pacman.conf"
 }
 
-function install_paru () {
-    mkdir -p "${HOME}/dev/"
-    ( cd "${HOME}/dev/"
-      rm -r -f "${HOME}/dev/paru/"
-      git clone https://aur.archlinux.org/paru.git
-      cd paru
-      makepkg -si
-    )
-}
-
 function aur_step () {
-    pacman -Q paru || install_paru
+    pacman -Q paru || yay -S --noconfirm --answerdiff=None paru
     pacman -Q spotify || paru -S spotify --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
-    pacman -Q polybar-git || paru -S polybar-git --noconfirm
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
 }
 
@@ -202,45 +119,12 @@ sudo systemctl start ufw.service
 sudo ufw default deny
 sudo ufw enable
 
-sudo systemctl enable NetworkManager.service
-sudo systemctl start NetworkManager.service
-sudo systemctl enable systemd-resolved.service
-sudo systemctl start systemd-resolved.service
-
-# Disable beep...
-sudo bash -c 'cat > /etc/modprobe.d/nobeep.conf <<EOF
-blacklist pcspkr
-EOF'
-
 sudo usermod --append --groups docker `whoami`
 
-
-# setup .xinitrc
-cat > ~/.xinitrc <<EOF
-# .xsession
-
-export XDG_CURRENT_DESKTOP="qt5ct"
-export QT_QPA_PLATFORMTHEME="qt5ct"
-
-run-parts --verbose --regex="\.sh" /etc/X11/xinit/xinitrc.d/
-
-gnome-keyring-daemon --components=secrets --daemonize --start
-
-.screenlayout/two-monitors.sh
-
-exec i3
-EOF
-
-ls ~/ -lah | grep ".oh-my-zsh"
-
-# install oh-my-posh
-if [[ ! -f "${HOME}/.bin/oh-my-posh" ]]; then
-    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/bin
-fi
-
-# install oh-my-zsh
-if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+# Install oh-my-posh
+if [[ ! -f "${HOME}/.local/bin/oh-my-posh" ]]; then
+    mkdir -p  "${HOME}/.local/bin/"
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
 fi
 
 # Put stack, ghcup, cargo, cabal bin paths into path
@@ -252,28 +136,6 @@ path+=(~/.cabal/bin)
 path+=(~/.cargo/bin)
 EOF
 
-# Set zsh behaviour
-ZSHRC="${HOME}/.zshrc"
-sed -i "s/ZSH_THEME=\".*\"/ZSH_THEME=\"agnoster\"/g" "${ZSHRC}"
-sed -i "s/^.*ENABLE_CORRECTION=\".*\"/ENABLE_CORRECTION=\"true\"/g" "${ZSHRC}"
-sed -i "s/^.*COMPLETION_WAITING_DOTS=\".*\"/COMPLETION_WAITING_DOTS=\"true\"/g" "${ZSHRC}"
-sed -i "s/^.*UPDATE_ZSH_DAYS=.*/UPDATE_ZSH_DAYS=7/g" "${ZSHRC}"
-sed -i "s/^.*HIST_STAMPS=.*/HIST_STAMPS=\"mm\\/dd\\/yyyy\"/g" "${ZSHRC}"
-sed -i "s/^.*plugins=.*/plugins=(git thefuck)/g" "${ZSHRC}"
-
-cat > ~/.oh-my-zsh/custom/custom-rc.zsh <<EOF
-autoload -U +X compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
-
-alias vim="nvim"
-export EDITOR=nvim
-export ZK_NOTEBOOK_DIR=${HOME}/Dropbox/notes
-export TERMINFO='/usr/share/terminfo/'
-alias hx="helix"
-EOF
-
-sudo usermod --shell /bin/zsh `whoami`
-
 mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
 
 # Set git behaviour
@@ -283,7 +145,7 @@ git config --global rebase.autosquash true
 
 mkdir -p ~/.config/
 if [ ! -L "${HOME}/.config/nvim" ]; then
-    ln -s "${PROG_DIR}/nvim" ~/.config/nvim
+    ln -s "${PROG_DIR}/nvim" "${HOME}/.config/nvim"
 fi
 nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
 
@@ -298,41 +160,13 @@ cat > ~/.config/lazygit/config.yml <<EOF
       mode: 'rebase'
 EOF
 
-# Install polybar configuration
-mkdir -p "${HOME}/.config/polybar"
-rm -f "${HOME}/.config/polybar/config"
-cp "${PROG_DIR}/polybar.conf" "${HOME}/.config/polybar/config.ini"
-
-# Install alacritty configuration
-if [ ! -L "${HOME}/.config/alacritty" ]; then
-    ln -s "${PROG_DIR}/alacritty" ~/.config/alacritty
-fi
-
 # Install wezterm configuration
 if [ ! -L "${HOME}/.wezterm.lua" ]; then
     ln -s "${PROG_DIR}/wezterm.lua" ~/.wezterm.lua
 fi
 
-# Set default applications
-
-xdg-mime default thunar.desktop inode/directory
-xdg-mime default org.kde.okular.desktop application/pdf
-xdg-mime default firefox.desktop x-scheme-handler/http
-xdg-mime default firefox.desktop x-scheme-handler/https
-
-# Configure mouse acceleration....
-# https://wiki.archlinux.org/title/Mouse_acceleration
-if [[ ! -f "/etc/X11/xorg.conf.d/50-mouse-acceleration.conf" ]]; then
-    sudo cp "${PROG_DIR}/50-mouse-acceleration.conf" /etc/X11/xorg.conf.d/50-mouse-acceleration.conf
-fi
-
-# Configure i3
-mkdir -p "${HOME}/.config/i3"
-cp "${PROG_DIR}/i3.config" "${HOME}/.config/i3/config"
-
 # Rescan fonts
 fc-cache -r -v
-
 
 mkdir -p "${HOME}/.local/bin/"
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
@@ -341,12 +175,11 @@ cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
 
 cp "${PROG_DIR}/toggle-keyboard.sh" "${HOME}/.local/bin/"
 
-cp "${PROG_DIR}/switch-workspace.py" "${HOME}/.local/bin/"
+#cp "${PROG_DIR}/switch-workspace.py" "${HOME}/.local/bin/"
 
 }
 
 function setup_teleport() {
-
     read -p "teleport proxy domain name: " TELEPORT_PROXY_NAME
     tsh login --ttl=20 -o /tmp/short-lived-teleport-key --proxy="${TELEPORT_PROXY_NAME}"
     TOKEN_AND_CA_PIN=$(tctl -i /tmp/short-lived-teleport-key --auth-server="${TELEPORT_PROXY_NAME}" nodes add)
@@ -377,6 +210,12 @@ EOF
     sudo systemctl start teleport.service
 }
 
+function install_tuxedo() {
+    mhwd-kernel -li
+    sudo pacman -S linux-headers
+    sudo pacman -S tuxedo-control-center tuxedo-keyboard-dkms
+}
+
 function print_help() {
 cat << EOF
 Usage: install.sh [OPTION]
@@ -388,11 +227,12 @@ Usage: install.sh [OPTION]
   -r --skip-rust            don't install/update rust tool chain
   -t --skip-rust-tools      don't install/update tools build in rust
   -s --skip-system-setup    don't try to setup system setup
+  -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     set GPU acceleration method to legacy mode
   -t --teleport             configure this machine as teleport node
+  -u --tuxedo               install tuxedo specific drivers and apps
 EOF
 }
-
 
 while [[ $# -gt 0 ]]
 do
@@ -435,6 +275,10 @@ case $key in
     SETUP_TELEPORT=true
     shift # past argument
     ;;
+    -u|--tuxedo)
+    INSTALL_TUXEDO=true
+    shift # past argument
+    ;;
     -h|--help)
     print_help
     exit 0
@@ -466,6 +310,9 @@ if [[ ${SKIP_RUST_TOOLS} == false ]]; then
 fi
 if [[ ${SKIP_SYSTEM_SETUP} == false ]]; then
     system_setup_step
+fi
+if [[ ${INSTALL_TUXEDO} == true ]]; then
+    install_tuxedo
 fi
 
 if [[ ${GPU_ACCELERATION} == true ]]; then
