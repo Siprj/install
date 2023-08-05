@@ -233,6 +233,11 @@ EOF
 
 ls ~/ -lah | grep ".oh-my-zsh"
 
+# install oh-my-posh
+if [[ ! -f "${HOME}/.bin/oh-my-posh" ]]; then
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/bin
+fi
+
 # install oh-my-zsh
 if [[ ! -d "${HOME}/.oh-my-zsh" ]]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
