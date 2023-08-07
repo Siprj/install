@@ -65,7 +65,6 @@ function pacman_setp() {
         btop
         exa
         zoxide
-        dust
         fd
         sd
         procs
@@ -164,6 +163,10 @@ EOF
 if [ ! -L "${HOME}/.wezterm.lua" ]; then
     ln -s "${PROG_DIR}/wezterm.lua" ~/.wezterm.lua
 fi
+
+mkdir -p "${HOME}/.zsh"
+cp zshrc "${HOME}/.zshrc"
+cp terminal-title.zsh "${HOME}/.zsh/terminal-title.zsh"
 
 # Rescan fonts
 fc-cache -r -v
