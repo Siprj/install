@@ -16,6 +16,7 @@ declare INSTALL_TUXEDO=false
 function pacman_setp() {
     declare -a packages=(
         base-devel
+        cmake
         cups
         docker
         docker-buildx
@@ -143,6 +144,9 @@ git config --global core.editor nvim
 git config --global rebase.autosquash true
 
 mkdir -p ~/.config/
+if [ -d "${HOME}/.config/nvim" ] && [ ! -L "${HOME}/.config/nvim" ]; then
+    rm -r -f "${HOME}/.config/nvim"
+fi
 if [ ! -L "${HOME}/.config/nvim" ]; then
     ln -s "${PROG_DIR}/nvim" "${HOME}/.config/nvim"
 fi
