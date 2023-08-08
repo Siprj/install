@@ -234,9 +234,8 @@ Usage: install.sh [OPTION]
   -r --skip-rust            don't install/update rust tool chain
   -t --skip-rust-tools      don't install/update tools build in rust
   -s --skip-system-setup    don't try to setup system setup
-  -s --skip-system-setup    don't try to setup system setup
   -g --gpu-acceleration     set GPU acceleration method to legacy mode
-  -t --teleport             configure this machine as teleport node
+  -l --teleport             configure this machine as teleport node
   -u --tuxedo               install tuxedo specific drivers and apps
 EOF
 }
@@ -278,7 +277,7 @@ case $key in
     GPU_ACCELERATION=true
     shift # past argument
     ;;
-    -t|--teleport)
+    -l|--teleport)
     SETUP_TELEPORT=true
     shift # past argument
     ;;
