@@ -71,6 +71,8 @@ function pacman_setp() {
         procs
         bottom
         broot
+        wireplumber
+        pavucontrol
         )
 
     sudo pacman -Sy --noconfirm
