@@ -15,8 +15,8 @@ require'packer'.startup(function(use)
   use{"folke/tokyonight.nvim"}
   use{"nvim-treesitter/nvim-treesitter", run = ":TSUpdate"}
   use{"https://gitlab.com/HiPhish/rainbow-delimiters.nvim"}
-  use{"kyazdani42/nvim-web-devicons"}
-  use{"kyazdani42/nvim-tree.lua"}
+  use{"nvim-tree/nvim-tree.lua"}
+  use{"nvim-tree/nvim-web-devicons"}
   use{"nvim-telescope/telescope.nvim",
     requires = {
       "nvim-lua/plenary.nvim",
@@ -162,16 +162,16 @@ if not packer_bootstrap then
   require'nvim-web-devicons'.setup()
 
   -- nvim-tree
-  local tree_callback = require'nvim-tree.config'.nvim_tree_callback
+  local nvim_tree_api = require'nvim-tree.api'
   require'nvim-tree'.setup{
     hijack_cursor       = true,
     view = {
       mappings = {
         list = {
-          { key = "i", cb = tree_callback("vsplit") },
-          { key = "s", cb = tree_callback("split") },
-          { key = "t", cb = tree_callback("tabnew") },
-          { key = "o", cb = tree_callback("system_open") },
+          { key = "i", cb = nvim_tree_api.node.open.vertical },
+          { key = "s", cb = nvim_tree_api.node.open.horizontal },
+          { key = "t", cb = nvim_tree_api.node.open.tab },
+          { key = "o", cb = nvim_tree_api.node.run.system },
         }
       },
     },
