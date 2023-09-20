@@ -87,6 +87,11 @@ function aur_step () {
     pacman -Q spotify || paru -S spotify --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
+    pacman -Q dropbox || paru -S dropbox --noconfirm
+    pacman -Q papirus-folders-catppuccin-git || paru -S papirus-folders-catppuccin-git --noconfirm
+    pacman -Q catppuccin-gtk-theme-mocha || paru -S catppuccin-gtk-theme-mocha --noconfirm
+    pacman -Q catppuccin-cursors-mocha || paru -S catppuccin-cursors-mocha --noconfirm
+    pacman -Q kvantum-theme-catppuccin-git || paru -S kvantum-theme-catppuccin-git --noconfirm
 }
 
 function font_step () {
@@ -114,6 +119,8 @@ function system_setup_step() {
 
 sudo systemctl daemon-reload
 
+systemctl enable --now --user wob.socket
+
 # Firewall setup
 sudo systemctl enable ufw.service
 sudo systemctl start ufw.service
@@ -122,6 +129,8 @@ sudo ufw default deny
 sudo ufw enable
 
 sudo usermod --append --groups docker `whoami`
+
+sudo sed -i "s/cs_CZ/en_US/" "/etc/locale.conf"
 
 # Install oh-my-posh
 if [[ ! -f "${HOME}/.local/bin/oh-my-posh" ]]; then
@@ -138,7 +147,51 @@ path+=(~/.cabal/bin)
 path+=(~/.cargo/bin)
 EOF
 
-mkdir -p ~/.config/rofi/ && cp ${PROG_DIR}/rofi.rasi ~/.config/rofi/config.rasi
+mkdir -p ~/.config/rofi/ && cp "${PROG_DIR}/rofi.rasi" ~/.config/rofi/config.rasi
+mkdir -p ~/.local/share/rofi/themes/ && cp "${PROG_DIR}/catppuccin-mocha-modified.rasi" ~/.local/share/rofi/themes/catppuccin-mocha-modified.rasi
+
+mkdir -p ~/.config/qt5ct/colors/ && cp "${PROG_DIR}/qt-5-Catppuccin-Mocha-modified.conf" ~/.config/qt5ct/colors/Catppuccin-Mocha-Modified.conf
+mkdir -p ~/.config/qt6ct/colors/ && cp "${PROG_DIR}/qt-6-Catppuccin-Mocha-modified.conf" ~/.config/qt5ct/colors/Catppuccin-Mocha-Modified.conf
+cp "${PROG_DIR}/qt5ct.conf" ~/.config/qt5ct/qt5ct.conf
+cp "${PROG_DIR}/qt6ct.conf" ~/.config/qt6ct/qt6ct.conf
+
+papirus-folders -C cat-mocha-lavender --theme Papirus-Dark
+
+mkdir -p ~/.config/swaylock/
+curl https://raw.githubusercontent.com/catppuccin/catppuccin/cad3fe6c9eb2476f9787c386a6b9c70de8e6d468/assets/logos/exports/1544x1544_circle.png -o ~/.config/swaylock/catppuccin-logo.png
+if [ ! -L "${HOME}/.config/swaylock/config" ]; then
+    rm -R -f "${HOME}/.config/swaylock/config"
+    ln -s "${PROG_DIR}/swaylock.config" "${HOME}/.config/swaylock/config"
+fi
+
+mkdir -p ~/.config/sway/
+if [ ! -L "${HOME}/.config/sway/config" ]; then
+    rm -R -f "${HOME}/.config/sway/config"
+    ln -s "${PROG_DIR}/sway.config" "${HOME}/.config/sway/config"
+fi
+
+mkdir -p ~/.config/mako/
+if [ ! -L "${HOME}/.config/mako/config" ]; then
+    rm -R -f "${HOME}/.config/mako/config"
+    ln -s "${PROG_DIR}/mako.config" "${HOME}/.config/mako/config"
+fi
+
+# Set firefox catppuccin flamingo theme
+firefox https://color.firefox.com/?theme=XQAAAAJHBAAAAAAAAABBqYhm849SCicxcUcPX38oKRicm6da8pFtMcajvXaAE3RJ0F_F447xQs-L1kFlGgDKq4IIvWciiy4upusW7OvXIRinrLrwLvjXB37kvhN5ElayHo02fx3o8RrDShIhRpNiQMOdww5V2sCMLAfehhp8u7kT4nh31-_5sD_P8FhlfX9Sdj_brd9hzw5NA_jx4peTGmoiUcikCHxa8Sm8bylvXElo3HHzylyv8f7R7gwkSEe8Mkq_ERB00vhRYSdLVEI7OR2j9y8UtYJhXmmHxXtQ2a2q0wDt9h-Dv7L5NTOL6rXow07mQCwsiafOlEKwLdkeAd2DoxJ1_Pu_amXOiUhOKrOw2DBrS-cIjSXWu9in58J8EBSEno0b4K2apcsY4mww6HdBAXjQjS7PBl1Eoli3qcNvy3o0v-yq9guO7ozjOWAFY-rVMCACPIWLr-pEBHErXolnftBIiOuC_k1brGAscZ579rDSHW_Bf9KewXOw3subWzfX0sPqI5eJLXKKLKfJEuPnm7z6IlEkCi__KG8k0-VIsE0lvbgk_dPXNsl8__ihao0
+
+# Configure X11 and Wayland cursor
+# To bu sure the configuration is also set using
+# `gsettings set org.gnome.desktop.interface icon-theme ..` in the sway
+# configuration file
+mkdir -p ~/.icons/default/
+cat > ~/.icons/default/index.theme <<EOF
+[icon theme]
+Inherits=Catppuccin-Mocha-Flamingo-Cursors
+EOF
+
+
+kvantummanager --set "Catppuccin-Mocha-Flamingo"
+
 
 # Set git behaviour
 git config --global commit.verbose true
@@ -171,8 +224,15 @@ if [ ! -L "${HOME}/.wezterm.lua" ]; then
 fi
 
 mkdir -p "${HOME}/.zsh"
-cp zshrc "${HOME}/.zshrc"
-cp terminal-title.zsh "${HOME}/.zsh/terminal-title.zsh"
+cp "${PROG_DIR}/zshrc" "${HOME}/.zshrc"
+if [ ! -L "${HOME}/.zshrc" ]; then
+    rm -R -f "${HOME}/.zshrc"
+    ln -s "${PROG_DIR}/zshrc" "${HOME}/.zshrc"
+fi
+if [ ! -L "${HOME}/.zsh/terminal-title.zsh" ]; then
+    rm -R -f "${HOME}/.zsh/terminal-title.zsh"
+    ln -s "${PROG_DIR}/terminal-title.zsh" "${HOME}/.zsh/terminal-title.zsh"
+fi
 
 # Rescan fonts
 fc-cache -r -v
@@ -182,7 +242,14 @@ cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 
 cp "${PROG_DIR}/blue.sh" "${HOME}/.local/bin/"
 
+# TODO: keyboard switching
 cp "${PROG_DIR}/toggle-keyboard.sh" "${HOME}/.local/bin/"
+
+cp "${PROG_DIR}/screenshot.sh" "${HOME}/.local/bin/"
+
+cp "${PROG_DIR}/powermenu.sh" "${HOME}/.local/bin/"
+
+cp "${PROG_DIR}/background.sh" "${HOME}/.local/bin/"
 
 #cp "${PROG_DIR}/switch-workspace.py" "${HOME}/.local/bin/"
 
