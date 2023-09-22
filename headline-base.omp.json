@@ -36,27 +36,7 @@
             "style": "full"
           },
           "template": "<b><o> {{ .Path }}</o></b>"
-        }
-      ]
-    },
-    {
-      "alignment": "right",
-      "type": "prompt",
-      "filler": "<darkGray><o> </o></>",
-      "segments": [
-        {
-          "foreground": "darkGray",
-          "style": "plain",
-          "type": "text",
-          "template": "<o> </o>",
-          "interactive": true
-        }
-      ]
-    },
-    {
-      "alignment": "right",
-      "type": "prompt",
-      "segments": [
+        },
         {
           "foreground": "cyan",
           "style": "accordion",
@@ -64,7 +44,7 @@
           "properties": {
             "branch_icon": " "
           },
-          "template": "<b><o>{{ url .HEAD .UpstreamURL }}</o></b>"
+          "template": "<darkGray><o> </o></><b><o>{{ url .HEAD .UpstreamURL }}</o></b>"
         },
         {
           "foreground": "darkGray",
@@ -113,6 +93,20 @@
             "fetch_stash_count": true
           },
           "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) .Ahead .Behind (gt .StashCount 0) }}<o>] </o>{{ end }}"
+        }
+      ]
+    },
+    {
+      "alignment": "right",
+      "type": "prompt",
+      "filler": "<darkGray><o> </o></>",
+      "segments": [
+        {
+          "foreground": "darkGray",
+          "style": "plain",
+          "type": "text",
+          "template": "<o> </o>",
+          "interactive": false
         }
       ]
     },
