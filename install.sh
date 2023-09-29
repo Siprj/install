@@ -73,6 +73,7 @@ function pacman_setp() {
         broot
         wireplumber
         pavucontrol
+        lua-language-server
         )
 
     sudo pacman -Sy --noconfirm
