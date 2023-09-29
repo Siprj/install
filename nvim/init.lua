@@ -93,6 +93,10 @@ local kinds = {
   Variable = " ",
 }
 
+if vim.g.vscode then
+    -- VSCode extension
+else
+
 -------------------------------------------------------------------------------
 -- Plugins
 -------------------------------------------------------------------------------
@@ -562,7 +566,7 @@ local nvim_lspconfig = {
       cmp_capabilities
     )
     local on_attach = function(client, bufnr)
-      if client.resolved_capabilities.code_lens then
+      if client.server_capabilities.code_lens then
         local codelens = vim.api.nvim_create_augroup(
           'LSPCodeLens',
           { clear = true }
@@ -741,11 +745,11 @@ local lualine = {
           },
         },
         lualine_x = {
-          {
-            function() return require'noice'.api.status.mode.get() end,
-            cond = function() return require'noice'.api.status.mode.has() end,
-            color = {fg = string.format("#%06x", vim.api.nvim_get_hl(0, {name = "Constant"}).fg)}
-          },
+--          {
+--            function() return require'noice'.api.status.mode.get() end,
+--            cond = function() return require'noice'.api.status.mode.has() end,
+--            color = {fg = string.format("#%06x", vim.api.nvim_get_hl(0, {name = "Constant"}).fg)}
+--          },
           {
             function() return "  " .. require("dap").status() end,
             cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
@@ -1165,6 +1169,13 @@ local fugitive = {
 }
 
 
+local fidget = {
+  "j-hui/fidget.nvim",
+  event = "LspAttach",
+  opts = {},
+}
+
+
 local plugins = {
   catppuccin,
   tokyonight,
@@ -1173,7 +1184,7 @@ local plugins = {
   nvim_cmp,
   nvim_lspconfig,
   telescope,
-  noice,
+--  noice,
   dressing,
   lualine,
   indent_blankline,
@@ -1188,6 +1199,7 @@ local plugins = {
   hop,
   zk_nvim,
   fugitive,
+  fidget,
 }
 
 require("lazy").setup(plugins)
@@ -1229,6 +1241,4 @@ vim.keymap.set("n", "k", "gk")
 vim.keymap.set("n", "<leader>ss", function() vim.opt.spell = not vim.opt.spell:get() end)
 vim.keymap.set("n", "<leader><CR>", ":noh|hi Cursor guibg=red<CR>", { silent = true })
 
-
---   -- fidget; show nice LSP status outside the status line
---   require'fidget'.setup{}
+end
