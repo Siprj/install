@@ -1,0 +1,204 @@
+@import "catppuccin-mocha.css";
+
+/* =============================================================================
+ *
+ * Waybar configuration
+ *
+ * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+ *
+ * =========================================================================== */
+
+/* import css definitions for current theme */
+
+/* -----------------------------------------------------------------------------
+ * Keyframes
+ * -------------------------------------------------------------------------- */
+
+@keyframes blink-warning {
+    to {
+        color: @yellow;
+        background-color: @surface0;
+    }
+}
+
+@keyframes blink-critical {
+    to {
+        color: @maroon;
+        background-color: @surface0;
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+
+/* Reset all styles */
+* {
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-family: "JetBrainsMono Nerd Font", "Roboto Mono", sans-serif;
+    box-shadow: none;
+}
+
+/* The whole bar */
+window#waybar {
+    background: @base;
+    color: @rosewater;
+    font-size: 14px;
+    border-bottom: 1px solid transparent;
+    border-color: @surface2;
+}
+
+/* Each module */
+#custom-pacman,
+#custom-menu,
+#custom-help,
+#custom-scratchpad,
+#custom-github,
+#custom-clipboard,
+#custom-zeit,
+#custom-dnd,
+#bluetooth,
+#battery,
+#clock,
+#cpu,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#idle_inhibitor,
+#backlight,
+#language,
+#custom-adaptive-light,
+#custom-sunset,
+#custom-playerctl,
+#tray {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Module styles
+ * -------------------------------------------------------------------------- */
+
+#custom-scratchpad,
+#custom-menu,
+#clock {
+    color: @flamingo;
+    border-bottom: 1px solid transparent;
+    border-color: @surface2;
+    background-color: @surface1;
+}
+
+#battery {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#battery.warning {
+    color: @peach;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+#battery.warning.discharging {
+    animation-name: blink-warning;
+    animation-duration: 2s;
+}
+
+#battery.critical.discharging {
+    animation-name: blink-critical;
+    animation-duration: 1s;
+}
+
+#clock {
+    font-weight: bold;
+}
+
+#cpu.warning {
+    color: @peach;
+}
+
+#cpu.critical {
+    color: @red;
+}
+
+#custom-menu {
+    padding-left: 8px;
+    padding-right: 13px;
+}
+
+#memory {
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#memory.warning {
+    color: @red;
+}
+
+#memory.critical {
+    color: @red;
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#mode {
+    background: @surface0;
+}
+
+#network.disconnected {
+    color: @peach;
+}
+
+#pulseaudio.muted {
+    color: @peach;
+}
+
+#temperature.critical {
+    color: @red;
+}
+
+#workspaces button:hover {
+    background: @surface2;
+}
+
+#workspaces button {
+    border-top: 2px solid transparent;
+    /* To compensate for the top border and still have vertical centering */
+    padding-bottom: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: @blue;
+}
+
+#workspaces button.focused {
+    border-color: @blue;
+}
+
+#workspaces button.urgent {
+    border-color: @red;
+    color: @red;
+}
+
+#custom-pacman {
+    color: @peach;
+}
+
+#bluetooth.disabled {
+    color: @peach;
+}
+
+#custom-wf-recorder {
+    color: @red;
+    padding-right: 10px;
+}
+
