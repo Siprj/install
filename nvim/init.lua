@@ -659,7 +659,7 @@ local telescope = {
     },
   version = false,
   keys = {
-    {"<leader>space", function() require'telescope.builtin'.find_files() end, silent=true, mode = "n" },
+    {"<leader><space>", function() require'telescope.builtin'.find_files() end, silent=true, mode = "n" },
     {"<leader>t", function() require'telescope.builtin'.builtin() end, silent=true, mode = "n" },
     {"<leader>b", function() require'telescope.builtin'.buffers() end, silent=true, mode = "n" },
     {"<leader>tl", function() require'telescope.builtin'.live_grep() end, silent=true, mode = "n" },

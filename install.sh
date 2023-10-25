@@ -249,6 +249,8 @@ if [ ! -L "${HOME}/.zsh/terminal-title.zsh" ]; then
     ln -s "${PROG_DIR}/terminal-title.zsh" "${HOME}/.zsh/terminal-title.zsh"
 fi
 
+chsh -s $(which zsh)
+
 # Rescan fonts
 fc-cache -r -v
 
