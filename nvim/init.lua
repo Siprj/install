@@ -92,9 +92,18 @@ local kinds = {
   Value = " ",
   Variable = " ",
 }
+-- Copy and paste to os clipboard.
+vim.keymap.set({"n", "x"}, "<leader>y", "\"+y")
+vim.keymap.set({"n", "x"}, "<leader>d", "\"+d")
+vim.keymap.set({"n", "x"}, "<leader>p", "\"+p")
+
+-- Toggle spell checking; equivalent of :setlocal spell!<CR>
+vim.keymap.set("n", "<leader>ss", function() vim.opt.spell = not vim.opt.spell:get() end)
 
 if vim.g.vscode then
-    -- VSCode extension
+  -- VSCode configurations
+  vim.keymap.set({"n"}, "<leader>la", "<Cmd>call VSCodeNotify('editor.action.quickFix')<CR>")
+
 else
 
 -------------------------------------------------------------------------------
@@ -1227,18 +1236,11 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 
--- Copy and paste to os clipboard.
-vim.keymap.set({"n", "x"}, "<leader>y", "\"+y")
-vim.keymap.set({"n", "x"}, "<leader>d", "\"+d")
-vim.keymap.set({"n", "x"}, "<leader>p", "\"+p")
-
 -- Treat long lines as break lines (useful when moving around in them)
 vim.keymap.set("n", "j", "gj")
 vim.keymap.set("n", "k", "gk")
 
 
--- Toggle spell checking; equivalent of :setlocal spell!<CR>
-vim.keymap.set("n", "<leader>ss", function() vim.opt.spell = not vim.opt.spell:get() end)
 vim.keymap.set("n", "<leader><CR>", ":noh|hi Cursor guibg=red<CR>", { silent = true })
 
 end
