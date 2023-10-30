@@ -148,6 +148,9 @@ path+=(~/.cabal/bin)
 path+=(~/.cargo/bin)
 EOF
 
+mkdir -p ~/.config/profile.d/
+cp "${PROG_DIR}/paths.sh" ~/.config/profile.d/
+
 mkdir -p ~/.config/rofi/ && cp "${PROG_DIR}/rofi.rasi" ~/.config/rofi/config.rasi
 mkdir -p ~/.local/share/rofi/themes/ && cp "${PROG_DIR}/catppuccin-mocha-modified.rasi" ~/.local/share/rofi/themes/catppuccin-mocha-modified.rasi
 
