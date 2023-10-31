@@ -353,7 +353,7 @@ local neo_tree = {
         event_handlers = {
           {
             event = "file_opened",
-            handler = function(file_path)
+            handler = function()
               require("neo-tree.command").execute({ action = "close" })
             end
           },
@@ -673,52 +673,6 @@ local telescope = {
     telescope.load_extension("fzf")
     telescope.load_extension("neoclip")
   end
-}
-
-
-local noice = {
-  "folke/noice.nvim",
-  event = "VeryLazy",
-  opts = {
-    lsp = {
-      override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-        ["cmp.entry.get_documentation"] = true,
-      },
-    },
-    routes = {
-      {
-        filter = {
-          event = "msg_show",
-          any = {
-            { find = "%d+L, %d+B" },
-            { find = "; after #%d+" },
-            { find = "; before #%d+" },
-          },
-        },
-        view = "mini",
-      },
-    },
-    presets = {
-      bottom_search = true,
-      command_palette = true,
-      long_message_to_split = true,
-      inc_rename = true,
-    },
-  },
-  keys = {
-    {"<S-Enter>", function() require("noice").redirect(vim.fn.getcmdline()) end, mode = "c", desc = "Redirect cmdline to notification"},
-    {"<leader>nl", function() require("noice").cmd("last") end, desc = "Noice last message"},
-    {"<leader>na", function() require("noice").cmd("all") end, desc = "Noice all"},
-    {"<leader>nt", "<CMD>Telescope noice", desc = "Noice all in Telescope"},
-    {"<C-j>", function() if not require("noice.lsp").scroll(4) then return "<C-j>" end end, silent = true, expr = true, desc = "Scroll forward", mode = {"i", "n", "s"}},
-    {"<C-k>", function() if not require("noice.lsp").scroll(-4) then return "<C-k>" end end, silent = true, expr = true, desc = "Scroll backward", mode = {"i", "n", "s"}},
-  },
-  config = function(opts)
-    require'noice'.setup(opts)
-    require'telescope'.load_extension("noice")
-  end,
 }
 
 
@@ -1185,6 +1139,14 @@ local fidget = {
 }
 
 
+local markdown_preview = {
+  "iamcco/markdown-preview.nvim",
+  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+  ft = { "markdown" },
+  build = function() vim.fn["mkdp#util#install"]() end,
+}
+
+
 local plugins = {
   catppuccin,
   tokyonight,
@@ -1209,6 +1171,7 @@ local plugins = {
   zk_nvim,
   fugitive,
   fidget,
+  markdown_preview
 }
 
 require("lazy").setup(plugins)
