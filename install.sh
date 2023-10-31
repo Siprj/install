@@ -74,6 +74,7 @@ function pacman_setp() {
         wireplumber
         pavucontrol
         lua-language-server
+        gvfs-smb
         )
 
     sudo pacman -Sy --noconfirm
