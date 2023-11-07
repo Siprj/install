@@ -75,6 +75,7 @@ function pacman_setp() {
         pavucontrol
         lua-language-server
         gvfs-smb
+        blueman
         )
 
     sudo pacman -Sy --noconfirm
