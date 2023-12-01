@@ -625,7 +625,16 @@ local nvim_lspconfig = {
       capabilities = capabilities,
       cmd = {"run-hls.sh", "--lsp"}
     }
-    lsp_config.rust_analyzer.setup{on_attach=on_attach, capabilities = capabilities}
+    lsp_config.rust_analyzer.setup{
+      on_attach=on_attach,
+      capabilities = capabilities,
+      settings = { ["rust-analyzer"] = {
+          check = {
+            command = "clippy"
+          }
+        }
+      }
+    }
     lsp_config.elmls.setup{
       on_attach=on_attach,
       capabilities = capabilities,
@@ -1196,6 +1205,14 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua", "cabal", "yaml", "dockerfile"},
   group = init_group_id,
   callback = function() vim.api.nvim_create_autocmd("BufWritePre", { pattern = "<buffer>", callback = deleteTrailingWhitespaces }) end
+})
+
+local zk_home = vim.fn.expand('*$HOME/Dropbox/notes/*')
+-- Load zk when entering the notes directory.
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = {zk_home},
+  group = init_group_id,
+  callback = function() require'zk' end
 })
 
 

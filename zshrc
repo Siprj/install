@@ -1,6 +1,6 @@
 alias vim="nvim"
-EDITOR=nvim
-ZK_NOTEBOOK_DIR=/home/yrid/Dropbox/notes
+export EDITOR=nvim
+export ZK_NOTEBOOK_DIR=/home/yrid/Dropbox/notes
 alias hx="helix"
 alias ls="ls --color=tty"
 alias ll="ls --color=tty -lah"

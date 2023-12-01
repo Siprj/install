@@ -64,7 +64,7 @@ function pacman_setp() {
         lsd
         bat
         btop
-        exa
+        eza
         zoxide
         fd
         sd
