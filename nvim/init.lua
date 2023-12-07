@@ -717,11 +717,6 @@ local lualine = {
           },
         },
         lualine_x = {
---          {
---            function() return require'noice'.api.status.mode.get() end,
---            cond = function() return require'noice'.api.status.mode.has() end,
---            color = {fg = string.format("#%06x", vim.api.nvim_get_hl(0, {name = "Constant"}).fg)}
---          },
           {
             function() return "  " .. require("dap").status() end,
             cond = function () return package.loaded["dap"] and require("dap").status() ~= "" end,
@@ -1164,7 +1159,6 @@ local plugins = {
   nvim_cmp,
   nvim_lspconfig,
   telescope,
---  noice,
   dressing,
   lualine,
   indent_blankline,
