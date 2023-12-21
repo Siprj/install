@@ -678,7 +678,7 @@ local telescope = {
   },
   config = function()
     local telescope = require'telescope'
-    telescope.setup()
+    telescope.setup({})
     telescope.load_extension("fzf")
     telescope.load_extension("neoclip")
   end
@@ -1086,8 +1086,8 @@ local hop = {
   version = "*",
   opts = {},
   keys = {
-    {"f", function() require'hop'.hint_char1() end, desc = "Next todo comment", mode = {"n", "x", "o", "v"}},
-    {"F", function() require'hop'.hint_char1() end, desc = "Previous todo comment", mode = {"n", "x", "o", "v"}},
+    {"f", function() require'hop'.hint_char1({}) end, desc = "Next todo comment", mode = {"n", "x", "o", "v"}},
+    {"F", function() require'hop'.hint_char1({}) end, desc = "Previous todo comment", mode = {"n", "x", "o", "v"}},
   },
 }
 
@@ -1118,6 +1118,11 @@ local zk_nvim = {
     }
   end,
   keys = {
+    {"<leader>znv", "<CMD>ZkNew {dir = \"videos\"}<CR>", mode = "n"},
+    {"<leader>znb", "<CMD>ZkNew {dir = \"books\"}<CR>", mode = "n"},
+    {"<leader>zna", "<CMD>ZkNew {dir = \"articles\"}<CR>", mode = "n"},
+    {"<leader>znt", "<CMD>ZkNew {dir = \"tools\"}<CR>", mode = "n"},
+    {"<leader>znn", "<CMD>ZkNew<CR>", mode = "n"},
     {"<leader>zn", "<CMD>ZkNew<CR>", mode = "n"},
     {"<leader>zo", "<CMD>ZkNotes<CR>", mode = "n"},
     {"<leader>zft", "<CMD>'<,'>ZkNewFromTitleSelection<CR>", mode = "v"},
