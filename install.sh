@@ -176,6 +176,30 @@ if [ ! -L "${HOME}/.config/sway/config" ]; then
     ln -s "${PROG_DIR}/sway.config" "${HOME}/.config/sway/config"
 fi
 
+mkdir -p ~/.config/sway/config.d/
+if [ ! -L "${HOME}/.config/sway/config.d/outputs.config" ]; then
+
+    rm -R -f "${HOME}/.config/sway/config.d/outputs.config"
+
+    OPTIONS=("Three screens"
+             "One screen")
+
+    select option in "${OPTIONS[@]}"
+    do
+        case $option in
+            "Three screens")
+                ln -s "${PROG_DIR}/sway-three-outputs.config" "${HOME}/.config/sway/config.d/outputs.config"
+                break
+                ;;
+            "One screen")
+                ln -s "${PROG_DIR}/sway-one-outputs.config" "${HOME}/.config/sway/config.d/outputs.config"
+                break
+                ;;
+        esac
+    done
+
+fi
+
 mkdir -p ~/.config/mako/
 if [ ! -L "${HOME}/.config/mako/config" ]; then
     rm -R -f "${HOME}/.config/mako/config"
