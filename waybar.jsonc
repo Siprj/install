@@ -242,5 +242,8 @@
         "on-click": "/usr/share/sway/scripts/wluma.sh toggle; pkill -RTMIN+12 waybar",
         "exec-if": "/usr/share/sway/scripts/wluma.sh check",
         "signal": 12
+    },
+    "sway/workspaces": {
+        "all-outputs": true,
     }
 }

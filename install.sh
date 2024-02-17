@@ -200,6 +200,12 @@ if [ ! -L "${HOME}/.config/sway/config.d/outputs.config" ]; then
 
 fi
 
+systemctl --user disable swayrd
+
+# Get this-is-the-sway workspace switching utility
+curl -L --proto '=https'  https://github.com/Siprj/this-is-the-sway/releases/download/v0.0.1/this-is-the-sway.zip -o /tmp/this-is-the-sway.zip
+(cd ~/.local/bin/ && unzip -o /tmp/this-is-the-sway.zip && chmod +x this-is-the-sway)
+
 mkdir -p ~/.config/mako/
 if [ ! -L "${HOME}/.config/mako/config" ]; then
     rm -R -f "${HOME}/.config/mako/config"

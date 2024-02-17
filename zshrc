@@ -207,3 +207,5 @@ source "${HOME}/.zsh/catppuccin-zsh-syntax-highlighting/themes/catppuccin_mocha-
 source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 eval "$(oh-my-posh init zsh --config ${HOME}/install/headline-base.omp.json)"
+
+eval "$(zoxide init zsh)"
