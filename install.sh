@@ -8,7 +8,7 @@ declare SKIP_PACMAN=false
 declare SKIP_SYSTEM_SETUP=false
 declare SKIP_RUST=false
 declare SKIP_RUST_TOOLS=false
-declare GPU_ACCELERATION=false
+declare AUDIO_SUSPENSION=false
 declare SETUP_TELEPORT=false
 declare SKIP_FONTS=false
 declare INSTALL_TUXEDO=false
@@ -355,7 +355,7 @@ Usage: install.sh [OPTION]
   -r --skip-rust            don't install/update rust tool chain
   -t --skip-rust-tools      don't install/update tools build in rust
   -s --skip-system-setup    don't try to setup system setup
-  -g --gpu-acceleration     set GPU acceleration method to legacy mode
+  -g --audio-suspendion     disable audio suspension so there is no poping sound
   -l --teleport             configure this machine as teleport node
   -u --tuxedo               install tuxedo specific drivers and apps
 EOF
@@ -394,8 +394,8 @@ case $key in
     SKIP_SYSTEM_SETUP=true
     shift # past argument
     ;;
-    -g|--gpu-acceleration)
-    GPU_ACCELERATION=true
+    -g|--audio_suspension)
+    AUDIO_SUSPENSION=true
     shift # past argument
     ;;
     -l|--teleport)
@@ -442,11 +442,17 @@ if [[ ${INSTALL_TUXEDO} == true ]]; then
     install_tuxedo
 fi
 
-if [[ ${GPU_ACCELERATION} == true ]]; then
-    sudo mkdir -p "/etc/X11/xorg.conf.d/"
-    sudo cp "${PROG_DIR}/20-amdgpu.conf" "/etc/X11/xorg.conf.d/"
-    sudo cp "${PROG_DIR}/20-intell.conf" "/etc/X11/xorg.conf.d/"
+if [[ ${AUDIO_SUSPENSION} == true ]]; then
+    # Disable audio hardware suspension
+    if [ ! -L "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua" ]; then
+        mkdir -p "${HOME}/.config/wireplumber/main.lua.d/"
+        rm -R -f "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua"
+        ln -s "${PROG_DIR}/51-disable-suspension.lua" "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua"
+    fi
+    systemctl --user restart pipewire.service
+    systemctl --user restart wireplumber.service
 fi
+
 
 if [[ ${SETUP_TELEPORT} == true ]]; then
     setup_teleport
