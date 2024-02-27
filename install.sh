@@ -76,6 +76,7 @@ function pacman_setp() {
         lua-language-server
         gvfs-smb
         blueman
+        thunar
         )
 
     sudo pacman -Sy --noconfirm
