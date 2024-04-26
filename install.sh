@@ -207,6 +207,8 @@ systemctl --user disable swayrd
 curl -L --proto '=https'  https://github.com/Siprj/this-is-the-sway/releases/download/v0.0.1/this-is-the-sway.zip -o /tmp/this-is-the-sway.zip
 (cd /usr/local/bin/ && sudo unzip -o /tmp/this-is-the-sway.zip && sudo chmod +x this-is-the-sway)
 sudo cp this-is-the-sway.service /usr/lib/systemd/user/
+systemctl enable --user this-is-the-sway
+systemctl start --user this-is-the-sway
 
 mkdir -p ~/.config/mako/
 if [ ! -L "${HOME}/.config/mako/config" ]; then
