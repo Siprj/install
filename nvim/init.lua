@@ -166,7 +166,25 @@ local neo_tree = {
       "nvim-lua/plenary.nvim",
       "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
       "MunifTanjim/nui.nvim",
-      "s1n7ax/nvim-window-picker",
+      {
+        's1n7ax/nvim-window-picker',
+        version = '2.*',
+        config = function()
+          require 'window-picker'.setup({
+            filter_rules = {
+              include_current_win = false,
+              autoselect_one = true,
+              -- filter using buffer options
+              bo = {
+                -- if the file type is one of following, the window will be ignored
+                filetype = { 'neo-tree', "neo-tree-popup", "notify" },
+                -- if the buffer type is one of following, the window will be ignored
+                buftype = { 'terminal', "quickfix" },
+              },
+          },
+        })
+        end,
+      },
     },
     keys = {
       {"<leader>o", "<CMD>Neotree action=focus reveal toggle=true<CR>", silent = true, mode = "n"},
@@ -177,7 +195,6 @@ local neo_tree = {
         popup_border_style = "rounded",
         enable_git_status = true,
         enable_diagnostics = true,
-        enable_normal_mode_for_inputs = false, -- Enable normal mode for input dialogs.
         open_files_do_not_replace_types = { "terminal", "trouble", "qf" }, -- when opening files, do not use windows containing these filetypes or buftypes
         sort_case_insensitive = false, -- used when sorting files and directories in the tree
         default_component_configs = {
@@ -426,6 +443,13 @@ local luasnip = {
         t({"", "  (", "  )", "where", ""}),
       }),
     })
+    luasnip.add_snippets("rust", {
+      s("derive", {
+        t("#[derive("),
+        i(0,"name"),
+        t(")]"),
+      }),
+    })
   end,
 }
 
@@ -513,18 +537,17 @@ local nvim_lspconfig = {
       callback = function(args)
         local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client then return; end
         if client.server_capabilities.inlayHintProvider then
-            if vim.lsp.inlay_hint then
-                vim.lsp.inlay_hint(bufnr, true)
-            end
+            vim.lsp.inlay_hint.enable(true, {bufnr= bufnr})
         end
 
-        if client.server_capabilities.code_lens then
+        if client.server_capabilities.codeLensProvider then
           local codelens = vim.api.nvim_create_augroup("LSPCodeLens", {clear = true})
           vim.api.nvim_create_autocmd({"BufEnter"}, {
             group = codelens,
             callback = function()
-              vim.lsp.codelens.refresh()
+              vim.lsp.codelens.refresh({bufnr = 0})
             end,
             buffer = bufnr,
             once = true,
@@ -1170,7 +1193,7 @@ local copilot = {
           jump_next = "]]",
           accept = "<CR>",
           refresh = "gr",
-          open = "<M-CR>"
+          open = "<C-CR>"
         },
         layout = {
           position = "bottom", -- | top | left | right
@@ -1207,6 +1230,19 @@ local copilot = {
   end,
 }
 
+local outline = {
+  "hedyhli/outline.nvim",
+  config = function()
+    -- Example mapping to toggle outline
+    vim.keymap.set("n", "<leader>lo", "<cmd>Outline<CR>",
+      { desc = "Toggle Outline" })
+
+    require("outline").setup {
+      -- Your setup opts here (leave empty to use defaults)
+    }
+  end,
+}
+
 local plugins = {
   catppuccin,
   tokyonight,
@@ -1231,7 +1267,8 @@ local plugins = {
   fugitive,
   fidget,
   markdown_preview,
-  copilot
+  copilot,
+  outline
 }
 
 require("lazy").setup(plugins)
