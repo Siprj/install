@@ -555,7 +555,7 @@ local nvim_lspconfig = {
           vim.api.nvim_create_autocmd({"BufWritePost", "CursorHold"}, {
             group = codelens,
             callback = function()
-              vim.lsp.codelens.refresh()
+              vim.lsp.codelens.refresh({bufnr = 0})
             end,
             buffer = bufnr,
           })
