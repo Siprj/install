@@ -252,6 +252,7 @@ kvantummanager --set "Catppuccin-Mocha-Flamingo"
 git config --global commit.verbose true
 git config --global core.editor nvim
 git config --global rebase.autosquash true
+git config --global rerere.enabled true
 
 mkdir -p ~/.config/
 if [ -d "${HOME}/.config/nvim" ] && [ ! -L "${HOME}/.config/nvim" ]; then
