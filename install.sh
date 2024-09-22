@@ -93,7 +93,7 @@ function aur_step () {
     pacman -Q teleport-bin || paru -S teleport-bin --noconfirm
     pacman -Q dropbox || paru -S dropbox --noconfirm
     pacman -Q papirus-folders-catppuccin-git || paru -S papirus-folders-catppuccin-git --noconfirm
-    pacman -Q catppuccin-gtk-theme-mocha || paru -S catppuccin-gtk-theme-mocha --noconfirm
+    pacman -Q colloid-catppuccin-gtk-theme-git || paru -S colloid-catppuccin-gtk-theme-git --noconfirm
     pacman -Q catppuccin-cursors-mocha || paru -S catppuccin-cursors-mocha --noconfirm
     pacman -Q kvantum-theme-catppuccin-git || paru -S kvantum-theme-catppuccin-git --noconfirm
 }
