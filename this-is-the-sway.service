@@ -1,8 +1,8 @@
 [Unit]
 Description=Tiling plugin for sway
-Documentation=man:wob(1)
-PartOf=graphical-session.target
-After=graphical-session.target
+PartOf=sway-session.target
+BindsTo=sway-session.target
+After=sway.service
 ConditionEnvironment=WAYLAND_DISPLAY
 
 [Service]

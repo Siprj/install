@@ -77,6 +77,7 @@ function pacman_setp() {
         gvfs-smb
         blueman
         thunar
+        xdg-desktop-portal-gtk
         )
 
     sudo pacman -Sy --noconfirm
@@ -206,7 +207,7 @@ systemctl --user disable swayrd
 # Get this-is-the-sway workspace switching utility
 curl -L --proto '=https'  https://github.com/Siprj/this-is-the-sway/releases/download/v0.0.1/this-is-the-sway.zip -o /tmp/this-is-the-sway.zip
 (cd /usr/local/bin/ && sudo unzip -o /tmp/this-is-the-sway.zip && sudo chmod +x this-is-the-sway)
-sudo cp this-is-the-sway.service /usr/lib/systemd/user/
+sudo cp "${PROG_DIR}/this-is-the-sway.service" /usr/lib/systemd/user/
 systemctl enable --user this-is-the-sway
 systemctl start --user this-is-the-sway
 
@@ -241,11 +242,11 @@ firefox https://color.firefox.com/?theme=XQAAAAJHBAAAAAAAAABBqYhm849SCicxcUcPX38
 mkdir -p ~/.icons/default/
 cat > ~/.icons/default/index.theme <<EOF
 [icon theme]
-Inherits=Catppuccin-Mocha-Flamingo-Cursors
+Inherits=catppuccin-mocha-flamingo-cursors
 EOF
 
 
-kvantummanager --set "Catppuccin-Mocha-Flamingo"
+kvantummanager --set "catppuccin-mocha-flamingo"
 
 
 # Set git behaviour
@@ -290,6 +291,14 @@ if [ ! -L "${HOME}/.zsh/terminal-title.zsh" ]; then
 fi
 
 chsh -s $(which zsh)
+
+if [ ! -L "${HOME}/.config/environment.d/10-paths.conf" ]; then
+    ln -s "${PROG_DIR}/environment.d/10-paths.conf" "${HOME}/.config/environment.d/10-paths.conf"
+fi
+
+if [ ! -L "${HOME}/.config/environment.d/90-style.conf" ]; then
+    ln -s "${PROG_DIR}/environment.d/90-style.conf" "${HOME}/.config/environment.d/90-style.conf"
+fi
 
 # Rescan fonts
 fc-cache -r -v
