@@ -292,6 +292,8 @@ fi
 
 chsh -s $(which zsh)
 
+mkdir -p "${HOME}/.config/environment.d/"
+
 if [ ! -L "${HOME}/.config/environment.d/10-paths.conf" ]; then
     ln -s "${PROG_DIR}/environment.d/10-paths.conf" "${HOME}/.config/environment.d/10-paths.conf"
 fi
