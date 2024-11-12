@@ -460,10 +460,10 @@ fi
 
 if [[ ${AUDIO_SUSPENSION} == true ]]; then
     # Disable audio hardware suspension
-    if [ ! -L "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua" ]; then
-        mkdir -p "${HOME}/.config/wireplumber/main.lua.d/"
-        rm -R -f "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua"
-        ln -s "${PROG_DIR}/51-disable-suspension.lua" "${HOME}/.config/wireplumber/main.lua.d/51-disable-suspension.lua"
+    if [ ! -L "${HOME}/.config/wireplumber/wireplumber.conf.d/51-disable-suspension.conf" ]; then
+        mkdir -p "${HOME}/.config/wireplumber/wireplumber.conf.d/"
+        rm -R -f "${HOME}/.config/wireplumber/wireplumber.conf.d/51-disable-suspension.conf"
+        ln -s "${PROG_DIR}/51-disable-suspension.lua" "${HOME}/.config/wireplumber/wireplumber.conf.d/51-disable-suspension.conf"
     fi
     systemctl --user restart pipewire.service
     systemctl --user restart wireplumber.service
