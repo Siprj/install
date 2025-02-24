@@ -78,6 +78,7 @@ function pacman_setp() {
         blueman
         thunar
         xdg-desktop-portal-gtk
+        flameshot
         )
 
     sudo pacman -Sy --noconfirm
