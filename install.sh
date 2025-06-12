@@ -79,6 +79,8 @@ function pacman_setp() {
         thunar
         xdg-desktop-portal-gtk
         flameshot
+        bind
+        swaylock
         )
 
     sudo pacman -Sy --noconfirm
@@ -124,6 +126,9 @@ function rust_tools_step() {
 function system_setup_step() {
 
 sudo systemctl daemon-reload
+
+sudo systemctl start systemd-resolved.service
+sudo systemctl enable systemd-resolved.service
 
 systemctl enable --now --user wob.socket
 
@@ -204,6 +209,7 @@ if [ ! -L "${HOME}/.config/sway/config.d/outputs.config" ]; then
 fi
 
 systemctl --user disable swayrd
+systemctl --user disable sworkstyle
 
 # Get this-is-the-sway workspace switching utility
 curl -L --proto '=https'  https://github.com/Siprj/this-is-the-sway/releases/download/v0.0.1/this-is-the-sway.zip -o /tmp/this-is-the-sway.zip
