@@ -528,10 +528,17 @@ local nvim_lspconfig = {
     },
   },
   config = function()
-    vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError", numhl = "" })
-    vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn", numhl = "" })
-    vim.fn.sign_define("DiagnosticSignHint", { text = " ", texthl = "DiagnosticSignHint", numhl = "" })
-    vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo", numhl = "" })
+    vim.diagnostic.config({
+      signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = '',
+          [vim.diagnostic.severity.WARN] = '',
+          [vim.diagnostic.severity.INFO] = '',
+          [vim.diagnostic.severity.HINT] = '󰌵',
+        },
+      }
+    })
+
 
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(args)
@@ -656,6 +663,9 @@ local nvim_lspconfig = {
             command = "clippy"
           }
         }
+      },
+      commands = {
+        ExpandMacro = { function() vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), vim.print) end }
       }
     }
     lsp_config.elmls.setup{
@@ -863,6 +873,7 @@ local treesitter = {
   --},
   config = function()
     require'nvim-treesitter.configs'.setup{
+      ignore_install = { "ipkg" },
       highlight = {enable = true},
       indent = {enable = true},
       ensure_installed = "all",
