@@ -1,139 +1,159 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "secondary_prompt": {
+    "template": "$ ",
+    "foreground_templates": [
+      "{{ if gt .Code 0 }}red{{ end }}",
+      "default"
+    ]
+  },
   "blocks": [
     {
-      "alignment": "left",
       "type": "prompt",
+      "alignment": "left",
       "segments": [
         {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "<b><o>\uf007{{ .UserName }}</o></b>",
+          "type": "session",
+          "style": "plain",
           "foreground_templates": [
             "{{ if .SSHSession }}magenta{{ end }}",
             "{{ if .WSL }}:lightMagenta{{ end }}",
             "red"
-          ],
-          "style": "plain",
-          "type": "session",
-          "template": "<b><o>{{ .UserName }}</o></b>"
+          ]
         },
         {
-          "foreground": "darkGray",
-          "style": "plain",
-          "type": "text",
-          "template": "<o>@</o>"
-        },
-        {
-          "foreground": "yellow",
-          "style": "plain",
-          "type": "session",
-          "template": "<b><o>{{ .HostName }}</o></b><darkGray><o>: </o></>"
-        },
-        {
-          "foreground": "blue",
-          "style": "plain",
-          "type": "path",
           "properties": {
+            "cache_duration": "none"
+          },
+          "template": "<o>@</o>",
+          "foreground": "darkGray",
+          "type": "text",
+          "style": "plain"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "<b><o>\uf6c4{{ .HostName }}</o></b><darkGray><o>: </o></>",
+          "foreground": "yellow",
+          "type": "session",
+          "style": "plain"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
             "folder_separator_icon": "/",
             "style": "full"
           },
-          "template": "<b><o> {{ .Path }}</o></b>"
+          "template": "<b><o>\ue5fe {{ .Path }}</o></b>",
+          "foreground": "blue",
+          "type": "path",
+          "style": "plain"
         },
         {
+          "properties": {
+            "branch_icon": "\ue725 ",
+            "cache_duration": "none"
+          },
+          "template": "<darkGray><o> </o></><b><o>{{ url .HEAD .UpstreamURL }}</o></b>",
           "foreground": "cyan",
-          "style": "accordion",
           "type": "git",
-          "properties": {
-            "branch_icon": " "
-          },
-          "template": "<darkGray><o> </o></><b><o>{{ url .HEAD .UpstreamURL }}</o></b>"
+          "style": "accordion"
         },
         {
-          "foreground": "darkGray",
-          "style": "accordion",
-          "type": "git",
           "properties": {
-            "fetch_status": true,
-            "fetch_stash_count": true
-          },
-          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) .Ahead .Behind (gt .StashCount 0) }}<o> [</o>{{ end }}"
-        },
-        {
-          "foreground": "magenta",
-          "style": "accordion",
-          "type": "git",
-          "properties": {
+            "cache_duration": "none",
+            "fetch_stash_count": true,
             "fetch_status": true
           },
-          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) }}<b><o>{{ if .Staging.Changed }}+{{ end }}{{ if lt .Staging.Modified .Working.Modified }}!{{ end }}{{ if and .Working.Changed (not .Staging.Modified) }}?{{ end }}</o></b>{{ end }}"
+          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) .Ahead .Behind (gt .StashCount 0) }}<o> [</o>{{ end }}",
+          "foreground": "darkGray",
+          "type": "git",
+          "style": "accordion"
         },
         {
-          "foreground": "magenta",
-          "style": "accordion",
-          "type": "git",
           "properties": {
+            "cache_duration": "none",
             "fetch_status": true
           },
-          "template": "{{ if or .Ahead .Behind }}<b><o>{{ if gt .Behind 0 }}↓{{ end }}{{ if gt .Ahead 0 }}↑{{ end }}{{ if eq .Behind .Ahead }}↕{{ end }}</o></b>{{ end }}"
-        },
-        {
+          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) }}<b><o>{{ if .Staging.Changed }}+{{ end }}{{ if lt .Staging.Modified .Working.Modified }}!{{ end }}{{ if and .Working.Changed (not .Staging.Modified) }}?{{ end }}</o></b>{{ end }}",
           "foreground": "magenta",
-          "style": "accordion",
           "type": "git",
-          "properties": {
-            "fetch_status": true,
-            "fetch_stash_count": true
-          },
-          "template": "{{ if gt .StashCount 0 }}<b><o>*</o></b>{{ end }}"
+          "style": "accordion"
         },
         {
-          "foreground": "darkGray",
-          "style": "accordion",
-          "type": "git",
           "properties": {
-            "fetch_status": true,
-            "fetch_stash_count": true
+            "cache_duration": "none",
+            "fetch_status": true
           },
-          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) .Ahead .Behind (gt .StashCount 0) }}<o>] </o>{{ end }}"
+          "template": "{{ if or .Ahead .Behind }}<b><o>{{ if gt .Behind 0 }}\u2193{{ end }}{{ if gt .Ahead 0 }}\u2191{{ end }}{{ if eq .Behind .Ahead }}\u2195{{ end }}</o></b>{{ end }}",
+          "foreground": "magenta",
+          "type": "git",
+          "style": "accordion"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "fetch_stash_count": true,
+            "fetch_status": true
+          },
+          "template": "{{ if gt .StashCount 0 }}<b><o>*</o></b>{{ end }}",
+          "foreground": "magenta",
+          "type": "git",
+          "style": "accordion"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "fetch_stash_count": true,
+            "fetch_status": true
+          },
+          "template": "{{ if or .Staging.Changed (lt .Staging.Modified .Working.Modified) (and .Working.Changed (not .Staging.Modified)) .Ahead .Behind (gt .StashCount 0) }}<o>] </o>{{ end }}",
+          "foreground": "darkGray",
+          "type": "git",
+          "style": "accordion"
         }
       ]
     },
     {
-      "alignment": "right",
       "type": "prompt",
+      "alignment": "right",
       "filler": "<darkGray><o> </o></>",
       "segments": [
         {
-          "foreground": "darkGray",
-          "style": "plain",
-          "type": "text",
+          "properties": {
+            "cache_duration": "none"
+          },
           "template": "<o> </o>",
-          "interactive": false
+          "foreground": "darkGray",
+          "type": "text",
+          "style": "plain"
         }
       ]
     },
     {
-      "alignment": "left",
       "type": "prompt",
-      "newline": true,
+      "alignment": "left",
       "segments": [
         {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "$ ",
+          "type": "text",
+          "style": "plain",
           "foreground_templates": [
             "{{ if gt .Code 0 }}red{{ end }}",
             "default"
-          ],
-          "style": "plain",
-          "type": "text",
-          "template": "$ "
+          ]
         }
-      ]
+      ],
+      "newline": true
     }
   ],
-  "secondary_prompt": {
-    "foreground_templates": [
-      "{{ if gt .Code 0 }}red{{ end }}",
-      "default"
-    ],
-    "template": "$ "
-  },
-  "final_space": false,
-  "version": 2
+  "version": 3
 }

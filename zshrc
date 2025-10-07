@@ -55,6 +55,7 @@ compinit -C -i
 zmodload -i zsh/complist
 
 fpath+="${HOME}/.zsh/zsh-completions/src"
+fpath+="${HOME}/.zsh/custom-completions/"
 
 # Look at more completion tricks
 # https://thevaluable.dev/zsh-completion-guide-examples/

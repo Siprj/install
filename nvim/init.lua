@@ -649,13 +649,12 @@ local nvim_lspconfig = {
     vim.keymap.set({"n"}, "<leader>ld", function() require'telescope.builtin'.lsp_definitions() end)
     vim.keymap.set({"n"}, "<leader>ll", function() vim.diagnostic.config{virtual_text = not require'lsp_lines'.toggle()} end)
 
-    local lsp_config = require'lspconfig'
-    lsp_config.hls.setup{
+    vim.lsp.config('hls', {
       on_attach=on_attach,
       capabilities = capabilities,
       cmd = {"run-hls.sh", "--lsp"}
-    }
-    lsp_config.rust_analyzer.setup{
+    })
+    vim.lsp.config('rust_analyzer', {
       on_attach=on_attach,
       capabilities = capabilities,
       settings = { ["rust-analyzer"] = {
@@ -667,15 +666,15 @@ local nvim_lspconfig = {
       commands = {
         ExpandMacro = { function() vim.lsp.buf_request_all(0, "rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), vim.print) end }
       }
-    }
-    lsp_config.elmls.setup{
+    })
+    vim.lsp.config('elmls', {
       on_attach=on_attach,
       capabilities = capabilities,
       cmd = {"npx", "elm-language-server"}
-    }
+    })
 
     require("neodev").setup()
-    lsp_config.lua_ls.setup({
+    vim.lsp.config('lua_ls', {
       settings = {
         Lua = {
           completion = {
@@ -684,6 +683,10 @@ local nvim_lspconfig = {
         }
       }
     })
+    vim.lsp.enable('clangd')
+    vim.lsp.enable('elmsl')
+    vim.lsp.enable('rust_analyzer')
+    vim.lsp.enable('hls')
   end,
 }
 
@@ -694,10 +697,10 @@ local telescope = {
   event = "VeryLazy",
   dependencies =
     { "nvim-lua/plenary.nvim",
-       { "nvim-telescope/telescope-fzf-native.nvim",
-         build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build"
-       },
-       "AckslD/nvim-neoclip.lua",
+      { "nvim-telescope/telescope-fzf-native.nvim",
+        build = "make"
+      },
+      "AckslD/nvim-neoclip.lua",
     },
   version = false,
   keys = {
@@ -865,15 +868,18 @@ local treesitter = {
   build = ":TSUpdate",
   event = { "BufReadPost", "BufNewFile" },
   lazy = false,
-  dependencies = {{"nvim-treesitter/nvim-treesitter-textobjects"}},
+  branch = 'main',
+  dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects",
+      branch = 'main',
+      }},
   cmd = {"TSUpdateSync"},
   --keys = {
   --  { "<c-space>", desc = "Increment selection" },
   --  { "<bs>", desc = "Decrement selection", mode = "x" },
   --},
   config = function()
-    require'nvim-treesitter.configs'.setup{
-      ignore_install = { "ipkg" },
+    require'nvim-treesitter'.setup{
       highlight = {enable = true},
       indent = {enable = true},
       ensure_installed = "all",
