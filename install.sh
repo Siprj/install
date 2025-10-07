@@ -81,6 +81,8 @@ function pacman_setp() {
         flameshot
         bind
         swaylock
+        tree-sitter
+        tree-sitter-cli
         )
 
     sudo pacman -Sy --noconfirm
@@ -269,7 +271,7 @@ fi
 if [ ! -L "${HOME}/.config/nvim" ]; then
     ln -s "${PROG_DIR}/nvim" "${HOME}/.config/nvim"
 fi
-nvim -u ~/.config/nvim/init.vim +PlugUpgrade +PlugUpdate +PlugClean! +qall
+nvim -u ~/.config/nvim/init.vim +Lazy
 
 mkdir -p ~/.config/lazygit/
 cat > ~/.config/lazygit/config.yml <<EOF

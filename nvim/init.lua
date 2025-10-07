@@ -882,7 +882,6 @@ local treesitter = {
     require'nvim-treesitter'.setup{
       highlight = {enable = true},
       indent = {enable = true},
-      ensure_installed = "all",
       incremental_selection = {
         enable = true, keymaps = {
           init_selection = "<C-space>",
@@ -990,6 +989,7 @@ local treesitter = {
         },
       },
     }
+    require'nvim-treesitter'.install("all")
   end,
 }
 
@@ -1292,7 +1292,17 @@ require("lazy").setup(plugins)
 
 vim.cmd "colorscheme catppuccin"
 
-
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'rust', 'haskell', 'typescript', 'javascript', 'zig' },
+    callback = function()
+      -- syntax highlighting, provided by Neovim
+      vim.treesitter.start()
+      -- folds, provided by Neovim
+      vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+      -- indentation, provided by nvim-treesitter
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
+  })
 local init_group_id = vim.api.nvim_create_augroup("init_group", { clear = true })
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = {"*"},
