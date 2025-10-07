@@ -1292,15 +1292,16 @@ require("lazy").setup(plugins)
 
 vim.cmd "colorscheme catppuccin"
 
+local init_group_id = vim.api.nvim_create_augroup("init_group", { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
     pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua", "cabal", "yaml", "dockerfile", 'typescript',},
+  group = init_group_id,
     callback = function()
       vim.treesitter.start()
       vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
       vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end,
   })
-local init_group_id = vim.api.nvim_create_augroup("init_group", { clear = true })
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = {"*"},
   group = init_group_id,
