@@ -1,0 +1,45 @@
+[modules]
+left = [ [ "appLauncher",  "Updates", "Workspaces" ] ]
+center = [ "WindowTitle" ]
+right = [ "Tray", "KeyboardLayout", [  "SystemInfo", "Clock", "Privacy", "Settings" ] ]
+
+[updates]
+check_cmd = "checkupdates; paru -Qua"
+update_cmd = 'alacritty -e bash -c "paru; echo Done - Press enter to exit; read" &'
+
+[[CustomModule]]
+name = "appLauncher"
+icon = "󱗼"
+command = "vicinae toggle"
+
+[workspaces]
+enable_workspace_filling = false
+
+[window_title]
+truncate_title_after_length = 100
+
+[settings]
+
+[appearance]
+#style = "Solid"
+success_color = "#a6e3a1"
+text_color = "#cdd6f4"
+
+workspace_colors = [ "#fab387", "#b4befe", "#cba6f7" ]
+
+[appearance.primary_color]
+base = "#fab387"
+text = "#1e1e2e"
+
+[appearance.danger_color]
+base = "#f38ba8"
+weak = "#f9e2af"
+
+[appearance.background_color]
+base = "#1e1e2e"
+weak = "#313244"
+strong = "#45475a"
+
+[appearance.secondary_color]
+base = "#11111b"
+strong = "#1b1b25"

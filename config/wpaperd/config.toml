@@ -1,0 +1,7 @@
+[default]
+duration = "5s"
+mode = "center"
+sorting = "random"
+
+[any]
+path = "~/Wallpapers/"

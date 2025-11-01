@@ -1,0 +1,7 @@
+  gui:
+    theme:
+      selectedLineBgColor:
+        - reverse
+  git:
+    pull:
+      mode: 'rebase'

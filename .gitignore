@@ -2,3 +2,8 @@ nvim/bundle/
 nvim/plugin/
 nvim/lazy-lock.json
 .luarc.json
+config/nvim/lazy-lock.json
+dotfiles/zsh/cache
+dotfiles/zsh/update_time
+dotfiles/zsh/zsh-completions
+dotfiles/zsh/zsh-syntax-highlighting
