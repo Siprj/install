@@ -112,6 +112,8 @@ function pacman_setp() {
         swaync
         gwenview
         wl-clipboard
+	firefox
+	wezterm
         )
 
     sudo pacman -Sy --noconfirm
@@ -122,7 +124,8 @@ function pacman_setp() {
 }
 
 function aur_step () {
-    pacman -Q paru || yay -S --noconfirm --answerdiff=None paru
+    pacman -Q paru || (cd $(mktmp -d); git clone https://aur.archlinux.org/paru.git; cd paru; makepkg -si)
+    pacman -Q ashell || paru -S ashell --noconfirm
     pacman -Q spotify || paru -S spotify --noconfirm
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q dropbox || paru -S dropbox --noconfirm
