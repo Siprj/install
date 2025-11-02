@@ -88,7 +88,6 @@ function pacman_setp() {
         pavucontrol
         lua-language-server
         gvfs-smb
-        blueman
         thunar
         xdg-desktop-portal-gtk
         bind
@@ -128,6 +127,7 @@ function aur_step () {
     pacman -Q lazygit || paru -S lazygit --noconfirm
     pacman -Q dropbox || paru -S dropbox --noconfirm
     pacman -Q sweet-folders-icons-git || paru -S sweet-folders-icons-git --noconfirm
+    pacman -Q catppuccin-sddm-theme-mocha || paru -S catppuccin-sddm-theme-mocha --noconfirm
     # pacman -Q papirus-folders-catppuccin-git || paru -S papirus-folders-catppuccin-git --noconfirm
     # pacman -Q colloid-catppuccin-gtk-theme-git || paru -S colloid-catppuccin-gtk-theme-git --noconfirm
     pacman -Q catppuccin-cursors-mocha || paru -S catppuccin-cursors-mocha --noconfirm

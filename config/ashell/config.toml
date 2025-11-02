@@ -1,7 +1,7 @@
 [modules]
 left = [ [ "appLauncher",  "Updates", "Workspaces" ] ]
 center = [ "WindowTitle" ]
-right = [ "Tray", "KeyboardLayout", [  "SystemInfo", "Clock", "Privacy", "Settings" ] ]
+right = [ "Tray", "KeyboardLayout", [  "SystemInfo", "Privacy", "Clock", "Settings" ] ]
 
 [updates]
 check_cmd = "checkupdates; paru -Qua"
@@ -19,6 +19,7 @@ enable_workspace_filling = false
 truncate_title_after_length = 100
 
 [settings]
+logout_cmd = "loginctl kill-session ${XDG_SESSION_ID}"
 
 [appearance]
 #style = "Solid"
