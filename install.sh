@@ -112,8 +112,7 @@ function pacman_setp() {
         swaync
         gwenview
         wl-clipboard
-	firefox
-	wezterm
+        firefox
         )
 
     sudo pacman -Sy --noconfirm
@@ -132,7 +131,7 @@ function aur_step () {
     pacman -Q sweet-folders-icons-git || paru -S sweet-folders-icons-git --noconfirm
     pacman -Q catppuccin-sddm-theme-mocha || paru -S catppuccin-sddm-theme-mocha --noconfirm
     # pacman -Q papirus-folders-catppuccin-git || paru -S papirus-folders-catppuccin-git --noconfirm
-    # pacman -Q colloid-catppuccin-gtk-theme-git || paru -S colloid-catppuccin-gtk-theme-git --noconfirm
+    pacman -Q colloid-catppuccin-gtk-theme-git || paru -S colloid-catppuccin-gtk-theme-git --noconfirm
     pacman -Q catppuccin-cursors-mocha || paru -S catppuccin-cursors-mocha --noconfirm
     # pacman -Q kvantum-theme-catppuccin-git || paru -S kvantum-theme-catppuccin-git --noconfirm
     pacman -Q vicinae || paru -S vicinae --noconfirm
@@ -162,6 +161,9 @@ function system_setup_step() {
 
 link_directory "${PROG_DIR}/config" "${HOME}/.config/"
 link_directory "${PROG_DIR}/dotfiles" "${HOME}/."
+
+sudo mkdir -p /etc/sddm.conf.d/
+sudo cp "${PROG_DIR}/sddm.theme" /etc/sddm.conf.d/theme.conf
 
 sudo systemctl daemon-reload
 
@@ -212,7 +214,7 @@ git config --global core.editor nvim
 git config --global rebase.autosquash true
 git config --global rerere.enabled true
 
-nvim -u ~/.config/nvim/init.vim +Lazy
+nvim +Lazy
 
 chsh -s $(which zsh)
 

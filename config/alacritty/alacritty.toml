@@ -1,0 +1,10 @@
+[general]
+import = ["~/.config/alacritty/catppuccin-latte.toml"]
+
+[keyboard]
+bindings = [
+  { key = "N", mods = "Control|Shift", action = "SpawnNewInstance" }
+]
+
+[env]
+TERM = "xterm-256color"

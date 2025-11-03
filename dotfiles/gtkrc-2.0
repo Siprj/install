@@ -2,7 +2,7 @@
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
 include "/home/yrid/.gtkrc-2.0.mine"
-gtk-theme-name="Colloid-Orange-Dark-Compact-Catppuccin"
+gtk-theme-name="Colloid-Yellow-Dark-Compact-Catppuccin"
 gtk-icon-theme-name="Sweet-Blue"
 gtk-font-name="Adwaita Sans 11"
 gtk-cursor-theme-name="catppuccin-mocha-flamingo-cursors"
