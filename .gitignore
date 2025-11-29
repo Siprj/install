@@ -8,3 +8,4 @@ dotfiles/zsh/update_time
 dotfiles/zsh/zsh-completions
 dotfiles/zsh/zsh-syntax-highlighting
 dotfiles/zsh/catppuccin-zsh-syntax-highlighting/
+config/hypr/monitors.conf

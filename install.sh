@@ -113,6 +113,10 @@ function pacman_setp() {
         gwenview
         wl-clipboard
         firefox
+        libappindicator
+        nwg-displays
+        man-db
+        man-pages
         )
 
     sudo pacman -Sy --noconfirm
@@ -120,6 +124,8 @@ function pacman_setp() {
 
     # Try to enable pacman colors
     sudo sed -i "s/#Color/Color/" "/etc/pacman.conf"
+
+    (pacman -Q network-manager-applet && sudo pacman -Rscu network-manager-applet --noconfirm) || true
 }
 
 function aur_step () {
