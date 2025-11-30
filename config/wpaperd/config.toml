@@ -1,7 +1,7 @@
 [default]
-duration = "5s"
+duration = "360s"
 mode = "center"
 sorting = "random"
 
 [any]
-path = "~/Wallpapers/"
+path = "~/Dropbox/Wallpapers/"
