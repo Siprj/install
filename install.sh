@@ -209,7 +209,7 @@ fc-cache -r -v
 mkdir -p "${HOME}/.local/bin/"
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
 
-mkdir -r "${HOME}/Screenshots/"
+mkdir -p "${HOME}/Screenshots/"
 
 }
 
