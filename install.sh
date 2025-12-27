@@ -73,6 +73,7 @@ function pacman_setp() {
         tree
         unzip
         vlc
+        vlc-plugin-ffmpeg
         wget
         wireshark-qt
         tealdeer
@@ -117,6 +118,8 @@ function pacman_setp() {
         nwg-displays
         man-db
         man-pages
+        pacman-contrib
+        celluloid
         )
 
     sudo pacman -Sy --noconfirm
@@ -160,7 +163,7 @@ function rust_step () {
 }
 
 function rust_tools_step() {
-    true
+    cargo install wayshot
 }
 
 function system_setup_step() {
@@ -187,30 +190,6 @@ if [[ ! -f "${HOME}/.local/bin/oh-my-posh" ]]; then
     curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
 fi
 
-#mkdir -p ~/.config/sway/config.d/
-#if [ ! -L "${HOME}/.config/sway/config.d/outputs.config" ]; then
-#
-#    rm -R -f "${HOME}/.config/sway/config.d/outputs.config"
-#
-#    OPTIONS=("Three screens"
-#             "One screen")
-#
-#    select option in "${OPTIONS[@]}"
-#    do
-#        case $option in
-#            "Three screens")
-#                ln -s "${PROG_DIR}/sway-three-outputs.config" "${HOME}/.config/sway/config.d/outputs.config"
-#                break
-#                ;;
-#            "One screen")
-#                ln -s "${PROG_DIR}/sway-one-outputs.config" "${HOME}/.config/sway/config.d/outputs.config"
-#                break
-#                ;;
-#        esac
-#    done
-#
-#fi
-
 # Set firefox catppuccin flamingo theme
 firefox https://color.firefox.com/?theme=XQAAAAJHBAAAAAAAAABBqYhm849SCicxcUcPX38oKRicm6da8pFtMcajvXaAE3RJ0F_F447xQs-L1kFlGgDKq4IIvWciiy4upusW7OvXIRinrLrwLvjXB37kvhN5ElayHo02fx3o8RrDShIhRpNiQMOdww5V2sCMLAfehhp8u7kT4nh31-_5sD_P8FhlfX9Sdj_brd9hzw5NA_jx4peTGmoiUcikCHxa8Sm8bylvXElo3HHzylyv8f7R7gwkSEe8Mkq_ERB00vhRYSdLVEI7OR2j9y8UtYJhXmmHxXtQ2a2q0wDt9h-Dv7L5NTOL6rXow07mQCwsiafOlEKwLdkeAd2DoxJ1_Pu_amXOiUhOKrOw2DBrS-cIjSXWu9in58J8EBSEno0b4K2apcsY4mww6HdBAXjQjS7PBl1Eoli3qcNvy3o0v-yq9guO7ozjOWAFY-rVMCACPIWLr-pEBHErXolnftBIiOuC_k1brGAscZ579rDSHW_Bf9KewXOw3subWzfX0sPqI5eJLXKKLKfJEuPnm7z6IlEkCi__KG8k0-VIsE0lvbgk_dPXNsl8__ihao0
 
@@ -229,6 +208,8 @@ fc-cache -r -v
 
 mkdir -p "${HOME}/.local/bin/"
 cp "${PROG_DIR}/run-hls.sh" "${HOME}/.local/bin/"
+
+mkdir -r "${HOME}/Screenshots/"
 
 }
 

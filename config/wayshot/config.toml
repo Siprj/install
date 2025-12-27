@@ -1,0 +1,18 @@
+[base]
+cursor = false
+clipboard = false
+file = true
+stdout = false
+# max logging level
+# possible values: info, trace, debug, warn, error
+log_level = "info"
+
+[file]
+# screenshots directory (not a file!)
+#path = "$HOME/Screenshots/"
+# screenshot file name format
+# refer to chrono formatting rules: https://docs.rs/chrono/latest/chrono/format/strftime/index.html
+name_format = "Screenshots/wayshot-%Y_%m_%d-%H_%M_%S"
+# screenshot file encoding
+# possible values: jpg, png, ppm, qui, webp, avif, jxl
+encoding = "png"
