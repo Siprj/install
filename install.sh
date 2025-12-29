@@ -50,6 +50,7 @@ function pacman_setp() {
         cups
         docker
         docker-buildx
+        docker-compose
         neovim
         gdb
         git
