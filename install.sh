@@ -88,6 +88,7 @@ function pacman_setp() {
         fd
         wireplumber
         pavucontrol
+        pipewire-pulse
         lua-language-server
         gvfs-smb
         thunar
