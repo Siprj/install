@@ -1,0 +1,5 @@
+-t mkv
+--write-subs
+--write-auto-subs
+--sub-langs "en.*",-live_chat
+-o ~/Videos/%(title)s.%(ext)s
