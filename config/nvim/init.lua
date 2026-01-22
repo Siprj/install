@@ -116,9 +116,8 @@ local catppuccin = {
     name = "catppuccin",
     opts = {
       flavour = "mocha",
+      auto_integrations = true,
       integrations = {
-        alpha = true,
-        cmp = true,
         flash = true,
         gitsigns = true,
         illuminate = true,
@@ -137,13 +136,11 @@ local catppuccin = {
         },
         navic = {enabled = true, custom_bg = "lualine"},
         neotest = true,
-        noice = true,
         notify = true,
         neotree = true,
         semantic_tokens = true,
         telescope = true,
         treesitter = true,
-        which_key = true,
     }
   }
 }
@@ -454,64 +451,58 @@ local luasnip = {
 }
 
 
-local nvim_cmp = {
-  "hrsh7th/nvim-cmp",
-  version = false, -- last release is way too old
-  event = "InsertEnter",
-  dependencies = {
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/cmp-buffer",
-    "hrsh7th/cmp-path",
-    "saadparwaiz1/cmp_luasnip",
+local blink_cmp = {
+  'saghen/blink.cmp',
+  -- optional: provides snippets for the snippet source
+  -- dependencies = { 'rafamadriz/friendly-snippets' },
+
+  -- use a release tag to download pre-built binaries
+  --version = '1.*',
+  -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+  build = 'cargo build --release',
+
+  ---@module 'blink.cmp'
+  ---@type blink.cmp.Config
+  opts = {
+    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+    -- 'super-tab' for mappings similar to vscode (tab to accept)
+    -- 'enter' for enter to accept
+    -- 'none' for no mappings
+    --
+    -- All presets have the following mappings:
+    -- C-space: Open menu or open docs if already open
+    -- C-n/C-p or Up/Down: Select next/previous item
+    -- C-e: Hide menu
+    -- C-k: Toggle signature help (if signature.enabled = true)
+    --
+    -- See :h blink-cmp-config-keymap for defining your own keymap
+    keymap = { preset = 'enter' },
+
+    appearance = {
+      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- Adjusts spacing to ensure icons are aligned
+      nerd_font_variant = 'mono'
+    },
+
+    -- (Default) Only show the documentation popup when manually triggered
+    completion = { documentation = { auto_show = false } },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer', "codecompanion" },
+    },
+
+    cmdline = { sources = { "cmdline" } },
+
+    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+    --
+    -- See the fuzzy documentation for more information
+    fuzzy = { implementation = "rust" }
   },
-  opts = function()
-    vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-    local cmp = require("cmp")
-    local defaults = require("cmp.config.default")()
-    return {
-      completion = {
-        completeopt = "menu,menuone,noinsert",
-      },
-      snippet = {
-        expand = function(args)
-          require("luasnip").lsp_expand(args.body)
-        end,
-      },
-      mapping = cmp.mapping.preset.insert({
-        ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<C-k>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-j>"] = cmp.mapping.scroll_docs(4),
-        ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.abort(),
-        ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        ["<S-CR>"] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = true,
-        }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-      }),
-      sources = cmp.config.sources({
-        { name = "nvim_lsp" },
-        { name = "luasnip" },
-        { name = "buffer" },
-        { name = "path" },
-      }),
-      formatting = {
-        format = function(_, item)
-          local icons = kinds          if icons[item.kind] then
-            item.kind = icons[item.kind] .. item.kind
-          end
-          return item
-        end,
-      },
-      experimental = {
-        ghost_text = {
-          hl_group = "CmpGhostText",
-        },
-      },
-      sorting = defaults.sorting,
-    }
-  end,
+  opts_extend = { "sources.default" }
 }
 
 
@@ -521,7 +512,7 @@ local nvim_lspconfig = {
   event = { "BufReadPre", "BufNewFile" },
   dependencies = {
     {
-      "hrsh7th/cmp-nvim-lsp",
+      'saghen/blink.cmp',
       {"folke/neodev.nvim", opts = {}},
       "nvim-telescope/telescope.nvim",
       "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
@@ -597,7 +588,7 @@ local nvim_lspconfig = {
       }
     })
 
-    local cmp_capabilities = require'cmp_nvim_lsp'.default_capabilities()
+    local cmp_capabilities = require'blink.cmp'.get_lsp_capabilities()
     local capabilities = vim.tbl_deep_extend(
       "force",
       {},
@@ -989,7 +980,7 @@ local treesitter = {
         },
       },
     }
-    require'nvim-treesitter'.install("all")
+    require'nvim-treesitter'.install({ "rust", "javascript", "typescript", "haskell", "cpp", "css", "markdown", "markdown_inline", "bash", "python", "cmake", "csv", "diff", "elm", "html", "ini", "toml", "json", "kconfig", "lua", "nix", "ssh_config", "vimdoc", "wgsl", "yaml", "xml", "zsh", "dockerfile" })
   end,
 }
 
@@ -1135,7 +1126,7 @@ local hop = {
 local zk_nvim = {
   "mickael-menu/zk-nvim",
   config = function ()
-    local cmp_capabilities = require'cmp_nvim_lsp'.default_capabilities()
+    local cmp_capabilities = require'blink.cmp'.get_lsp_capabilities()
     local capabilities = vim.tbl_deep_extend(
       "force",
       {},
@@ -1188,65 +1179,6 @@ local fidget = {
 }
 
 
-local markdown_preview = {
-  "iamcco/markdown-preview.nvim",
-  cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-  ft = { "markdown" },
-  build = function() vim.fn["mkdp#util#install"]() end,
-}
-
-
-local copilot = {
-  "zbirenbaum/copilot.lua",
-  cmd = "Copilot",
-  event = "InsertEnter",
-  config = function()
-    require("copilot").setup({
-      panel = {
-        enabled = true,
-        auto_refresh = false,
-        keymap = {
-          jump_prev = "[[",
-          jump_next = "]]",
-          accept = "<CR>",
-          refresh = "gr",
-          open = "<C-CR>"
-        },
-        layout = {
-          position = "bottom", -- | top | left | right
-          ratio = 0.4
-        },
-      },
-      suggestion = {
-        enabled = true,
-        auto_trigger = false,
-        debounce = 75,
-        keymap = {
-          accept = "<M-l>",
-          accept_word = false,
-          accept_line = false,
-          next = "<M-]>",
-          prev = "<M-[>",
-          dismiss = "<C-]>",
-        },
-      },
-      filetypes = {
-        yaml = false,
-        markdown = false,
-        help = false,
-        gitcommit = false,
-        gitrebase = false,
-        hgcommit = false,
-        svn = false,
-        cvs = false,
-        ["."] = false,
-      },
-      copilot_node_command = 'node', -- Node.js version must be > 18.x
-      server_opts_overrides = {},
-    })
-  end,
-}
-
 local outline = {
   "hedyhli/outline.nvim",
   config = function()
@@ -1260,12 +1192,40 @@ local outline = {
   end,
 }
 
+local codecompanion = {
+  "olimorris/codecompanion.nvim",
+  dependencies =
+    { "nvim-lua/plenary.nvim" },
+  opts = {
+    --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
+    interactions = {
+      chat = {
+        adapter = "copilot",
+        model = "claude-opus-4.5",
+        --adapter = "ollama",
+        --model = "qwen3:latest"
+      },
+      inline = {
+        adapter = "copilot",
+        model = "claude-opus-4.5",
+        --adapter = "ollama",
+        --model = "qwen3:latest"
+      },
+    },
+    opts = {
+      log_level = "DEBUG",
+    },
+  }
+}
+
+local cop = { "github/copilot.vim" }
+
 local plugins = {
   catppuccin,
   tokyonight,
   neo_tree,
   luasnip,
-  nvim_cmp,
+  blink_cmp,
   nvim_lspconfig,
   telescope,
   dressing,
@@ -1283,9 +1243,9 @@ local plugins = {
   zk_nvim,
   fugitive,
   fidget,
-  markdown_preview,
-  copilot,
-  outline
+  outline,
+  codecompanion,
+  cop,
 }
 
 require("lazy").setup(plugins)
@@ -1294,7 +1254,7 @@ vim.cmd "colorscheme catppuccin"
 
 local init_group_id = vim.api.nvim_create_augroup("init_group", { clear = true })
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua", "cabal", "yaml", "dockerfile", 'typescript',},
+    pattern = {"c", "cpp", "java", "haskell", "javascript", "python", "elm", "rust", "lua", "yaml", "dockerfile", 'typescript',},
   group = init_group_id,
     callback = function()
       vim.treesitter.start()
