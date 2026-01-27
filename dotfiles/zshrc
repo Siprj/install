@@ -4,6 +4,9 @@ export ZK_NOTEBOOK_DIR=/home/yrid/Dropbox/notes
 alias hx="helix"
 alias ls="ls --color=tty"
 alias ll="ls --color=tty -lah"
+alias dcu="docker compose up -d"
+alias dcd="docker compose down -t0"
+alias dc="docker compose"
 
 function check_install_or_update() {
     if [[ ! -e "${HOME}/.zsh/update_time" ]]; then 
