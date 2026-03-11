@@ -146,14 +146,6 @@ local catppuccin = {
 }
 
 
-local tokyonight = {
-  "folke/tokyonight.nvim",
-  lazy = false,
-  priority = 1000,
-  opts = { style = "moon" },
-}
-
-
 -- TODO: Close after picking file
 local neo_tree = {
     "nvim-neo-tree/neo-tree.nvim",
@@ -701,7 +693,31 @@ local telescope = {
     {"<leader>tl", function() require'telescope.builtin'.live_grep() end, silent=true, mode = "n" },
     {"<leader>tg", function() require'telescope.builtin'.git_files() end, silent=true, mode = "n"},
     {"<leader>tc", "<CMD>Telescope neoclip", silent = true, mode = "n"},
-    {"<leader>gg", function() require'telescope.builtin'.live_grep({ additional_args = function() return {"--hidden"} end}) end, silent = true, mode = "n"},
+{"<leader>gg", function()
+  local telescope = require('telescope')
+  local actions = require('telescope.actions')
+  local action_state = require('telescope.actions.state')
+  local builtin = require('telescope.builtin')
+  builtin.live_grep({
+    additional_args = function() return {"--hidden"} end,
+    attach_mappings = function(_, map)
+      map('i', '<C-i>', function(prompt_bufnr)
+        local current_prompt = action_state.get_current_line()
+        actions.close(prompt_bufnr)
+        vim.ui.input({ prompt = 'Filetype filter (e.g. lua, py): ' }, function(filetype)
+          if not filetype or filetype == '' then return end
+          builtin.live_grep{
+            default_text = current_prompt,
+            additional_args = function()
+              return {"--type", filetype, "--hidden"}
+            end
+          }
+        end)
+      end)
+      return true
+    end
+  })
+end, silent = true, mode = "n"},
   },
   config = function()
     local telescope = require'telescope'
@@ -1222,7 +1238,6 @@ local cop = { "github/copilot.vim" }
 
 local plugins = {
   catppuccin,
-  tokyonight,
   neo_tree,
   luasnip,
   blink_cmp,
