@@ -1217,13 +1217,13 @@ local codecompanion = {
     interactions = {
       chat = {
         adapter = "copilot",
-        model = "claude-opus-4.5",
+        model = "claude-opus-4.6",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
       inline = {
         adapter = "copilot",
-        model = "claude-opus-4.5",
+        model = "claude-opus-4.6",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
