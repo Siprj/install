@@ -38,7 +38,7 @@
           "properties": {
             "cache_duration": "none"
           },
-          "template": "<b><o>\uf6c4{{ .HostName }}</o></b><darkGray><o>: </o></>",
+          "template": "<b><o>\udb80\uddc5{{ .HostName }}</o></b><darkGray><o>: </o></>",
           "foreground": "yellow",
           "type": "session",
           "style": "plain"
