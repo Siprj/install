@@ -445,13 +445,13 @@ local luasnip = {
 
 local blink_cmp = {
   'saghen/blink.cmp',
-  -- optional: provides snippets for the snippet source
-  -- dependencies = { 'rafamadriz/friendly-snippets' },
+  dependencies = { 'saghen/blink.lib' },
 
-  -- use a release tag to download pre-built binaries
-  --version = '1.*',
-  -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-  build = 'cargo build --release',
+  build = function()
+    -- build the fuzzy matcher, wait up to 60 seconds
+    -- you can use `gb` in `:Lazy` to rebuild the plugin as needed
+    require('blink.cmp').build():wait(60000)
+  end,
 
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
@@ -484,8 +484,6 @@ local blink_cmp = {
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer', "codecompanion" },
     },
-
-    cmdline = { sources = { "cmdline" } },
 
     -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
     -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
@@ -537,18 +535,18 @@ local nvim_lspconfig = {
           vim.api.nvim_create_autocmd({"BufEnter"}, {
             group = codelens,
             callback = function()
-              vim.lsp.codelens.refresh({bufnr = 0})
+              vim.lsp.codelens.enable(true ,{bufnr = 0})
             end,
             buffer = bufnr,
             once = true,
           })
-          vim.api.nvim_create_autocmd({"BufWritePost", "CursorHold"}, {
-            group = codelens,
-            callback = function()
-              vim.lsp.codelens.refresh({bufnr = 0})
-            end,
-            buffer = bufnr,
-          })
+          -- vim.api.nvim_create_autocmd({"BufWritePost", "CursorHold"}, {
+          --   group = codelens,
+          --   callback = function()
+          --     vim.lsp.codelens.refresh({bufnr = 0})
+          --   end,
+          --   buffer = bufnr,
+          -- })
         end
 
       end,
@@ -656,6 +654,13 @@ local nvim_lspconfig = {
       cmd = {"npx", "elm-language-server"}
     })
 
+    vim.lsp.config('tinymist', {
+      on_attach=on_attach,
+      capabilities = capabilities,
+      cmd = { "tinymist" },
+      filetypes = { "typst" },
+    })
+
     require("neodev").setup()
     vim.lsp.config('lua_ls', {
       settings = {
@@ -670,6 +675,8 @@ local nvim_lspconfig = {
     vim.lsp.enable('elmsl')
     vim.lsp.enable('rust_analyzer')
     vim.lsp.enable('hls')
+    vim.lsp.enable('ts_ls')
+    vim.lsp.enable('tinymist')
   end,
 }
 
@@ -1216,14 +1223,12 @@ local codecompanion = {
     --Refer to: https://github.com/olimorris/codecompanion.nvim/blob/main/lua/codecompanion/config.lua
     interactions = {
       chat = {
-        adapter = "copilot",
-        model = "claude-opus-4.6",
+        adapter = "claude_code",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
       inline = {
         adapter = "copilot",
-        model = "claude-opus-4.6",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
@@ -1235,6 +1240,16 @@ local codecompanion = {
 }
 
 local cop = { "github/copilot.vim" }
+
+local claude = {
+  "greggh/claude-code.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim", -- Required for git operations
+  },
+  config = function()
+    require("claude-code").setup()
+  end
+}
 
 local plugins = {
   catppuccin,
@@ -1261,6 +1276,7 @@ local plugins = {
   outline,
   codecompanion,
   cop,
+  claude,
 }
 
 require("lazy").setup(plugins)
