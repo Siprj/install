@@ -151,6 +151,10 @@ function aur_step () {
 function font_step () {
     mkdir -p ~/.local/share/fonts/
 
+    curl -L -o /tmp/fontawesome-free-6.5.2-desktop.zip https://use.fontawesome.com/releases/v6.5.2/fontawesome-free-6.5.2-desktop.zip
+    mkdir -p ~/.local/share/fonts/fontawesome6
+    unzip -j /tmp/fontawesome-free-6.5.2-desktop.zip 'fontawesome-free-6.5.2-desktop/otfs/*.otf' -d ~/.local/share/fonts/fontawesome6
+
     curl -L --proto '=https' https://github.com/ryanoasis/nerd-fonts/releases/latest/download/FiraCode.zip -o /tmp/FireCode.zip
     (cd ~/.local/share/fonts/ && unzip -o /tmp/FireCode.zip)
     rm /tmp/FireCode.zip
