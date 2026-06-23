@@ -1,7 +1,12 @@
+region   = "en-GB"
+
+position = "Top"
+
+
 [modules]
 left = [ [ "appLauncher",  "Updates", "Workspaces" ] ]
 center = [ "WindowTitle" ]
-right = [ "Tray", "KeyboardLayout", [  "SystemInfo", "Privacy", "Clock", "Settings" ] ]
+right = [ "Tray", "KeyboardLayout", [  "SystemInfo", "Privacy", "MediaPlayer", "Tempo", "Settings" ] ]
 
 [updates]
 check_cmd = "checkupdates; paru -Qua"
@@ -20,6 +25,18 @@ truncate_title_after_length = 100
 
 [settings]
 logout_cmd = "loginctl kill-session ${XDG_SESSION_ID}"
+
+[tempo]
+clock_format = "%a %d %b %R"
+
+[osd]
+enabled = true   # Disabled by default; set to true to enable the OSD overlay
+timeout = 1500   # Auto-hide delay in milliseconds
+show_volume_percentage = true    # Show percentage text next to volume/mic bar
+show_brightness_percentage = true # Show percentage text next to brightness bar
+
+[media_player]
+indicator_format = "Icon"
 
 [appearance]
 #style = "Solid"

@@ -278,7 +278,8 @@ local neo_tree = {
               --"*/src/*/tsconfig.json",
             },
             always_show = { -- remains visible even if other settings would normally hide it
-              --".gitignored",
+              ".github",
+              ".gitignore",
             },
             never_show = { -- remains hidden even if visible is toggled to true, this overrides always_show
               --".DS_Store",
@@ -445,7 +446,10 @@ local luasnip = {
 
 local blink_cmp = {
   'saghen/blink.cmp',
-  dependencies = { 'saghen/blink.lib' },
+  dependencies = {
+    'saghen/blink.lib'
+  },
+  -- optional: provides snippets for the snippet source
 
   build = function()
     -- build the fuzzy matcher, wait up to 60 seconds
@@ -1224,11 +1228,13 @@ local codecompanion = {
     interactions = {
       chat = {
         adapter = "claude_code",
+        --model = "claude-opus-4-6",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
       inline = {
-        adapter = "copilot",
+        adapter = "claude_code",
+        --model = "claude-sonnet-4-6",
         --adapter = "ollama",
         --model = "qwen3:latest"
       },
@@ -1236,6 +1242,11 @@ local codecompanion = {
     opts = {
       log_level = "DEBUG",
     },
+    commands = {
+      selected = {
+        "kwa.sh",
+      }
+    }
   }
 }
 
