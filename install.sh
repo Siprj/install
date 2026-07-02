@@ -122,6 +122,7 @@ function pacman_setp() {
         man-pages
         pacman-contrib
         celluloid
+        uv
         )
 
     sudo pacman -Sy --noconfirm
